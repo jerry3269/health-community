@@ -13,7 +13,7 @@ public class MemberController {
 
     @PostMapping("/member")
     public String saveMember(@RequestBody Member member){
-        memberService.save(member);
+        memberService.join(member);
         return member.getUsername();
     }
 }

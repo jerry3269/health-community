@@ -24,7 +24,7 @@ public class Comment extends BaseEntity{
 
     private int like;
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Comment> child = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

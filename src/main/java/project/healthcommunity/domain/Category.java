@@ -20,7 +20,7 @@ public class Category extends BaseEntity{
 
     private String categoryName;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<CategoryPost> postList = new ArrayList<>();
 
     @OneToMany(mappedBy = "parent")
