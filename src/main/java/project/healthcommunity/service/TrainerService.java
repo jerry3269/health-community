@@ -9,6 +9,7 @@ import project.healthcommunity.domain.Trainer;
 import project.healthcommunity.repository.CertificateRepository;
 import project.healthcommunity.repository.TrainerRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,9 +102,9 @@ public class TrainerService {
      * 자격증 수정
      */
     @Transactional
-    public void updateCertificate(Long id, Certificate certificate){
+    public void updateCertificate(Long id, Certificate certificate, String certificateName, LocalDate acquisitionDate){
         Certificate findCertificate = findCertificateByTrainer(id, certificate.getCertificateName());
-        findCertificate.update(certificate.getCertificateName(), certificate.getAcquisitionDate());
+        findCertificate.update(certificateName, acquisitionDate);
     }
 
     /**

@@ -25,7 +25,7 @@ public class Post extends BaseEntity{
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    private int like;
+    private int like = 0;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<CategoryPost> categoryList = new ArrayList<>();
@@ -40,6 +40,15 @@ public class Post extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private PostStatus status;
+
+    // 생성자
+
+    public Post(int like) {
+        this.like = like;
+    }
+
+
+
 
 
     // 연관관계 메서드 시작 //

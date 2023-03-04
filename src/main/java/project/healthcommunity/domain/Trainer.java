@@ -16,7 +16,7 @@ import static java.util.Arrays.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"id", "trainerName", "age", "career"})
-public class Trainer extends BaseEntity {
+public class Trainer extends BaseEntity{
 
     @Id
     @GeneratedValue
