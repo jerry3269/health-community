@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"id", "category"})
 public class CategoryPost extends BaseEntity{
 
     @Id
@@ -22,6 +24,14 @@ public class CategoryPost extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    // 생성자
+
+    public CategoryPost(Category category, Post post) {
+        this.category = category;
+        this.post = post;
+    }
+
 
     // 연관관계 메서드 시작 //
 

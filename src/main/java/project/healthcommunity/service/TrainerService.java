@@ -3,6 +3,7 @@ package project.healthcommunity.service;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import project.healthcommunity.domain.Certificate;
 import project.healthcommunity.domain.Trainer;
@@ -21,10 +22,11 @@ public class TrainerService {
     private final TrainerRepository trainerRepository;
     private final CertificateRepository certificateRepository;
 
+
     /**
      * 트레이너 등록
      */
-    @Transactional
+    @Transactional(noRollbackForClassName = {"IllegalStateException"})
     public void join(Trainer trainer){
         validDupTrainer(trainer);
         trainerRepository.save(trainer);
@@ -130,5 +132,9 @@ public class TrainerService {
     public Certificate findCertificateByTrainer(Long id, String certificateName) {
         Certificate findCertificate = certificateRepository.findByTrainer_idAndCertificateName(id, certificateName);
         return findCertificate;
+    }
+
+    public void clear(){
+        trainerRepository.deleteAll();
     }
 }

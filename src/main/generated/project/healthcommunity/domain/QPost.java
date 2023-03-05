@@ -44,11 +44,11 @@ public class QPost extends EntityPathBase<Post> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> lastModifiedDate = _super.lastModifiedDate;
 
-    public final NumberPath<Integer> like = createNumber("like", Integer.class);
-
     public final QMember member;
 
     public final EnumPath<PostStatus> status = createEnum("status", PostStatus.class);
+
+    public final NumberPath<Integer> sympathy = createNumber("sympathy", Integer.class);
 
     public final StringPath title = createString("title");
 

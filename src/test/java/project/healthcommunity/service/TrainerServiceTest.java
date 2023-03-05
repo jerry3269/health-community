@@ -2,10 +2,13 @@ package project.healthcommunity.service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import project.healthcommunity.domain.Certificate;
 import project.healthcommunity.domain.Trainer;
@@ -16,6 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -30,8 +34,13 @@ class TrainerServiceTest {
 
     @Autowired
     CertificateRepository certificateRepository;
-    @Autowired
-    private TrainerRepository trainerRepository;
+
+
+    @AfterEach
+    void clear(){
+        trainerService.clear();
+        certificateRepository.deleteAll();
+    }
 
     @Test
     void join() {
@@ -93,7 +102,10 @@ class TrainerServiceTest {
         Trainer trainer1 = new Trainer("t1",10,1);
         Trainer trainer2 = new Trainer("t1",20,2);
         trainerService.join(trainer1);
-        trainerService.join(trainer2);
+
+        assertThrows(IllegalStateException.class, () -> {
+            trainerService.join(trainer2);
+        });
     }
 
     @Test
@@ -106,8 +118,9 @@ class TrainerServiceTest {
         trainerService.join(trainer1);
         trainerService.join(trainer2);
 
-
-        trainerService.addCertificate(trainer1.getId(),new Certificate(trainer1, "팔굽1급", LocalDate.of(2019,12,19)));
+        assertThrows(IllegalStateException.class, () -> {
+            trainerService.addCertificate(trainer1.getId(),new Certificate(trainer1, "팔굽1급", LocalDate.of(2019,12,19)));
+        });
     }
 
     @Test
@@ -157,7 +170,10 @@ class TrainerServiceTest {
         em.flush();
         em.clear();
 
+
         trainerService.deleteCertificate(trainer.getId(), certificate1);
+
+
     }
 
     @Test

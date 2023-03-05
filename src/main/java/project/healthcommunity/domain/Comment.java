@@ -22,7 +22,9 @@ public class Comment extends BaseEntity{
     @JoinColumn(name = "post_id")
     private Post post;
 
-    private int like;
+    private String content;
+
+    private int sympathy;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Comment> child = new ArrayList<>();
@@ -46,5 +48,10 @@ public class Comment extends BaseEntity{
         comment.getChild().add(this);
     }
 
+
     // 연관관계 메서드 끝 //
+
+    public void update(String content) {
+        this.content = content;
+    }
 }
