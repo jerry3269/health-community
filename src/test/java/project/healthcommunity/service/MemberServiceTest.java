@@ -2,12 +2,12 @@ package project.healthcommunity.service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import project.healthcommunity.domain.Member;
+import project.healthcommunity.member.domain.Member;
+import project.healthcommunity.member.service.MemberService;
 
 import java.util.List;
 
@@ -40,9 +40,10 @@ class MemberServiceTest {
         Member member1 = new Member("m1", 10);
         Member member2 = new Member("m1", 20);
         memberService.join(member1);
-        memberService.join(member2);
 
-        Assertions.fail("예외가 발생해야 합니다.");
+        assertThrows(IllegalStateException.class, () -> {
+            memberService.join(member2);
+        });
 
     }
 
