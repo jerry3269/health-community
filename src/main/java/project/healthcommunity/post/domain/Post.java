@@ -55,7 +55,6 @@ public class Post extends BaseEntity {
         this.content = content;
         for (Category category : categoryList) {
             CategoryPost categoryPost = new CategoryPost(category, this);
-            this.categoryList.add(categoryPost);
         }
         addMember(member);
         this.status = PostStatus.POST;
@@ -66,7 +65,6 @@ public class Post extends BaseEntity {
         this.content = content;
         for (Category category : categoryList) {
             CategoryPost categoryPost = new CategoryPost(category, this);
-            this.categoryList.add(categoryPost);
         }
         addTrainer(trainer);
         this.status = PostStatus.POST;

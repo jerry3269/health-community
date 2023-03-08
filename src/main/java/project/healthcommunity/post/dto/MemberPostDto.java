@@ -3,6 +3,7 @@ package project.healthcommunity.post.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import project.healthcommunity.category.dto.CategoryDto;
+import project.healthcommunity.categorypost.domain.CategoryPost;
 import project.healthcommunity.categorypost.dto.CategoryPostDto;
 import project.healthcommunity.comment.dto.CommentDto;
 import project.healthcommunity.post.domain.Post;
@@ -33,7 +34,9 @@ public class MemberPostDto {
         this.title = post.getTitle();
         this.content = post.getContent();
         this.sympathy = post.getSympathy();
+
         this.categoryDtoList = post.getCategoryList().stream().map(CategoryDto::new).collect(toList());
+
         this.commentDtoList = post.getComments().stream().map(CommentDto::new).collect(toList());
     }
 }

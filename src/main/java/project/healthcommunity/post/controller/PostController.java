@@ -50,6 +50,7 @@ public class PostController {
         request.getCategoryNameList().stream().forEach(name ->
             categoryList.add(categoryService.categoryListByName(name).get(0))
         );
+
         Post post = new Post(request.getTitle(), request.getContent(), categoryList, member);
         postService.post(post);
         return new MemberPostDto(post);
