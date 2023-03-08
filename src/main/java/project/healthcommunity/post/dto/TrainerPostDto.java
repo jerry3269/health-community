@@ -3,8 +3,7 @@ package project.healthcommunity.post.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import project.healthcommunity.category.dto.CategoryDto;
-import project.healthcommunity.categorypost.dto.CategoryPostDto;
-import project.healthcommunity.comment.dto.CommentDto;
+import project.healthcommunity.comment.dto.MemberCommentDto;
 import project.healthcommunity.post.domain.Post;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public class TrainerPostDto {
     private int sympathy;
 
     private List<CategoryDto> categoryDtoList;
-    private List<CommentDto> commentDtoList;
+    private List<MemberCommentDto> memberCommentDtoList;
 
     public TrainerPostDto(Post post) {
         this.trainerId = post.getTrainer().getId();
@@ -34,6 +33,6 @@ public class TrainerPostDto {
         this.content = post.getContent();
         this.sympathy = post.getSympathy();
         this.categoryDtoList = post.getCategoryList().stream().map(CategoryDto::new).collect(toList());
-        this.commentDtoList = post.getComments().stream().map(CommentDto::new).collect(toList());
+        this.memberCommentDtoList = post.getComments().stream().map(MemberCommentDto::new).collect(toList());
     }
 }

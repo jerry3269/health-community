@@ -30,17 +30,6 @@ public class PostController {
     private final TrainerService trainerService;
     private final CategoryService categoryService;
 
-    /**
-     * {
-     *     "memberId": 1,
-     *     "username": "m1",
-     *     "title": "안녕하세요",
-     *     "content": "양지웅입니다",
-     *     "categoryNameList": [
-     *         "팔굽","윗몸"
-     *     ]
-     * }
-     */
 
     @PostMapping("/api/save/post/member")
     public MemberPostDto saveMemberPost(@RequestBody CreateMemberPostRequest request) {
