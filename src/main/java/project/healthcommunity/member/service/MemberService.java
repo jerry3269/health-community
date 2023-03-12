@@ -34,9 +34,9 @@ public class MemberService {
     }
 
     @Transactional
-    public void update(Long id, String username, int age){
+    public void update(Long id, String username){
         Member findMember = findOne(id);
-        findMember.update(username, age);
+        findMember.update(username);
     }
 
     public Member findOne(Long id){

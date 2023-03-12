@@ -11,11 +11,14 @@ public class ChildCommentDto {
     private String postTitle;
     private String content;
     private int sympathy;
+    private Long parentId;
+
 
     public ChildCommentDto(Comment comment) {
         this.postId = comment.getPost().getId();
         this.postTitle = comment.getPost().getTitle();
         this.content = comment.getContent();
         this.sympathy = comment.getSympathy();
+        this.parentId = comment.getParent().getId();
     }
 }

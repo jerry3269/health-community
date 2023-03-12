@@ -3,6 +3,8 @@ package project.healthcommunity.trainer.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.healthcommunity.certificate.domain.Certificate;
+import project.healthcommunity.certificate.dto.CertificateDto;
 import project.healthcommunity.comment.domain.Comment;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.certificate.repository.CertificateRepository;
@@ -10,6 +12,9 @@ import project.healthcommunity.trainer.repository.TrainerRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -36,9 +41,9 @@ public class TrainerService {
 
 
     @Transactional
-    public void update(Long id, String trainerName, int age, int career){
+    public void update(Long id, String trainerName, List<Certificate> certificates){
         Trainer findTrainer = findOne(id);
-        findTrainer.update(trainerName, age, career);
+        findTrainer.update(trainerName, certificates);
     }
 
 

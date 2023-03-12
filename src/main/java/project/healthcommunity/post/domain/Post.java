@@ -83,11 +83,9 @@ public class Post extends BaseEntity {
 
 
     //비지니스 로직 //
-    public void update(String title, String content, List<Category> categories) {
+    public void update(String title, String content) {
         this.title = title;
         this.content = content;
-        this.categoryList.clear();
-        this.categoryList = categories.stream().map(c -> new CategoryPost(c, this)).toList();
     }
 
 

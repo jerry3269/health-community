@@ -58,10 +58,9 @@ public class Trainer extends BaseEntity {
 
 
     // == 비지니스 로직 == //
-    public void update(String trainerName, int age, int career) {
+    public void update(String trainerName, List<Certificate> certificates) {
         this.trainerName = trainerName;
-        this.age = age;
-        this.career = career;
+        certificates.forEach(this::addCertificate);
     }
 
     public void addCertificate(Certificate certificate) {

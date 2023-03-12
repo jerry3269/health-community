@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import project.healthcommunity.certificate.domain.Certificate;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.trainer.service.TrainerService;
 
@@ -49,7 +50,8 @@ class TrainerServiceTest {
         Trainer trainer1 = new Trainer("t1",10,1);
         trainerService.join(trainer1);
 
-        trainerService.update(trainer1.getId(), "t1", 20, 2);
+
+        trainerService.update(trainer1.getId(), "t1", null);
         em.flush();
         em.clear();
 

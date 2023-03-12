@@ -53,7 +53,7 @@ class MemberServiceTest {
         memberService.join(member1);
 
 
-        memberService.update(member1.getId(), "m1", 20);
+        memberService.update(member1.getId(), "m1");
 
         em.flush();
         em.clear();

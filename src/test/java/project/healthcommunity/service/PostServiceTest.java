@@ -84,7 +84,7 @@ class PostServiceTest {
 
         String s2 = "팔굽혀펴기 10개하기 본문입니다.";
         List<Category> category2 = categoryService.categoryListByName("팔굽");
-        postService.update(post1.getId(), "팔굽 10개 하기", s2, category2);
+        postService.update(post1.getId(), "팔굽 10개 하기", s2);
     }
 
     @Test

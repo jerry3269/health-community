@@ -23,20 +23,20 @@ public class PostService {
 
 
     @Transactional
-    public void post(Post post){
+    public Long post(Post post){
         List<CategoryPost> categoryPostList = post.getCategoryList();
         for (CategoryPost categoryPost : categoryPostList) {
             categoryPostRepository.save(categoryPost);
         }
         postRepository.save(post);
+        return post.getId();
     }
 
 
     @Transactional
-    public void update(Long id, String title, String content, List<Category> categories){
+    public void update(Long id, String title, String content){
         Post post = findOne(id);
-        deleteCategoryPostById(id);
-        post.update(title, content, categories);
+        post.update(title, content);
     }
 
 
@@ -61,5 +61,13 @@ public class PostService {
 
     public List<Post> findByTitle(String title){
         return postRepository.findByTitle(title);
+    }
+
+    public List<Post> findByMember(Long memberId){
+        return postRepository.findByMember_Id(memberId);
+    }
+
+    public List<Post> findByTrainer(Long trainerId) {
+        return postRepository.findByTrainer_Id(trainerId);
     }
 }

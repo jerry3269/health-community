@@ -36,8 +36,7 @@ public class Member extends BaseEntity {
     }
 
     // == 비지니스 로직 == //
-    public void update(String username, int age){
+    public void update(String username){
         this.username = username;
-        this.age = age;
     }
 }

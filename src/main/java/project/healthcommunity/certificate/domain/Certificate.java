@@ -33,7 +33,7 @@ public class Certificate extends BaseEntity {
     // 생성자 //
     public Certificate(Trainer trainer, String certificateName, LocalDate acquisitionDate) {
         validDupCertificate(trainer.getCertificates(), certificateName);
-        addTrainer(trainer);
+        this.trainer = trainer;
         this.certificateName = certificateName;
         this.acquisitionDate = acquisitionDate;
     }
