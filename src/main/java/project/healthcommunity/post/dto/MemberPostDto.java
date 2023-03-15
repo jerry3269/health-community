@@ -21,7 +21,7 @@ public class MemberPostDto {
 
     private String content;
 
-    private int sympathy;
+    private int likes;
 
     private List<CategoryDto> categoryDtoList;
     private List<MemberCommentDto> memberCommentDtoList;
@@ -31,7 +31,7 @@ public class MemberPostDto {
         this.username = post.getMember().getUsername();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.sympathy = post.getSympathy();
+        this.likes = post.getLikes();
         this.categoryDtoList = post.getCategoryList().stream().map(CategoryDto::new).collect(toList());
         this.memberCommentDtoList = post.getComments().stream().map(MemberCommentDto::new).collect(toList());
     }

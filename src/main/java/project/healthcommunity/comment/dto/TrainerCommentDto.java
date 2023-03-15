@@ -16,7 +16,7 @@ public class TrainerCommentDto {
 
     private String trainerName;
     private String content;
-    private int sympathy;
+    private int likes;
 
     private List<ChildCommentDto> childCommentDtoList;
 
@@ -26,7 +26,7 @@ public class TrainerCommentDto {
         this.postTitle = comment.getPost().getTitle();
         this.trainerName = comment.getTrainer().getTrainerName();
         this.content = comment.getContent();
-        this.sympathy = comment.getSympathy();
+        this.likes = comment.getLikes();
         childCommentDtoList = comment.getChild().stream().map(ChildCommentDto::new).collect(toList());
     }
 }

@@ -34,7 +34,7 @@ public class Trainer extends BaseEntity {
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
     private List<Certificate> certificates = new ArrayList<>();
 
-    private int ranking;
+    private int likes = 0;
 
     @OneToMany(mappedBy = "trainer")
     private List<Post> postList = new ArrayList<>();
@@ -65,6 +65,10 @@ public class Trainer extends BaseEntity {
 
     public void addCertificate(Certificate certificate) {
         certificate.addTrainer(this);
+    }
+
+    public void upLikes() {
+        this.likes++;
     }
 
 }

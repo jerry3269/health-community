@@ -44,9 +44,9 @@ public class QTrainer extends EntityPathBase<Trainer> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> lastModifiedDate = _super.lastModifiedDate;
 
-    public final ListPath<project.healthcommunity.post.domain.Post, project.healthcommunity.post.domain.QPost> postList = this.<project.healthcommunity.post.domain.Post, project.healthcommunity.post.domain.QPost>createList("postList", project.healthcommunity.post.domain.Post.class, project.healthcommunity.post.domain.QPost.class, PathInits.DIRECT2);
+    public final NumberPath<Integer> likes = createNumber("likes", Integer.class);
 
-    public final NumberPath<Integer> ranking = createNumber("ranking", Integer.class);
+    public final ListPath<project.healthcommunity.post.domain.Post, project.healthcommunity.post.domain.QPost> postList = this.<project.healthcommunity.post.domain.Post, project.healthcommunity.post.domain.QPost>createList("postList", project.healthcommunity.post.domain.Post.class, project.healthcommunity.post.domain.QPost.class, PathInits.DIRECT2);
 
     public final StringPath trainerName = createString("trainerName");
 

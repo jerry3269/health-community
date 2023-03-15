@@ -6,6 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import project.healthcommunity.comment.domain.Comment;
 import project.healthcommunity.member.domain.Member;
 import project.healthcommunity.member.repository.MemberRepository;
+import project.healthcommunity.trainer.domain.Trainer;
+import project.healthcommunity.trainer.repository.TrainerRepository;
+import project.healthcommunity.trainer.service.TrainerService;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +19,7 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final TrainerService trainerService;
 
 
 
@@ -63,8 +67,11 @@ public class MemberService {
         return member.getCommentList();
     }
 
-
-
-
+    @Transactional
+    public void upTrainerLikes(Long memberId, Long trainerId) {
+        Trainer trainer = trainerService.findOne(trainerId);
+        Member member = findOne(memberId);
+        trainer.upLikes();
+    }
 
 }

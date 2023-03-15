@@ -55,9 +55,6 @@ public class TrainerService {
         return findTrainer.get();
     }
 
-    /**
-     * 전체 조회
-     */
     public List<Trainer> trainers(){
         return trainerRepository.findAll();
     }
@@ -68,6 +65,7 @@ public class TrainerService {
         trainerRepository.deleteById(id);
     }
 
+    @Transactional
     public void clear(){
         trainerRepository.deleteAll();
     }
@@ -80,4 +78,5 @@ public class TrainerService {
         Trainer trainer = findOne(id);
         return trainer.getCommentList();
     }
+
 }

@@ -42,7 +42,7 @@ public class InitDb {
         private final MemberService memberService;
         private final PostService postService;
         private final CommentService commentService;
-        private CertificateService certificateService;
+        private final CertificateService certificateService;
 
 
         public void dbInit1(){
@@ -69,11 +69,14 @@ public class InitDb {
                 Trainer trainerByName = trainerService.findByTrainerName("t" + i).get(0);
                 if(i%2 == 0){
                     Certificate certificate1 = new Certificate(trainerByName, "팔굽1급", LocalDate.of(2019,12,19));
+                    certificateService.register(certificate1);
 
                 } else {
-                    Certificate certificate2 = new Certificate(trainerByName, "윗몸1급", LocalDate.of(2013,1,1));
+                    Certificate certificate2 = new Certificate(trainerByName, "윗몸1급", LocalDate.of(2013, 1, 1));
+                    certificateService.register(certificate2);
                 }
-                Certificate certificate3 = new Certificate(trainerByName, "체력1급", LocalDate.of(2023,10,10));
+                Certificate certificate3 = new Certificate(trainerByName, "체력1급", LocalDate.of(2023, 10, 10));
+                certificateService.register(certificate3);
             }
 
 

@@ -5,7 +5,6 @@ import lombok.Data;
 import project.healthcommunity.comment.domain.Comment;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
@@ -17,7 +16,7 @@ public class MemberCommentDto {
 
     private String username;
     private String content;
-    private int sympathy;
+    private int likes;
 
     private List<ChildCommentDto> childCommentDtoList;
 
@@ -27,7 +26,7 @@ public class MemberCommentDto {
         this.postTitle = comment.getPost().getTitle();
         this.username = comment.getMember().getUsername();
         this.content = comment.getContent();
-        this.sympathy = comment.getSympathy();
+        this.likes = comment.getLikes();
         childCommentDtoList = comment.getChild().stream().map(ChildCommentDto::new).collect(toList());
     }
 }

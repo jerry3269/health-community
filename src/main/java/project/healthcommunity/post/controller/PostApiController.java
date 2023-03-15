@@ -26,7 +26,7 @@ public class PostApiController {
     private final CategoryService categoryService;
 
     @GetMapping("/api/post/member/{id}")
-    public MemberPostDto findMemberPostById(
+    public MemberPostDto findMemberPostByPostId(
             @PathVariable("id") Long id) {
 
         Post findPost = postService.findOne(id);
@@ -45,7 +45,7 @@ public class PostApiController {
     }
 
     @GetMapping("/api/post/trainer/{id}")
-    public TrainerPostDto findTrainerPostById(
+    public TrainerPostDto findTrainerPostByPostId(
             @PathVariable("id") Long id) {
 
         Post findPost = postService.findOne(id);

@@ -8,5 +8,5 @@ public class CreateTrainerCommentRequest {
     private String postTitle;
     private String TrainerName;
     private String content;
-    private int sympathy;
+    private int likes;
 }

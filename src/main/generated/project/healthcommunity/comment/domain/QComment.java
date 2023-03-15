@@ -42,6 +42,8 @@ public class QComment extends EntityPathBase<Comment> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> lastModifiedDate = _super.lastModifiedDate;
 
+    public final NumberPath<Integer> likes = createNumber("likes", Integer.class);
+
     public final project.healthcommunity.member.domain.QMember member;
 
     public final QComment parent;
@@ -49,8 +51,6 @@ public class QComment extends EntityPathBase<Comment> {
     public final project.healthcommunity.post.domain.QPost post;
 
     public final EnumPath<CommentStatus> status = createEnum("status", CommentStatus.class);
-
-    public final NumberPath<Integer> sympathy = createNumber("sympathy", Integer.class);
 
     public final project.healthcommunity.trainer.domain.QTrainer trainer;
 

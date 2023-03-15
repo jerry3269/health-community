@@ -1,5 +1,6 @@
 package project.healthcommunity.trainer.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import project.healthcommunity.certificate.dto.CertificateDto;
@@ -20,6 +21,7 @@ public class TrainerDto {
     private int career;
     private List<CertificateDto> certificateDtoList;
 
+    @QueryProjection
     public TrainerDto(Trainer trainer) {
         this.trainerName = trainer.getTrainerName();
         this.age = trainer.getAge();

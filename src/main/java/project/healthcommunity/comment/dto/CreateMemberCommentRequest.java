@@ -8,5 +8,5 @@ public class CreateMemberCommentRequest {
     private String postTitle;
     private String username;
     private String content;
-    private int sympathy;
+    private int likes;
 }

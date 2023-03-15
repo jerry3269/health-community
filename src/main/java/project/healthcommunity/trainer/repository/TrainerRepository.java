@@ -6,7 +6,7 @@ import project.healthcommunity.trainer.domain.Trainer;
 
 import java.util.List;
 
-public interface TrainerRepository extends JpaRepository<Trainer, Long> {
+public interface TrainerRepository extends JpaRepository<Trainer, Long>, TrainerRepositoryCustom {
 
     List<Trainer> findByTrainerName(String trainerName);
 }

@@ -18,7 +18,7 @@ public class ChildCommentDto {
         this.postId = comment.getPost().getId();
         this.postTitle = comment.getPost().getTitle();
         this.content = comment.getContent();
-        this.sympathy = comment.getSympathy();
+        this.sympathy = comment.getLikes();
         this.parentId = comment.getParent().getId();
     }
 }

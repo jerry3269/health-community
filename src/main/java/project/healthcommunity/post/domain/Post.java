@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"id", "title", "content", "sympathy","categoryList"})
+@ToString(of = {"id", "title", "content", "likes" ,"categoryList"})
 public class Post extends BaseEntity {
 
     @Id
@@ -33,7 +33,7 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    private int sympathy = 0;
+    private int likes = 0;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<CategoryPost> categoryList = new ArrayList<>();

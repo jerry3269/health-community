@@ -11,11 +11,13 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-// @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class CertificateDto {
 
     private String certificateName;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+
+
+    // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate acquisitionDate;
 
     public CertificateDto(Certificate certificate) {
