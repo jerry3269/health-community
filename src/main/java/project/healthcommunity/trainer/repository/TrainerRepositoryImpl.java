@@ -2,7 +2,6 @@ package project.healthcommunity.trainer.repository;
 
 
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -10,15 +9,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.util.StringUtils;
 import project.healthcommunity.certificate.domain.QCertificate;
-import project.healthcommunity.trainer.domain.QTrainer;
+import project.healthcommunity.certificate.dto.CertificateDto;
+import project.healthcommunity.certificate.dto.QCertificateDto;
+import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.trainer.dto.QTrainerDto;
 import project.healthcommunity.trainer.dto.TrainerResult;
 import project.healthcommunity.trainer.dto.TrainerSearchCond;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import static java.util.stream.Collectors.*;
 import static org.springframework.util.StringUtils.*;
@@ -33,8 +33,21 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom {
 
     @Override
     public List<TrainerResult> search(TrainerSearchCond condition) {
-        List<Tuple> fetch = queryFactory
-                .select(new QTrainerDto(trainer),
+        List<TrainerResult> trainerResults = getTrainerResults(condition);
+
+        List<Long> trainerIds = toTrainerIds(trainerResults);
+
+        Map<Long, List<CertificateDto>> certificateDtoMap = findCertificateDtoMap(trainerIds);
+
+        trainerResults.forEach(t -> t.getTrainerDto().setCertificateDtoList(certificateDtoMap.get(t.getTrainerDto().getId())));
+
+        return trainerResults;
+    }
+
+    private List<TrainerResult> getTrainerResults(TrainerSearchCond condition) {
+        List<Tuple> fetch
+                = queryFactory
+                .select(new QTrainerDto(trainer.id, trainer.trainerName, trainer.age, trainer.career),
                         trainer.likes,
                         trainer.certificates.size(),
                         trainer.postList.size(),
@@ -52,7 +65,7 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom {
 
         List<TrainerResult> collect = fetch.stream()
                 .map(f -> new TrainerResult(
-                        f.get(new QTrainerDto(trainer)),
+                        f.get(new QTrainerDto(trainer.id, trainer.trainerName, trainer.age, trainer.career)),
                         f.get(trainer.likes),
                         f.get(trainer.certificates.size()),
                         f.get(trainer.postList.size()),
@@ -62,11 +75,46 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom {
         return collect;
     }
 
+
+    private List<Long> toTrainerIds(List<TrainerResult> trainerResults) {
+        return trainerResults.stream().map(t->
+                t.getTrainerDto().getId()).collect(toList());
+    }
+
+    @Override
+    public Page<TrainerResult> searchPage_optimization(TrainerSearchCond condition, Pageable pageable) {
+        Page<TrainerResult> trainerResults = searchPage(condition, pageable);
+        List<Long> trainerIds = toTrainerIds(trainerResults);
+
+        Map<Long, List<CertificateDto>> certificateDtoMap = findCertificateDtoMap(trainerIds);
+
+
+        trainerResults.forEach(t -> t.getTrainerDto().setCertificateDtoList(certificateDtoMap.get(t.getTrainerDto().getId())));
+        return trainerResults;
+    }
+
+    private List<Long> toTrainerIds(Page<TrainerResult> trainerResults) {
+        return trainerResults.stream().map(t ->
+                t.getTrainerDto().getId()).collect(toList());
+    }
+
+    private Map<Long, List<CertificateDto>> findCertificateDtoMap(List<Long> trainerIds) {
+        List<CertificateDto> fetch = queryFactory
+                .select(new QCertificateDto(certificate))
+                .from(certificate)
+                .leftJoin(certificate.trainer, trainer)
+                .fetch();
+
+        Map<Long, List<CertificateDto>> certificateDtoMap =
+                fetch.stream().collect(groupingBy(CertificateDto::getTrainerId));
+        return certificateDtoMap;
+    }
+
     @Override
     public Page<TrainerResult> searchPage(TrainerSearchCond condition, Pageable pageable) {
 
         List<Tuple> fetch = queryFactory
-                .select(new QTrainerDto(trainer),
+                .select(new QTrainerDto(trainer.id, trainer.trainerName, trainer.age, trainer.career),
                         trainer.likes,
                         trainer.certificates.size(),
                         trainer.postList.size(),
@@ -86,7 +134,7 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom {
 
         List<TrainerResult> collect = fetch.stream()
                 .map(f -> new TrainerResult(
-                        f.get(new QTrainerDto(trainer)),
+                        f.get(new QTrainerDto(trainer.id, trainer.trainerName, trainer.age, trainer.career)),
                         f.get(trainer.likes),
                         f.get(trainer.certificates.size()),
                         f.get(trainer.postList.size()),

@@ -12,4 +12,6 @@ public interface TrainerRepositoryCustom {
     List<TrainerResult> search(TrainerSearchCond condition);
 
     Page<TrainerResult> searchPage(TrainerSearchCond condition, Pageable pageable);
+
+    Page<TrainerResult> searchPage_optimization(TrainerSearchCond condition, Pageable pageable);
 }

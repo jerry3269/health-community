@@ -79,17 +79,15 @@ public class TrainerApiController {
     }
 
     /**
-     *
-     * @param condition
-     * {
-     *     "trinaerName": "",
-     *     "ageGoe": ,
-     *     "careerGoe": ,
-     *     "certificateCountGoe": ,
-     *     "likesGoe": ,
-     *     "postCountGoe": ,
-     *     "commentCountGoe":
-     * }
+     * @param condition {
+     *                  "trinaerName": "",
+     *                  "ageGoe": ,
+     *                  "careerGoe": ,
+     *                  "certificateCountGoe": ,
+     *                  "likesGoe": ,
+     *                  "postCountGoe": ,
+     *                  "commentCountGoe":
+     *                  }
      * @return
      */
     @GetMapping("/api/trainer/search")
@@ -98,17 +96,15 @@ public class TrainerApiController {
     }
 
     /**
-     *
-     * @param condition
-     * {
-     *     "trinaerName": "",
-     *     "ageGoe": ,
-     *     "careerGoe": ,
-     *     "certificateCountGoe": ,
-     *     "likesGoe": ,
-     *     "postCountGoe": ,
-     *     "commentCountGoe":
-     * }
+     * @param condition {
+     *                  "trinaerName": "",
+     *                  "ageGoe": ,
+     *                  "careerGoe": ,
+     *                  "certificateCountGoe": ,
+     *                  "likesGoe": ,
+     *                  "postCountGoe": ,
+     *                  "commentCountGoe":
+     *                  }
      * @param pageable
      * @return
      */
@@ -119,4 +115,10 @@ public class TrainerApiController {
         return trainerRepository.searchPage(condition, pageable);
     }
 
+    @GetMapping("/api/trainer/search/page/optimize")
+    public Page<TrainerResult> searchTrainerV3_page_optimization(
+            @RequestBody TrainerSearchCond condition,
+            @PageableDefault(page = 0, size = 10, sort = "likes", direction = Sort.Direction.DESC) Pageable pageable) {
+        return trainerRepository.searchPage_optimization(condition, pageable);
+    }
 }
