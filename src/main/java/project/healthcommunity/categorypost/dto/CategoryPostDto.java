@@ -1,5 +1,6 @@
 package project.healthcommunity.categorypost.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import project.healthcommunity.categorypost.domain.CategoryPost;
@@ -13,6 +14,7 @@ public class CategoryPostDto {
     private Long postId;
     private String postTitle;
 
+    @QueryProjection
     public CategoryPostDto(CategoryPost categoryPost) {
         this.categoryId = categoryPost.getCategory().getId();
         this.categoryName = categoryPost.getCategory().getCategoryName();

@@ -1,6 +1,10 @@
 package project.healthcommunity.post.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import project.healthcommunity.category.domain.Category;
 import project.healthcommunity.category.service.CategoryService;
@@ -8,8 +12,11 @@ import project.healthcommunity.member.domain.Member;
 import project.healthcommunity.member.service.MemberService;
 import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.post.dto.*;
+import project.healthcommunity.post.repository.PostRepository;
+import project.healthcommunity.post.repository.PostRepositoryCustom;
 import project.healthcommunity.post.service.PostService;
 import project.healthcommunity.trainer.domain.Trainer;
+import project.healthcommunity.trainer.repository.TrainerRepositoryCustom;
 import project.healthcommunity.trainer.service.TrainerService;
 
 import java.util.List;
@@ -24,6 +31,8 @@ public class PostApiController {
     private final MemberService memberService;
     private final TrainerService trainerService;
     private final CategoryService categoryService;
+    private final TrainerRepositoryCustom trainerRepository;
+    private final PostRepository postRepository;
 
     @GetMapping("/api/post/member/{id}")
     public MemberPostDto findMemberPostByPostId(
@@ -58,5 +67,15 @@ public class PostApiController {
         return postList.stream().map(PostDto::new).collect(toList());
     }
 
+    @GetMapping("/api/post/search")
+    public List<PostResult> searchPostV1(@RequestBody PostSearchCond condition) {
+        return postRepository.search(condition);
+    }
 
+    @GetMapping("/api/post/search/page")
+    public Page<PostResult> searchPostV2_page_optimize(
+            @RequestBody PostSearchCond condition,
+            @PageableDefault(page = 0, size = 10, sort = "likes", direction = Sort.Direction.DESC) Pageable pageable) {
+        return postRepository.search_page_optimization(condition, pageable);
+    }
 }
