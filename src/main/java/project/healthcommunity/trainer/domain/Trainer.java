@@ -1,10 +1,7 @@
 package project.healthcommunity.trainer.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import project.healthcommunity.certificate.domain.Certificate;
 import project.healthcommunity.comment.domain.Comment;
 import project.healthcommunity.global.domain.BaseEntity;
@@ -43,13 +40,14 @@ public class Trainer extends BaseEntity {
     private List<Comment> commentList = new ArrayList<>();
 
     // == 생성자 == //
+    @Builder
     public Trainer(String trainerName, int age, int career, Certificate... certificates) {
         this.trainerName = trainerName;
         this.age = age;
         this.career = career;
         this.certificates = stream(certificates).toList();
     }
-
+    @Builder
     public Trainer(String trainerName, int age, int career) {
         this.trainerName = trainerName;
         this.age = age;

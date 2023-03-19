@@ -1,6 +1,7 @@
 package project.healthcommunity.post.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import project.healthcommunity.category.dto.CategoryDto;
 import project.healthcommunity.comment.dto.MemberCommentDto;
@@ -25,7 +26,7 @@ public class TrainerPostDto {
 
     private List<CategoryDto> categoryDtoList;
     private List<MemberCommentDto> memberCommentDtoList;
-
+    @Builder
     public TrainerPostDto(Post post) {
         this.trainerId = post.getTrainer().getId();
         this.trainerName = post.getTrainer().getTrainerName();

@@ -1,10 +1,7 @@
 package project.healthcommunity.category.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import project.healthcommunity.categorypost.domain.CategoryPost;
 import project.healthcommunity.global.domain.BaseEntity;
 
@@ -38,11 +35,12 @@ public class Category extends BaseEntity {
 
 
     //생성자
+    @Builder
     public Category(String categoryName, Category parent) {
         this.categoryName = categoryName;
         addParentCategory(parent);
     }
-
+    @Builder
     public Category(String categoryName) {
         this.categoryName = categoryName;
     }

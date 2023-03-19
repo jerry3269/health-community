@@ -1,10 +1,7 @@
 package project.healthcommunity.certificate.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.global.domain.BaseEntity;
 
@@ -31,6 +28,7 @@ public class Certificate extends BaseEntity {
     private LocalDate acquisitionDate;
 
     // 생성자 //
+    @Builder
     public Certificate(Trainer trainer, String certificateName, LocalDate acquisitionDate) {
         validDupCertificate(trainer.getCertificates(), certificateName);
         this.trainer = trainer;

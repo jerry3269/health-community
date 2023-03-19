@@ -1,10 +1,7 @@
 package project.healthcommunity.post.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import project.healthcommunity.category.dto.CategoryDto;
 import project.healthcommunity.categorypost.dto.CategoryPostDto;
 import project.healthcommunity.post.domain.Post;
@@ -20,7 +17,7 @@ public class PostResult {
     private int likes;
     private int commentCount;
     private List<CategoryPostDto> categoryPostDtoList;
-
+    @Builder
     @QueryProjection
     public PostResult(Post post) {
         this.id = post.getId();

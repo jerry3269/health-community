@@ -1,6 +1,7 @@
 package project.healthcommunity.comment.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import project.healthcommunity.comment.domain.Comment;
 
@@ -20,7 +21,7 @@ public class MemberCommentDto {
 
     private List<ChildCommentDto> childCommentDtoList;
 
-
+    @Builder
     public MemberCommentDto(Comment comment) {
         this.postId = comment.getPost().getId();
         this.postTitle = comment.getPost().getTitle();

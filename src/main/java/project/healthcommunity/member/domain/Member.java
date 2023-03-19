@@ -30,6 +30,7 @@ public class Member extends BaseEntity {
 
 
     // == 생성자 == //
+    @Builder
     public Member(String username, int age) {
         this.username = username;
         this.age = age;

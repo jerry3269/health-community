@@ -1,10 +1,7 @@
 package project.healthcommunity.comment.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.global.domain.BaseEntity;
@@ -51,6 +48,7 @@ public class Comment extends BaseEntity {
     private Trainer trainer;
 
     // 생성자
+    @Builder
     public Comment(Post post, String content, Member member, Comment parent) {
         addPost(post);
         this.content = content;
@@ -58,14 +56,14 @@ public class Comment extends BaseEntity {
         addParentComment(parent);
         this.status = CommentStatus.COMMENT;
     }
-
+    @Builder
     public Comment(Post post, String content, Member member) {
         addPost(post);
         this.content = content;
         addMember(member);
         this.status = CommentStatus.COMMENT;
     }
-
+    @Builder
     public Comment(Post post, String content, Trainer trainer, Comment parent) {
         addPost(post);
         this.content = content;
@@ -73,7 +71,7 @@ public class Comment extends BaseEntity {
         addParentComment(parent);
         this.status = CommentStatus.COMMENT;
     }
-
+    @Builder
     public Comment(Post post, String content, Trainer trainer) {
         addPost(post);
         this.content = content;

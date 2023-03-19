@@ -1,10 +1,7 @@
 package project.healthcommunity.categorypost.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import project.healthcommunity.category.domain.Category;
 import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.global.domain.BaseEntity;
@@ -29,6 +26,7 @@ public class CategoryPost extends BaseEntity {
     private Post post;
 
     // 생성자
+    @Builder
     public CategoryPost(Category category, Post post) {
         addCategory(category);
         addPost(post);
