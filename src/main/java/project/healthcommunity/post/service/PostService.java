@@ -63,9 +63,6 @@ public class PostService {
         return postRepository.findByTitle(title);
     }
 
-    public List<Post> findByMember(Long memberId){
-        return postRepository.findByMember_Id(memberId);
-    }
 
     public List<Post> findByTrainer(Long trainerId) {
         return postRepository.findByTrainer_Id(trainerId);

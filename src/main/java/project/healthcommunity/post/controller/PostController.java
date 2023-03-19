@@ -29,58 +29,9 @@ public class PostController {
     private final TrainerService trainerService;
     private final CategoryService categoryService;
 
-    /**
-     * @param request
-     * {
-     *     "memberId": 1,
-     *     "username": "m1",
-     *     "title": "안녕하세요",
-     *     "content": "양지웅입니다",
-     *     "categoryNameList": [
-     *         "팔굽","윗몸"
-     *     ]
-     * }
-     * @param redirectAttributes
-     * @return
-     */
-    @PostMapping("/post/member")
-    public String saveMemberPost(
-            @RequestBody CreateMemberPostRequest request,
-            RedirectAttributes redirectAttributes) {
 
-        Member member = memberService.findOne(request.getMemberId());
 
-        List<Category> categoryList = request.getCategoryNameList().stream()
-                .map(name -> categoryService.categoryListByName(name).get(0))
-                .collect(toList());
 
-        Post post = new Post(request.getTitle(), request.getContent(), categoryList, member);
-        Long postId = postService.post(post);
-
-        redirectAttributes.addAttribute("id", postId);
-
-        return "redirect:/api/post/member/{id}";
-    }
-
-    /**
-     *
-     * @param id
-     * @param request
-     * {
-     *     "title": "수정",
-     *     "content": "수정된 글입니다."
-     * }
-     *
-     * @return
-     */
-    @PutMapping("/post/member/{id}")
-    public String updateMemberPost(
-            @PathVariable("id") Long id,
-            @RequestBody UpdatePostRequest request) {
-
-        postService.update(id, request.getTitle(), request.getContent());
-        return "redirect:/api/post/member/{id}";
-    }
 
     /**
      *

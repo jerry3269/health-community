@@ -46,6 +46,16 @@ public class TrainerService {
         findTrainer.update(trainerName, certificates);
     }
 
+    @Transactional
+    public void deleteTrainer(Long id) {
+        trainerRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void clear(){
+        trainerRepository.deleteAll();
+    }
+
 
     public Trainer findOne(Long id){
         Optional<Trainer> findTrainer = trainerRepository.findById(id);
@@ -60,15 +70,7 @@ public class TrainerService {
     }
 
 
-    @Transactional
-    public void deleteTrainer(Long id) {
-        trainerRepository.deleteById(id);
-    }
 
-    @Transactional
-    public void clear(){
-        trainerRepository.deleteAll();
-    }
 
     public List<Trainer> findByTrainerName(String trainerName) {
         return trainerRepository.findByTrainerName(trainerName);

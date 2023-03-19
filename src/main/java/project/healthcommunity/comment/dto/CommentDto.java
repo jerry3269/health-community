@@ -11,7 +11,7 @@ public class CommentDto {
     private String postTitle;
     private String content;
     private int likes;
-    @Builder
+
     @QueryProjection
     public CommentDto(Comment comment) {
         this.postId = comment.getPost().getId();

@@ -17,7 +17,7 @@ public class PostResult {
     private int likes;
     private int commentCount;
     private List<CategoryPostDto> categoryPostDtoList;
-    @Builder
+
     @QueryProjection
     public PostResult(Post post) {
         this.id = post.getId();

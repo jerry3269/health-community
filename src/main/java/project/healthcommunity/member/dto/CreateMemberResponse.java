@@ -13,7 +13,7 @@ public class CreateMemberResponse {
 
     private Long id;
     private String username;
-    @Builder
+
     @QueryProjection
     public CreateMemberResponse(Member member) {
         this.id = member.getId();

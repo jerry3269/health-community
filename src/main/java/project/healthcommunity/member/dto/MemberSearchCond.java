@@ -6,6 +6,5 @@ import lombok.Data;
 public class MemberSearchCond {
     private String username;
     private Integer ageGoe;
-    private Integer postCountGoe;
     private Integer commentCountGoe;
 }

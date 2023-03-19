@@ -47,7 +47,8 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom {
     private List<TrainerResult> getTrainerResults(TrainerSearchCond condition) {
         List<Tuple> fetch
                 = queryFactory
-                .select(new QTrainerDto(trainer.id, trainer.trainerName, trainer.age, trainer.career),
+                .select(
+                        new QTrainerDto(trainer.id, trainer.trainerName, trainer.age, trainer.career),
                         trainer.likes,
                         trainer.certificates.size(),
                         trainer.postList.size(),

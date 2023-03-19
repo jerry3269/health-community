@@ -33,26 +33,31 @@ public class Trainer extends BaseEntity {
 
     private int likes = 0;
 
+
     @OneToMany(mappedBy = "trainer")
     private List<Post> postList = new ArrayList<>();
+
 
     @OneToMany(mappedBy = "trainer")
     private List<Comment> commentList = new ArrayList<>();
 
     // == 생성자 == //
-    @Builder
+
+    @Builder(builderMethodName = "noCertificateBuilder", builderClassName = "noCertificateBuilder")
+    public Trainer(String trainerName, int age, int career) {
+        this.trainerName = trainerName;
+        this.age = age;
+        this.career = career;
+    }
+
+    @Builder(builderMethodName = "certificateBuilder", builderClassName = "certificateBuilder")
     public Trainer(String trainerName, int age, int career, Certificate... certificates) {
         this.trainerName = trainerName;
         this.age = age;
         this.career = career;
         this.certificates = stream(certificates).toList();
     }
-    @Builder
-    public Trainer(String trainerName, int age, int career) {
-        this.trainerName = trainerName;
-        this.age = age;
-        this.career = career;
-    }
+
 
 
     // == 비지니스 로직 == //

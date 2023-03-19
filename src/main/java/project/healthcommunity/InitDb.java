@@ -46,10 +46,25 @@ public class InitDb {
 
 
         public void dbInit1(){
-            Category category1 = new Category("맨몸");
-            Category category2 = new Category("윗몸", category1);
-            Category category3 = new Category("팔굽", category1);
-            Category category4 = new Category("달리기", category1);
+            Category category1 = Category.noParentBuilder()
+                    .categoryName("운동")
+                    .build();
+
+            Category category2 = Category.parentBuilder()
+                    .categoryName("윗몸")
+                    .parent(category1)
+                    .build();
+
+            Category category3 = Category.parentBuilder()
+                    .categoryName("팔굽")
+                    .parent(category1)
+                    .build();
+
+            Category category4 = Category.parentBuilder()
+                    .categoryName("달리기")
+                    .parent(category1)
+                    .build();
+
             categoryService.register(category1);
             categoryService.register(category2);
             categoryService.register(category3);
@@ -61,21 +76,46 @@ public class InitDb {
 
 
             for(int i = 1; i<11; i++){
-                trainerService.join(new Trainer("t"+i,i,i));
-                memberService.join(new Member("m"+i, i));
+                trainerService.join(
+                        Trainer.noCertificateBuilder()
+                        .trainerName("t" + i)
+                        .age(i)
+                        .career(i)
+                        .build());
+                memberService.join(
+                        Member.builder()
+                                .username("m" + i)
+                                .age(i)
+                                .build());
             }
 
             for (int i = 1; i < 11; i++) {
                 Trainer trainerByName = trainerService.findByTrainerName("t" + i).get(0);
                 if(i%2 == 0){
-                    Certificate certificate1 = new Certificate(trainerByName, "팔굽1급", LocalDate.of(2019,12,19));
+                    Certificate certificate1 = Certificate.builder()
+                            .trainer(trainerByName)
+                            .certificateName("팔굽1급")
+                            .acquisitionDate(LocalDate.of(2019, 12, 19))
+                            .build();
+                    
                     certificateService.register(certificate1);
 
                 } else {
-                    Certificate certificate2 = new Certificate(trainerByName, "윗몸1급", LocalDate.of(2013, 1, 1));
+                    Certificate certificate2 = Certificate.builder()
+                            .trainer(trainerByName)
+                            .certificateName("윗몸1급")
+                            .acquisitionDate(LocalDate.of(2013, 5, 1))
+                            .build();
+
                     certificateService.register(certificate2);
                 }
-                Certificate certificate3 = new Certificate(trainerByName, "체력1급", LocalDate.of(2023, 10, 10));
+
+                Certificate certificate3 = Certificate.builder()
+                        .trainer(trainerByName)
+                        .certificateName("달리기1급")
+                        .acquisitionDate(LocalDate.of(2023, 3, 19))
+                        .build();
+
                 certificateService.register(certificate3);
             }
 
@@ -88,13 +128,28 @@ public class InitDb {
                 Trainer trainerByName = trainerService.findByTrainerName("t" + i).get(0);
                 Member memberByName = memberService.findByUsername("m" + i).get(0);
                 if (i % 2 == 0) {
-                    Post post1 = new Post("윗몸 10개 하기"+"("+i+")", s1+"("+ i+")", findCategory1, trainerByName);
+                    Post post1 = Post.builder()
+                            .title("윗몸 10개 하기" + "(" + i + ")")
+                            .content(s1+"("+ i+")")
+                            .categoryList(findCategory1)
+                            .trainer(trainerByName)
+                            .build();
                     postService.post(post1);
                 } else {
-                    Post post2 = new Post("팔굽 10개 하기"+"("+i+")", s2+"("+ i+")", findCategory2, memberByName);
+                    Post post2 = Post.builder()
+                            .title("팔굽 10개 하기" + "(" + i + ")")
+                            .content(s2+"("+ i+")")
+                            .categoryList(findCategory2)
+                            .trainer(trainerByName)
+                            .build();
                     postService.post(post2);
                 }
-                Post post3 = new Post("달리기 10km 하기"+"("+i+")", s3+"("+ i+")", findCategory3, trainerByName);
+                Post post3 = Post.builder()
+                        .title("달리기 10km 하기" + "(" + i + ")")
+                        .content(s3+"("+ i+")")
+                        .categoryList(findCategory3)
+                        .trainer(trainerByName)
+                        .build();
                 postService.post(post3);
             }
         }
@@ -105,15 +160,26 @@ public class InitDb {
                     Post post = postsByTitle.get(0);
 
                     String s1 = "좋은 글 감사합니다.";
-                    List<Member> m1List = memberService.findByUsername("m1");
+                    Member m = memberService.findByUsername("m1").get(0);
 
-                    Comment comment1 = new Comment(post, s1, m1List.get(0));
+                    Comment comment1 = Comment.memberNoParentBuilder()
+                            .post(post)
+                            .content(s1)
+                            .member(m)
+                            .build();
+
                     commentService.write(comment1);
 
                     String s2 = "댓글 감사합니다.";
-                    List<Trainer> t1List = trainerService.findByTrainerName("t1");
+                    Trainer t = trainerService.findByTrainerName("t1").get(0);
 
-                    Comment comment2 = new Comment(post, s2, t1List.get(0), comment1);
+                    Comment comment2 = Comment.trainerParentBuilder()
+                            .post(post)
+                            .content(s2)
+                            .trainer(t)
+                            .parent(comment1)
+                            .build();
+                    
                     commentService.write(comment2);
                 }
             }

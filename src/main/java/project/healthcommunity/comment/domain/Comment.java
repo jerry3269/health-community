@@ -48,7 +48,23 @@ public class Comment extends BaseEntity {
     private Trainer trainer;
 
     // 생성자
-    @Builder
+
+    @Builder(builderMethodName = "memberNoParentBuilder", builderClassName = "memberNoParentBuilder")
+    public Comment(Post post, String content, Member member) {
+        addPost(post);
+        this.content = content;
+        addMember(member);
+        this.status = CommentStatus.COMMENT;
+    }
+
+    @Builder(builderMethodName = "trainerNoParentBuilder", builderClassName = "trainerNoParentBuilder")
+    public Comment(Post post, String content, Trainer trainer) {
+        addPost(post);
+        this.content = content;
+        addTrainer(trainer);
+        this.status = CommentStatus.COMMENT;
+    }
+    @Builder(builderMethodName = "memberParentBuilder", builderClassName = "memberParentBuilder")
     public Comment(Post post, String content, Member member, Comment parent) {
         addPost(post);
         this.content = content;
@@ -56,14 +72,8 @@ public class Comment extends BaseEntity {
         addParentComment(parent);
         this.status = CommentStatus.COMMENT;
     }
-    @Builder
-    public Comment(Post post, String content, Member member) {
-        addPost(post);
-        this.content = content;
-        addMember(member);
-        this.status = CommentStatus.COMMENT;
-    }
-    @Builder
+
+    @Builder(builderMethodName = "trainerParentBuilder",builderClassName = "trainerParentBuilder")
     public Comment(Post post, String content, Trainer trainer, Comment parent) {
         addPost(post);
         this.content = content;
@@ -71,13 +81,7 @@ public class Comment extends BaseEntity {
         addParentComment(parent);
         this.status = CommentStatus.COMMENT;
     }
-    @Builder
-    public Comment(Post post, String content, Trainer trainer) {
-        addPost(post);
-        this.content = content;
-        addTrainer(trainer);
-        this.status = CommentStatus.COMMENT;
-    }
+
 
     // 연관관계 메서드 시작 //
     public void addPost(Post post) {

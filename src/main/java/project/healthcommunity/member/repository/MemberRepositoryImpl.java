@@ -24,16 +24,11 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
 
-
     @Override
     public List<MemberResult> search(MemberSearchCond condition) {
 
         List<Tuple> fetch = queryFactory
                 .select(new QMemberDto(member),
-                        member.postList.size(),
-//                        as(select(post.count())
-//                                .from(post)
-//                                .where(post.member.eq(member)), "postCount"),
                         member.commentList.size())
 //                        as(select(comment.count())
 //                                .from(comment)
@@ -42,17 +37,16 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .where(
                         usernameEq(condition.getUsername()),
                         ageGoe(condition.getAgeGoe()),
-                        postCountGoe(condition.getPostCountGoe()),
                         commentCountGoe(condition.getCommentCountGoe()))
                 .fetch();
 
         List<MemberResult> collect = fetch
                 .stream()
-                .map(f -> new MemberResult(
-                        f.get(new QMemberDto(member)),
-                        f.get(member.postList.size()),
-                        f.get(member.commentList.size())))
-                .collect(Collectors.toList());
+                .map(f -> MemberResult.builder()
+                        .data(f.get(new QMemberDto(member)))
+                        .commentCount(f.get(member.commentList.size()))
+                        .build())
+                        .collect(Collectors.toList());
 
         return collect;
     }
@@ -62,13 +56,11 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
         List<Tuple> fetch = queryFactory
                 .select(new QMemberDto(member),
-                        member.postList.size(),
                         member.commentList.size())
                 .from(member)
                 .where(
                         usernameEq(condition.getUsername()),
                         ageGoe(condition.getAgeGoe()),
-                        postCountGoe(condition.getPostCountGoe()),
                         commentCountGoe(condition.getCommentCountGoe()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -76,10 +68,10 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
         List<MemberResult> collect = fetch
                 .stream()
-                .map(f -> new MemberResult(
-                        f.get(new QMemberDto(member)),
-                        f.get(member.postList.size()),
-                        f.get(member.commentList.size())))
+                .map(f -> MemberResult.builder()
+                        .data(f.get(new QMemberDto(member)))
+                        .commentCount(f.get(member.commentList.size()))
+                        .build())
                 .collect(Collectors.toList());
 
 
@@ -89,7 +81,6 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .where(
                         usernameEq(condition.getUsername()),
                         ageGoe(condition.getAgeGoe()),
-                        postCountGoe(condition.getPostCountGoe()),
                         commentCountGoe(condition.getCommentCountGoe()));
 
         return PageableExecutionUtils.getPage(collect, pageable, countQuery::fetchOne);
@@ -103,9 +94,6 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         return ageGoe != null ? member.age.goe(ageGoe) : null;
     }
 
-    private BooleanExpression postCountGoe(Integer postCountGoe) {
-        return postCountGoe != null ? member.postList.size().goe(postCountGoe) : null;
-    }
 
     private BooleanExpression commentCountGoe(Integer commentCountGoe) {
         return commentCountGoe != null ? member.commentList.size().goe(commentCountGoe) : null;

@@ -26,7 +26,7 @@ public class TrainerPostDto {
 
     private List<CategoryDto> categoryDtoList;
     private List<MemberCommentDto> memberCommentDtoList;
-    @Builder
+
     public TrainerPostDto(Post post) {
         this.trainerId = post.getTrainer().getId();
         this.trainerName = post.getTrainer().getTrainerName();

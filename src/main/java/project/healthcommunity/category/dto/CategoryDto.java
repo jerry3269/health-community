@@ -15,12 +15,12 @@ public class CategoryDto {
     private String categoryName;
 
     private String postTitle;
-    @Builder
+
     public CategoryDto(Category category) {
         this.id = category.getId();
         this.categoryName = category.getCategoryName();
     }
-    @Builder
+
     public CategoryDto(CategoryPost categoryPost) {
         this.id = categoryPost.getCategory().getId();
         this.categoryName = categoryPost.getCategory().getCategoryName();

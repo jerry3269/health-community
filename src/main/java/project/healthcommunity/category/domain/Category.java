@@ -21,6 +21,7 @@ public class Category extends BaseEntity {
 
     private String categoryName;
 
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<CategoryPost> postList = new ArrayList<>();
 
@@ -34,16 +35,18 @@ public class Category extends BaseEntity {
 
 
 
-    //생성자
-    @Builder
+    //생성자9
+
+    @Builder(builderMethodName = "noParentBuilder", builderClassName = "noParentBuilder")
+    public Category(String categoryName) {
+        this.categoryName = categoryName;
+    }
+    @Builder(builderMethodName = "parentBuilder", builderClassName = "parentBuilder")
     public Category(String categoryName, Category parent) {
         this.categoryName = categoryName;
         addParentCategory(parent);
     }
-    @Builder
-    public Category(String categoryName) {
-        this.categoryName = categoryName;
-    }
+
 
 
     // 연관관계 메서드 시작 //

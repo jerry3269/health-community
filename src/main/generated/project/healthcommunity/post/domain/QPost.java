@@ -46,8 +46,6 @@ public class QPost extends EntityPathBase<Post> {
 
     public final NumberPath<Integer> likes = createNumber("likes", Integer.class);
 
-    public final project.healthcommunity.member.domain.QMember member;
-
     public final EnumPath<PostStatus> status = createEnum("status", PostStatus.class);
 
     public final StringPath title = createString("title");
@@ -72,7 +70,6 @@ public class QPost extends EntityPathBase<Post> {
 
     public QPost(Class<? extends Post> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.member = inits.isInitialized("member") ? new project.healthcommunity.member.domain.QMember(forProperty("member")) : null;
         this.trainer = inits.isInitialized("trainer") ? new project.healthcommunity.trainer.domain.QTrainer(forProperty("trainer")) : null;
     }
 

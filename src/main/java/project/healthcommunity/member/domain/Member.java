@@ -22,8 +22,6 @@ public class Member extends BaseEntity {
     private String username;
     private int age;
 
-    @OneToMany(mappedBy = "member")
-    private List<Post> postList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<Comment> commentList = new ArrayList<>();

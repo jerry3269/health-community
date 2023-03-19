@@ -14,7 +14,7 @@ public class ChildCommentDto {
     private int sympathy;
     private Long parentId;
 
-    @Builder
+
     public ChildCommentDto(Comment comment) {
         this.postId = comment.getPost().getId();
         this.postTitle = comment.getPost().getTitle();

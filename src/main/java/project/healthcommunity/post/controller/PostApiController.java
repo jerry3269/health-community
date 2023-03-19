@@ -34,19 +34,8 @@ public class PostApiController {
     private final TrainerRepositoryCustom trainerRepository;
     private final PostRepository postRepository;
 
-    @GetMapping("/api/post/member/{id}")
-    public MemberPostDto findMemberPostByPostId(
-            @PathVariable("id") Long id) {
 
-        Post findPost = postService.findOne(id);
-        return new MemberPostDto(findPost);
-    }
 
-    @GetMapping("/api/posts/member/{memberId}")
-    public List<PostDto> postsByMember(@PathVariable("memberId") Long memberId) {
-        List<Post> postList = postService.findByMember(memberId);
-        return postList.stream().map(PostDto::new).collect(toList());
-    }
 
     @GetMapping("/api/posts")
     public List<PostDto> posts() {

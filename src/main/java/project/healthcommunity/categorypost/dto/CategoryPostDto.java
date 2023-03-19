@@ -14,7 +14,7 @@ public class CategoryPostDto {
     private String categoryName;
     private Long postId;
     private String postTitle;
-    @Builder
+
     @QueryProjection
     public CategoryPostDto(CategoryPost categoryPost) {
         this.categoryId = categoryPost.getCategory().getId();

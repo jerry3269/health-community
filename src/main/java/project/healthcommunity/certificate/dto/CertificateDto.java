@@ -19,7 +19,7 @@ public class CertificateDto {
 
     // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate acquisitionDate;
-    @Builder
+
     @QueryProjection
     public CertificateDto(Certificate certificate) {
         this.trainerId = certificate.getTrainer().getId();

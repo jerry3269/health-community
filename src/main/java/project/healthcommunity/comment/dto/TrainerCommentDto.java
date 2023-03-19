@@ -21,7 +21,7 @@ public class TrainerCommentDto {
 
     private List<ChildCommentDto> childCommentDtoList;
 
-    @Builder
+
     public TrainerCommentDto(Comment comment) {
         this.postId = comment.getPost().getId();
         this.postTitle = comment.getPost().getTitle();

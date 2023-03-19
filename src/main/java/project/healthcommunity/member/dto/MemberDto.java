@@ -12,11 +12,12 @@ public class MemberDto {
     private Long id;
     private String username;
     private int age;
-    @Builder
+
     @QueryProjection
     public MemberDto(Member member) {
         this.id = member.getId();
         this.username = member.getUsername();
         this.age = member.getAge();
     }
+
 }
