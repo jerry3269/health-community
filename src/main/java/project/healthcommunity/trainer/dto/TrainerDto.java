@@ -20,8 +20,6 @@ public class TrainerDto {
     private String trainerName;
     private int age;
     private int career;
-
-
     private List<CertificateDto> certificateDtoList;
 
     public TrainerDto(Trainer trainer) {

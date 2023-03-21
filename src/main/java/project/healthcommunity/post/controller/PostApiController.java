@@ -16,7 +16,7 @@ import project.healthcommunity.post.repository.PostRepository;
 import project.healthcommunity.post.repository.PostRepositoryCustom;
 import project.healthcommunity.post.service.PostService;
 import project.healthcommunity.trainer.domain.Trainer;
-import project.healthcommunity.trainer.repository.TrainerRepositoryCustom;
+
 import project.healthcommunity.trainer.service.TrainerService;
 
 import java.util.List;
@@ -28,10 +28,6 @@ import static java.util.stream.Collectors.*;
 public class PostApiController {
 
     private final PostService postService;
-    private final MemberService memberService;
-    private final TrainerService trainerService;
-    private final CategoryService categoryService;
-    private final TrainerRepositoryCustom trainerRepository;
     private final PostRepository postRepository;
 
 

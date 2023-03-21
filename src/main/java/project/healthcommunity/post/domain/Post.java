@@ -58,6 +58,7 @@ public class Post extends BaseEntity {
     public void addTrainer(Trainer trainer) {
         this.trainer = trainer;
         trainer.getPostList().add(this);
+        trainer.resetCountParameters();
     }
 
 

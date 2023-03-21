@@ -11,6 +11,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import project.healthcommunity.member.dto.MemberSearchCond;
 import project.healthcommunity.member.dto.QMemberDto;
 import project.healthcommunity.member.dto.MemberResult;
+import project.healthcommunity.member.dto.QMemberResult;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,39 +25,12 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
 
-    @Override
-    public List<MemberResult> search(MemberSearchCond condition) {
-
-        List<Tuple> fetch = queryFactory
-                .select(new QMemberDto(member),
-                        member.commentList.size())
-//                        as(select(comment.count())
-//                                .from(comment)
-//                                .where(comment.member.eq(member)), "commentCount")
-                .from(member)
-                .where(
-                        usernameEq(condition.getUsername()),
-                        ageGoe(condition.getAgeGoe()),
-                        commentCountGoe(condition.getCommentCountGoe()))
-                .fetch();
-
-        List<MemberResult> collect = fetch
-                .stream()
-                .map(f -> MemberResult.builder()
-                        .data(f.get(new QMemberDto(member)))
-                        .commentCount(f.get(member.commentList.size()))
-                        .build())
-                        .collect(Collectors.toList());
-
-        return collect;
-    }
 
     @Override
-    public Page<MemberResult> searchPage(MemberSearchCond condition, Pageable pageable) {
+    public Page<MemberResult> search(MemberSearchCond condition, Pageable pageable) {
 
-        List<Tuple> fetch = queryFactory
-                .select(new QMemberDto(member),
-                        member.commentList.size())
+        List<MemberResult> content = queryFactory
+                .select(new QMemberResult(member.id, member.username, member.age, member.commentCount))
                 .from(member)
                 .where(
                         usernameEq(condition.getUsername()),
@@ -66,15 +40,6 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        List<MemberResult> collect = fetch
-                .stream()
-                .map(f -> MemberResult.builder()
-                        .data(f.get(new QMemberDto(member)))
-                        .commentCount(f.get(member.commentList.size()))
-                        .build())
-                .collect(Collectors.toList());
-
-
         JPAQuery<Long> countQuery = queryFactory
                 .select(member.count())
                 .from(member)
@@ -83,7 +48,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                         ageGoe(condition.getAgeGoe()),
                         commentCountGoe(condition.getCommentCountGoe()));
 
-        return PageableExecutionUtils.getPage(collect, pageable, countQuery::fetchOne);
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
     private BooleanExpression usernameEq(String username) {

@@ -30,16 +30,17 @@ public class Trainer extends BaseEntity {
 
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
     private List<Certificate> certificates = new ArrayList<>();
-
     private int likes = 0;
-
 
     @OneToMany(mappedBy = "trainer")
     private List<Post> postList = new ArrayList<>();
 
-
     @OneToMany(mappedBy = "trainer")
     private List<Comment> commentList = new ArrayList<>();
+
+    private int certificateCount ;
+    private int postCount ;
+    private int commentCount ;
 
     // == 생성자 == //
 
@@ -48,6 +49,7 @@ public class Trainer extends BaseEntity {
         this.trainerName = trainerName;
         this.age = age;
         this.career = career;
+        resetCountParameters();
     }
 
     @Builder(builderMethodName = "certificateBuilder", builderClassName = "certificateBuilder")
@@ -56,6 +58,7 @@ public class Trainer extends BaseEntity {
         this.age = age;
         this.career = career;
         this.certificates = stream(certificates).toList();
+        resetCountParameters();
     }
 
 
@@ -68,10 +71,21 @@ public class Trainer extends BaseEntity {
 
     public void addCertificate(Certificate certificate) {
         certificate.addTrainer(this);
+        resetCountParameters();
     }
 
     public void upLikes() {
         this.likes++;
     }
+
+    public void resetCountParameters(){
+        this.certificateCount = this.certificates.size();
+        this.postCount = this.postList.size();
+        this.commentCount = this.commentList.size();
+    }
+
+
+
+
 
 }

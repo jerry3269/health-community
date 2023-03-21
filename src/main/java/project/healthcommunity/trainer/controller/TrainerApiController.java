@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import project.healthcommunity.certificate.domain.Certificate;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.trainer.dto.*;
-import project.healthcommunity.trainer.repository.TrainerRepositoryCustom;
+
+import project.healthcommunity.trainer.repository.TrainerRepository;
 import project.healthcommunity.trainer.service.TrainerService;
 
 import java.util.List;
@@ -20,7 +21,7 @@ import static java.util.stream.Collectors.*;
 @RequiredArgsConstructor
 public class TrainerApiController {
     private final TrainerService trainerService;
-    private final TrainerRepositoryCustom trainerRepository;
+    private final TrainerRepository trainerRepository;
 
     /**
      * @param request {
@@ -78,22 +79,6 @@ public class TrainerApiController {
         return new TrainerDto(findTrainer);
     }
 
-    /**
-     * @param condition {
-     *                  "trinaerName": "",
-     *                  "ageGoe": ,
-     *                  "careerGoe": ,
-     *                  "certificateCountGoe": ,
-     *                  "likesGoe": ,
-     *                  "postCountGoe": ,
-     *                  "commentCountGoe":
-     *                  }
-     * @return
-     */
-    @GetMapping("/api/trainer/search")
-    public List<TrainerResult> searchTrainerV1(@RequestBody TrainerSearchCond condition) {
-        return trainerRepository.search(condition);
-    }
 
     /**
      * @param condition {
@@ -108,17 +93,12 @@ public class TrainerApiController {
      * @param pageable
      * @return
      */
-    @GetMapping("/api/trainer/search/page")
-    public Page<TrainerResult> searchTrainerV2_page(
+    @GetMapping("/api/trainer/search")
+    public Page<TrainerResult> searchTrainer(
             @RequestBody TrainerSearchCond condition,
             @PageableDefault(page = 0, size = 10, sort = "likes", direction = Sort.Direction.DESC) Pageable pageable) {
-        return trainerRepository.searchPage(condition, pageable);
+        return trainerRepository.search(condition, pageable);
     }
 
-    @GetMapping("/api/trainer/search/page/optimize")
-    public Page<TrainerResult> searchTrainerV3_page_optimization(
-            @RequestBody TrainerSearchCond condition,
-            @PageableDefault(page = 0, size = 10, sort = "likes", direction = Sort.Direction.DESC) Pageable pageable) {
-        return trainerRepository.searchPage_optimization(condition, pageable);
-    }
+
 }

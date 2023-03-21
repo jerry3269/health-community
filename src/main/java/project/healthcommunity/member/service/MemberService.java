@@ -43,6 +43,13 @@ public class MemberService {
         findMember.update(username);
     }
 
+    @Transactional
+    public void upTrainerLikes(Long memberId, Long trainerId) {
+        Trainer trainer = trainerService.findOne(trainerId);
+        Member member = findOne(memberId);
+        trainer.upLikes();
+    }
+
     public Member findOne(Long id){
         Optional<Member> findMember = memberRepository.findById(id);
         if(!findMember.isPresent()){
@@ -67,11 +74,6 @@ public class MemberService {
         return member.getCommentList();
     }
 
-    @Transactional
-    public void upTrainerLikes(Long memberId, Long trainerId) {
-        Trainer trainer = trainerService.findOne(trainerId);
-        Member member = findOne(memberId);
-        trainer.upLikes();
-    }
+
 
 }

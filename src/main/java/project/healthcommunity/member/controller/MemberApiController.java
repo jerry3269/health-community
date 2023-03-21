@@ -50,7 +50,6 @@ public class MemberApiController {
         return new MemberDto(findMember);
     }
 
-
     /**
      * @param condition
      * {
@@ -62,24 +61,9 @@ public class MemberApiController {
      * @return
      */
     @GetMapping("/api/member/search")
-    public List<MemberResult> searchMemberV1(@RequestBody MemberSearchCond condition) {
-        return memberRepository.search(condition);
-    }
-
-    /**
-     * @param condition
-     * {
-     *     "username": "",
-     *     "ageGoe": ,
-     *     "postCountGoe": ,
-     *     "commentCountGoe":
-     * }
-     * @return
-     */
-    @GetMapping("/api/member/search/page")
-    public Page<MemberResult> searchMemberV2_page(
+    public Page<MemberResult> searchMember(
             @RequestBody MemberSearchCond condition,
             @PageableDefault(page = 0, size = 10, sort = "postCount", direction = Sort.Direction.DESC) Pageable pageable) {
-        return memberRepository.searchPage(condition, pageable);
+        return memberRepository.search(condition, pageable);
     }
 }

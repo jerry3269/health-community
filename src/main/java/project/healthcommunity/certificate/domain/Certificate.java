@@ -49,6 +49,7 @@ public class Certificate extends BaseEntity {
     public void addTrainer(Trainer trainer) {
         this.trainer = trainer;
         trainer.getCertificates().add(this);
+
     }
 
     // == 비지니스 로직 == //

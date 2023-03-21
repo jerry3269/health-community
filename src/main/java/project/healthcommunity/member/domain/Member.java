@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import project.healthcommunity.global.domain.BaseEntity;
 import project.healthcommunity.comment.domain.Comment;
-import project.healthcommunity.post.domain.Post;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,16 +25,23 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<Comment> commentList = new ArrayList<>();
 
+    private int commentCount;
+
 
     // == 생성자 == //
     @Builder
     public Member(String username, int age) {
         this.username = username;
         this.age = age;
+        resetCountParameters();
     }
 
     // == 비지니스 로직 == //
     public void update(String username){
         this.username = username;
+    }
+
+    public void resetCountParameters(){
+        this.commentCount = this.commentList.size();
     }
 }

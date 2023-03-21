@@ -10,7 +10,5 @@ import java.util.List;
 
 public interface MemberRepositoryCustom {
 
-    List<MemberResult> search(MemberSearchCond condition);
-
-    Page<MemberResult> searchPage(MemberSearchCond condition, Pageable pageable);
+    Page<MemberResult> search(MemberSearchCond condition, Pageable pageable);
 }

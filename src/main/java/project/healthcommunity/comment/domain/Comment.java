@@ -97,11 +97,13 @@ public class Comment extends BaseEntity {
     public void addMember(Member member) {
         this.member = member;
         member.getCommentList().add(this);
+        member.resetCountParameters();
     }
 
     public void addTrainer(Trainer trainer) {
         this.trainer = trainer;
         trainer.getCommentList().add(this);
+        trainer.resetCountParameters();
     }
 
     // 비지니스 로직 //
