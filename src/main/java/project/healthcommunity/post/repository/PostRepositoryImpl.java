@@ -31,67 +31,8 @@ import static project.healthcommunity.post.domain.QPost.*;
 public class PostRepositoryImpl implements PostRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
-
     @Override
-    public List<PostResult> search(PostSearchCond condition) {
-        List<PostResult> postResults = queryFactory
-                .select(new QPostResult(post))
-                .from(post)
-                .where(
-                        titleContain(condition.getTitle()),
-                        contentContain(condition.getContent()),
-                        likesGoe(condition.getLikesGoe()))
-                .fetch();
-
-        List<Long> postIds = findPostIds(postResults);
-
-        Map<Long, List<CategoryPostDto>> categoryPostDtoMap = findCategoryPostDtoMap(postIds);
-        Map<Long, List<CommentDto>> commentDtoMap = findCommentCountMap(postIds);
-
-
-        postResults.forEach(p ->
-                p.setCategoryPostDtoList(categoryPostDtoMap.get(p.getId())));
-
-        postResults.forEach(p ->
-                p.setCommentCount(commentDtoMap.containsKey(p.getId()) ? commentDtoMap.get(p.getId()).size() : 0));
-
-
-        return postResults;
-    }
-
-    private List<Long> findPostIds(List<PostResult> postResults) {
-        return postResults.stream().map(p -> p.getId()).collect(toList());
-    }
-
-    private Map<Long, List<CategoryPostDto>> findCategoryPostDtoMap(List<Long> postIds) {
-        List<CategoryPostDto> fetch = queryFactory
-                .select(new QCategoryPostDto(categoryPost))
-                .from(categoryPost)
-                .leftJoin(categoryPost.category).fetchJoin()
-                .leftJoin(categoryPost.post).fetchJoin()
-                .where(categoryPost.post.id.in(postIds))
-                .fetch();
-
-        Map<Long, List<CategoryPostDto>> categoryPostDtoMap =
-                fetch.stream().collect(groupingBy(CategoryPostDto::getPostId));
-
-        return categoryPostDtoMap;
-    }
-
-    private Map<Long, List<CommentDto>> findCommentCountMap(List<Long> postIds) {
-        List<CommentDto> fetch = queryFactory
-                .select(new QCommentDto(comment))
-                .from(comment)
-                .leftJoin(comment.post).fetchJoin()
-                .where(comment.post.id.in(postIds))
-                .fetch();
-
-        Map<Long, List<CommentDto>> commentDtoMap = fetch.stream().collect(groupingBy(CommentDto::getPostId));
-        return commentDtoMap;
-    }
-
-    @Override
-    public Page<PostResult> search_page_optimization(PostSearchCond condition, Pageable pageable) {
+    public Page<PostResult> search(PostSearchCond condition, Pageable pageable) {
 
         List<PostResult> postResults = queryFactory
                 .select(new QPostResult(post))
@@ -106,16 +47,12 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
         List<Long> postIds = findPostIds(postResults);
 
-        Map<Long, List<CategoryPostDto>> categoryPostDtoMap = findCategoryPostDtoMap(postIds);
         Map<Long, List<CommentDto>> commentDtoMap = findCommentCountMap(postIds);
 
-
-        postResults.forEach(p ->
-                p.setCategoryPostDtoList(categoryPostDtoMap.get(p.getId())));
-
-        postResults.forEach(p ->
-                p.setCommentCount(commentDtoMap.containsKey(p.getId()) ? commentDtoMap.get(p.getId()).size() : 0));
-
+        for (PostResult p : postResults) {
+            p.setCommentCount(
+                    commentDtoMap.containsKey(p.getId()) ? commentDtoMap.get(p.getId()).size() : 0);
+        }
 
         JPAQuery<Long> countQuery = queryFactory
                 .select(post.count())
@@ -126,6 +63,22 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                         likesGoe(condition.getLikesGoe()));
 
         return PageableExecutionUtils.getPage(postResults, pageable, countQuery::fetchOne);
+    }
+
+    private List<Long> findPostIds(List<PostResult> postResults) {
+        return postResults.stream().map(p -> p.getId()).collect(toList());
+    }
+
+    private Map<Long, List<CommentDto>> findCommentCountMap(List<Long> postIds) {
+        List<CommentDto> fetch = queryFactory
+                .select(new QCommentDto(comment))
+                .from(comment)
+                .leftJoin(comment.post).fetchJoin()
+                .where(comment.post.id.in(postIds))
+                .fetch();
+
+        Map<Long, List<CommentDto>> commentDtoMap = fetch.stream().collect(groupingBy(CommentDto::getPostId));
+        return commentDtoMap;
     }
 
     private BooleanExpression titleContain(String title) {

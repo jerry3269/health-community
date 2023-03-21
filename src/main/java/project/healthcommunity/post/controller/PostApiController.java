@@ -53,14 +53,9 @@ public class PostApiController {
     }
 
     @GetMapping("/api/post/search")
-    public List<PostResult> searchPostV1(@RequestBody PostSearchCond condition) {
-        return postRepository.search(condition);
-    }
-
-    @GetMapping("/api/post/search/page")
-    public Page<PostResult> searchPostV2_page_optimize(
+    public Page<PostResult> searchPost(
             @RequestBody PostSearchCond condition,
             @PageableDefault(page = 0, size = 10, sort = "likes", direction = Sort.Direction.DESC) Pageable pageable) {
-        return postRepository.search_page_optimization(condition, pageable);
+        return postRepository.search(condition, pageable);
     }
 }

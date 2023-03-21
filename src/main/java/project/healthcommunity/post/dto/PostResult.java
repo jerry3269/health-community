@@ -13,16 +13,14 @@ import java.util.List;
 public class PostResult {
     private Long id;
     private String title;
-    private String content;
     private int likes;
+
     private int commentCount;
-    private List<CategoryPostDto> categoryPostDtoList;
 
     @QueryProjection
     public PostResult(Post post) {
         this.id = post.getId();
         this.title = post.getTitle();
-        this.content = post.getContent();
         this.likes = post.getLikes();
     }
 }
