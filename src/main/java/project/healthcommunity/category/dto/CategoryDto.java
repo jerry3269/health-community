@@ -11,10 +11,8 @@ import project.healthcommunity.categorypost.domain.CategoryPost;
 public class CategoryDto {
 
     private Long id;
-
     private String categoryName;
 
-    private String postTitle;
 
     public CategoryDto(Category category) {
         this.id = category.getId();
@@ -24,6 +22,5 @@ public class CategoryDto {
     public CategoryDto(CategoryPost categoryPost) {
         this.id = categoryPost.getCategory().getId();
         this.categoryName = categoryPost.getCategory().getCategoryName();
-        this.postTitle = categoryPost.getPost().getTitle();
     }
 }
