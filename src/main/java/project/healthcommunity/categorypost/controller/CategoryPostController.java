@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.healthcommunity.categorypost.domain.CategoryPost;
 import project.healthcommunity.categorypost.dto.CategoryPostDto;
@@ -20,29 +21,30 @@ import static java.util.stream.Collectors.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/categorypost")
 public class CategoryPostController {
 
     private final CategoryPostRepository categoryPostRepository;
 
-    @GetMapping("/search/{categoryId}")
+    @GetMapping("/search/category/{id}")
     public Page<CategoryPostDto> search_categoryId(
-            @PathVariable("categoryId") Long categoryId,
+            @PathVariable("id") Long id,
             @PageableDefault(page = 0, size = 10, sort = "categoryId", direction = Sort.Direction.ASC) Pageable pageable){
 
-        List<CategoryPost> list = categoryPostRepository.findByCategory_id(categoryId, pageable);
+        List<CategoryPost> list = categoryPostRepository.findByCategory_id(id, pageable);
         List<CategoryPostDto> categoryPostDtos = list.stream().map(CategoryPostDto::new).collect(toList());
-        Long count = categoryPostRepository.countQueryByCategoryId(categoryId);
+        Long count = categoryPostRepository.countQueryByCategoryId(id);
         return new PageImpl<>(categoryPostDtos, pageable, count);
     }
 
-    @GetMapping("/search/{postId}")
+    @GetMapping("/search/post/{id}")
     public Page<CategoryPostDto> search_postId(
-            @PathVariable("postId") Long postId,
+            @PathVariable("id") Long id,
             @PageableDefault(page = 0, size = 10, sort = "postId", direction = Sort.Direction.ASC) Pageable pageable){
 
-        List<CategoryPost> list = categoryPostRepository.findByCategory_id(postId, pageable);
+        List<CategoryPost> list = categoryPostRepository.findByCategory_id(id, pageable);
         List<CategoryPostDto> categoryPostDtos = list.stream().map(CategoryPostDto::new).collect(toList());
-        Long count = categoryPostRepository.countQueryByPostId(postId);
+        Long count = categoryPostRepository.countQueryByPostId(id);
 
         return new PageImpl<>(categoryPostDtos, pageable, count);
     }

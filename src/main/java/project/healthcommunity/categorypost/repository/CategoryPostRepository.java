@@ -17,9 +17,9 @@ public interface CategoryPostRepository extends JpaRepository<CategoryPost, Long
 
     List<CategoryPost> findByPost_id(Long postId, Pageable pageable);
 
-    @Query("select count(cp) from CategoryPost cp where cp.category =: categoryId")
+    @Query("select count(cp.id) from CategoryPost cp where cp.category.id = :categoryId")
     Long countQueryByCategoryId(@Param("categoryId") Long categoryId);
 
-    @Query("select count(cp) from CategoryPost cp where cp.post =: postId")
+    @Query("select count(cp.id) from CategoryPost cp where cp.post.id = :postId")
     Long countQueryByPostId(@Param("postId") Long postId);
 }
