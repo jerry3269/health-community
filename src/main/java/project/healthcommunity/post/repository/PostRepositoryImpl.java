@@ -1,6 +1,6 @@
 package project.healthcommunity.post.repository;
 
-import com.querydsl.core.Tuple;
+
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -8,9 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
-import project.healthcommunity.categorypost.dto.CategoryPostDto;
-import project.healthcommunity.categorypost.dto.QCategoryPostDto;
-import project.healthcommunity.comment.domain.QComment;
+
 import project.healthcommunity.comment.dto.CommentDto;
 import project.healthcommunity.comment.dto.QCommentDto;
 import project.healthcommunity.post.dto.PostResult;

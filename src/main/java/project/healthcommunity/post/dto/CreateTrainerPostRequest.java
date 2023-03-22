@@ -2,7 +2,7 @@ package project.healthcommunity.post.dto;
 
 import lombok.Data;
 import project.healthcommunity.category.dto.CategoryDto;
-import project.healthcommunity.categorypost.dto.CategoryPostDto;
+
 
 import java.util.List;
 

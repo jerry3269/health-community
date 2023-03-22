@@ -3,7 +3,7 @@ package project.healthcommunity.post.dto;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 import project.healthcommunity.category.dto.CategoryDto;
-import project.healthcommunity.categorypost.dto.CategoryPostDto;
+
 import project.healthcommunity.post.domain.Post;
 
 import java.util.List;

@@ -25,7 +25,6 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
-    private final MemberService memberService;
     private final TrainerService trainerService;
     private final CategoryService categoryService;
 
