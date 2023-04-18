@@ -14,7 +14,6 @@ import project.healthcommunity.comment.dto.QCommentDto;
 import project.healthcommunity.post.dto.PostResponse;
 import project.healthcommunity.post.dto.PostSearchCond;
 import project.healthcommunity.post.dto.QPostResponse;
-import project.healthcommunity.post.dto.QPostResult;
 
 import java.util.List;
 import java.util.Map;
