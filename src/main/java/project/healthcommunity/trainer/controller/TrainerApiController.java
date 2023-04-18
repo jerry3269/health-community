@@ -32,21 +32,21 @@ public class TrainerApiController {
      * @return
      */
     @PostMapping("/api/trainer")
-    public TrainerDto saveTrainer(@RequestBody CreateTrainerDto request) {
+    public TrainerResponse saveTrainer(@RequestBody CreateTrainerRequest request) {
         Trainer trainer = new Trainer(request.getTrainerName(), request.getAge(), request.getCareer());
         trainerService.join(trainer);
-        return new TrainerDto(trainer);
+        return new TrainerResponse(trainer);
     }
 
     @GetMapping("/api/trainers")
-    public List<TrainerDto> trainers() {
-        return trainerService.trainers().stream().map(TrainerDto::new).collect(toList());
+    public List<TrainerResponse> trainers() {
+        return trainerService.trainers().stream().map(TrainerResponse::new).collect(toList());
     }
 
     @GetMapping("/api/trainer/{id}")
-    public TrainerDto trainerByParameter(@PathVariable Long id) {
+    public TrainerResponse trainerByParameter(@PathVariable Long id) {
         Trainer trainer = trainerService.findOne(id);
-        return new TrainerDto(trainer);
+        return new TrainerResponse(trainer);
     }
 
     /**
@@ -63,20 +63,20 @@ public class TrainerApiController {
      * @return
      */
     @PutMapping("/api/trainer/{id}")
-    public TrainerDto updateTrainer(
+    public TrainerResponse updateTrainer(
             @PathVariable("id") Long id,
-            @RequestBody UpdateTrainerDto request) {
+            @RequestBody UpdateTrainerRequest request) {
 
         Trainer findTrainer = trainerService.findOne(id);
 
-        List<Certificate> certificates = request.getCertificateDtoList()
+        List<Certificate> certificates = request.getCertificateFormList()
                 .stream()
                 .map(c -> new Certificate(findTrainer, c.getCertificateName(), c.getAcquisitionDate()))
                 .collect(toList());
 
         trainerService.update(id, request.getTrainerName(), certificates);
 
-        return new TrainerDto(findTrainer);
+        return new TrainerResponse(findTrainer);
     }
 
 
@@ -94,7 +94,7 @@ public class TrainerApiController {
      * @return
      */
     @GetMapping("/api/trainer/search")
-    public Page<TrainerResult> searchTrainer(
+    public Page<TrainerResponse> searchTrainer(
             @RequestBody TrainerSearchCond condition,
             @PageableDefault(page = 0, size = 10, sort = "likes", direction = Sort.Direction.DESC) Pageable pageable) {
         return trainerRepository.search(condition, pageable);

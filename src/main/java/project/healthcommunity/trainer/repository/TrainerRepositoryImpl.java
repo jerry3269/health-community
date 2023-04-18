@@ -7,16 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
-import project.healthcommunity.certificate.dto.CertificateDto;
-import project.healthcommunity.certificate.dto.QCertificateDto;
-import project.healthcommunity.trainer.domain.QTrainer;
+import project.healthcommunity.certificate.dto.CertificateForm;
+import project.healthcommunity.certificate.dto.QCertificateForm;
 import project.healthcommunity.trainer.domain.Trainer;
-import project.healthcommunity.trainer.dto.TrainerResult;
+import project.healthcommunity.trainer.dto.TrainerResponse;
 import project.healthcommunity.trainer.dto.TrainerSearchCond;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 import static org.springframework.util.StringUtils.hasText;
@@ -29,7 +27,7 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<TrainerResult> search(TrainerSearchCond condition, Pageable pageable) {
+    public Page<TrainerResponse> search(TrainerSearchCond condition, Pageable pageable) {
         List<Trainer> trainers = queryFactory
                 .selectFrom(trainer)
                 .where(
@@ -44,14 +42,14 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom{
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        List<TrainerResult> trainerResults = trainers.stream().map(TrainerResult::new).collect(toList());
+        List<TrainerResponse> trainerResponses = trainers.stream().map(TrainerResponse::new).collect(toList());
 
-        List<Long> trainerIds = trainerResults.stream().map(TrainerResult::getId).collect(toList());
+        List<Long> trainerIds = trainerResponses.stream().map(TrainerResponse::getId).collect(toList());
 
-        Map<Long, List<CertificateDto>> certificateDtoMap = findCertificateDtoMap(trainerIds);
+        Map<Long, List<CertificateForm>> certificateDtoMap = findCertificateDtoMap(trainerIds);
 
-        trainerResults.forEach(t-> {
-            t.setCertificateDtoList(certificateDtoMap.get(t.getId()));
+        trainerResponses.forEach(t-> {
+            t.setCertificateFormList(certificateDtoMap.get(t.getId()));
         });
 
         JPAQuery<Long> countQuery = queryFactory
@@ -68,21 +66,21 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom{
 
 
 
-        return PageableExecutionUtils.getPage(trainerResults, pageable, countQuery::fetchOne);
+        return PageableExecutionUtils.getPage(trainerResponses, pageable, countQuery::fetchOne);
     }
 
 
 
-    private Map<Long, List<CertificateDto>> findCertificateDtoMap(List<Long> trainerIds) {
-        List<CertificateDto> certificateDtoList = queryFactory
-                .select(new QCertificateDto(certificate))
+    private Map<Long, List<CertificateForm>> findCertificateDtoMap(List<Long> trainerIds) {
+        List<CertificateForm> certificateFormList = queryFactory
+                .select(new QCertificateForm(certificate))
                 .from(certificate)
                 .leftJoin(certificate.trainer, trainer).fetchJoin()
                 .where(trainer.id.in(trainerIds))
                 .fetch();
 
-        Map<Long, List<CertificateDto>> certificateDtoMap =
-                certificateDtoList.stream().collect(groupingBy(CertificateDto::getTrainerId));
+        Map<Long, List<CertificateForm>> certificateDtoMap =
+                certificateFormList.stream().collect(groupingBy(CertificateForm::getTrainerId));
         return certificateDtoMap;
     }
 

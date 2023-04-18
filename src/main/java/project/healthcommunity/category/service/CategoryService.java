@@ -16,15 +16,11 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    /**
-     * 카테고리 등록
-     */
     @Transactional
     public void register(Category category) {
         validDupCategory(category);
         categoryRepository.save(category);
     }
-
 
     private void validDupCategory(Category category) {
         List<Category> result = categoryRepository.findByCategoryName(category.getCategoryName());

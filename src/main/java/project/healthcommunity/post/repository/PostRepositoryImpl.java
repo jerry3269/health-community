@@ -11,17 +11,16 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import project.healthcommunity.comment.dto.CommentDto;
 import project.healthcommunity.comment.dto.QCommentDto;
-import project.healthcommunity.post.dto.PostResult;
+import project.healthcommunity.post.dto.PostResponse;
 import project.healthcommunity.post.dto.PostSearchCond;
+import project.healthcommunity.post.dto.QPostResponse;
 import project.healthcommunity.post.dto.QPostResult;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.*;
 import static org.springframework.util.StringUtils.*;
-import static project.healthcommunity.categorypost.domain.QCategoryPost.*;
 import static project.healthcommunity.comment.domain.QComment.*;
 import static project.healthcommunity.post.domain.QPost.*;
 
@@ -30,10 +29,10 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
     @Override
-    public Page<PostResult> search(PostSearchCond condition, Pageable pageable) {
+    public Page<PostResponse> search(PostSearchCond condition, Pageable pageable) {
 
-        List<PostResult> postResults = queryFactory
-                .select(new QPostResult(post))
+        List<PostResponse> postResponses = queryFactory
+                .select(new QPostResponse(post))
                 .from(post)
                 .where(
                         titleContain(condition.getTitle()),
@@ -43,11 +42,11 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        List<Long> postIds = findPostIds(postResults);
+        List<Long> postIds = findPostIds(postResponses);
 
         Map<Long, List<CommentDto>> commentDtoMap = findCommentCountMap(postIds);
 
-        for (PostResult p : postResults) {
+        for (PostResponse p : postResponses) {
             p.setCommentCount(
                     commentDtoMap.containsKey(p.getId()) ? commentDtoMap.get(p.getId()).size() : 0);
         }
@@ -60,11 +59,11 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                         contentContain(condition.getContent()),
                         likesGoe(condition.getLikesGoe()));
 
-        return PageableExecutionUtils.getPage(postResults, pageable, countQuery::fetchOne);
+        return PageableExecutionUtils.getPage(postResponses, pageable, countQuery::fetchOne);
     }
 
-    private List<Long> findPostIds(List<PostResult> postResults) {
-        return postResults.stream().map(p -> p.getId()).collect(toList());
+    private List<Long> findPostIds(List<PostResponse> postResponses) {
+        return postResponses.stream().map(p -> p.getId()).collect(toList());
     }
 
     private Map<Long, List<CommentDto>> findCommentCountMap(List<Long> postIds) {

@@ -1,30 +1,41 @@
 package project.healthcommunity.trainer.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
-import project.healthcommunity.certificate.dto.CertificateDto;
+import project.healthcommunity.certificate.dto.CertificateForm;
 import project.healthcommunity.trainer.domain.Trainer;
 
 import java.util.List;
 
 @Data
-public class TrainerResult {
+public class TrainerResponse {
+
+    @NotNull
     private Long id;
+    @NotBlank
     private String trainerName;
+    @Min(value = 0)
     private int age;
+    @Min(value = 0)
     private int career;
 
-    private List<CertificateDto> certificateDtoList;
+    private List<CertificateForm> certificateFormList;
+    @Min(value = 0)
     private int likes;
+    @Min(value = 0)
     private int certificateCount;
+    @Min(value = 0)
     private int postCount;
+    @Min(value = 0)
     private int commentCount;
 
     @Builder
     @QueryProjection
-    public TrainerResult(Long id, String trainerName, int age, int career, int likes, int certificateCount, int postCount, int commentCount) {
+    public TrainerResponse(Long id, String trainerName, int age, int career, int likes, int certificateCount, int postCount, int commentCount) {
         this.id = id;
         this.trainerName = trainerName;
         this.age = age;
@@ -35,7 +46,7 @@ public class TrainerResult {
         this.commentCount = commentCount;
     }
 
-    public TrainerResult(Trainer trainer) {
+    public TrainerResponse(Trainer trainer) {
         this.id = trainer.getId();
         this.trainerName = trainer.getTrainerName();
         this.age = trainer.getAge();

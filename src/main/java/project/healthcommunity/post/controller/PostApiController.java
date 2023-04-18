@@ -6,18 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-import project.healthcommunity.category.domain.Category;
-import project.healthcommunity.category.service.CategoryService;
-import project.healthcommunity.member.domain.Member;
-import project.healthcommunity.member.service.MemberService;
 import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.post.dto.*;
 import project.healthcommunity.post.repository.PostRepository;
-import project.healthcommunity.post.repository.PostRepositoryCustom;
 import project.healthcommunity.post.service.PostService;
-import project.healthcommunity.trainer.domain.Trainer;
-
-import project.healthcommunity.trainer.service.TrainerService;
 
 import java.util.List;
 
@@ -34,26 +26,26 @@ public class PostApiController {
 
 
     @GetMapping("/api/posts")
-    public List<PostDto> posts() {
-        return postService.posts().stream().map(PostDto::new).collect(toList());
+    public List<PostResponse> posts() {
+        return postService.posts().stream().map(PostResponse::new).collect(toList());
     }
 
     @GetMapping("/api/post/trainer/{id}")
-    public TrainerPostDto findTrainerPostByPostId(
+    public TrainerPostResponse findTrainerPostByPostId(
             @PathVariable("id") Long id) {
 
         Post findPost = postService.findOne(id);
-        return new TrainerPostDto(findPost);
+        return new TrainerPostResponse(findPost);
     }
 
     @GetMapping("/api/posts/trainer/{trainerId}")
-    public List<PostDto> postsByTrainer(@PathVariable("trainerId") Long trainerId) {
+    public List<PostResponse> postsByTrainer(@PathVariable("trainerId") Long trainerId) {
         List<Post> postList = postService.findByTrainer(trainerId);
-        return postList.stream().map(PostDto::new).collect(toList());
+        return postList.stream().map(PostResponse::new).collect(toList());
     }
 
     @GetMapping("/api/post/search")
-    public Page<PostResult> searchPost(
+    public Page<PostResponse> searchPost(
             @RequestBody PostSearchCond condition,
             @PageableDefault(page = 0, size = 10, sort = "likes", direction = Sort.Direction.DESC) Pageable pageable) {
         return postRepository.search(condition, pageable);

@@ -1,6 +1,5 @@
 package project.healthcommunity.member.repository;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -8,13 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
+import project.healthcommunity.member.dto.MemberResponse;
 import project.healthcommunity.member.dto.MemberSearchCond;
-import project.healthcommunity.member.dto.QMemberDto;
-import project.healthcommunity.member.dto.MemberResult;
-import project.healthcommunity.member.dto.QMemberResult;
+import project.healthcommunity.member.dto.QMemberResponse;
+
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.*;
 import static project.healthcommunity.member.domain.QMember.member;
@@ -27,10 +25,10 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
 
     @Override
-    public Page<MemberResult> search(MemberSearchCond condition, Pageable pageable) {
+    public Page<MemberResponse> search(MemberSearchCond condition, Pageable pageable) {
 
-        List<MemberResult> content = queryFactory
-                .select(new QMemberResult(member.id, member.username, member.age, member.commentCount))
+        List<MemberResponse> content = queryFactory
+                .select(new QMemberResponse(member))
                 .from(member)
                 .where(
                         usernameEq(condition.getUsername()),

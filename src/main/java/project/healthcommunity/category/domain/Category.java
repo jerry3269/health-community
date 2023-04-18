@@ -32,11 +32,7 @@ public class Category extends BaseEntity {
     @JoinColumn(name = "parent_id")
     private Category parent;
 
-
-
-
-    //생성자9
-
+    //생성자
     @Builder(builderMethodName = "noParentBuilder", builderClassName = "noParentBuilder")
     public Category(String categoryName) {
         this.categoryName = categoryName;

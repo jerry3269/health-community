@@ -11,7 +11,9 @@ import project.healthcommunity.categorypost.domain.CategoryPost;
 import java.util.List;
 
 public interface CategoryPostRepository extends JpaRepository<CategoryPost, Long> {
-    void deleteByPost_id(Long PostId);
+    void deleteByPost_id(Long postId);
+
+    void deleteByCategory_idAndPost_id(Long categoryId, Long postId);
 
     List<CategoryPost> findByCategory_id(Long categoryId, Pageable pageable);
 

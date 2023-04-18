@@ -38,9 +38,9 @@ public class Trainer extends BaseEntity {
     @OneToMany(mappedBy = "trainer")
     private List<Comment> commentList = new ArrayList<>();
 
-    private int certificateCount ;
-    private int postCount ;
-    private int commentCount ;
+    private int certificateCount = 0;
+    private int postCount = 0;
+    private int commentCount = 0;
 
     // == 생성자 == //
 

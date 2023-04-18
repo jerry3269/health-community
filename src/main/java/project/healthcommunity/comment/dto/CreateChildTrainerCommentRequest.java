@@ -1,25 +1,28 @@
 package project.healthcommunity.comment.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import project.healthcommunity.comment.domain.Comment;
 
 @Data
 @AllArgsConstructor
-public class ChildCommentDto {
+public class CreateChildTrainerCommentRequest {
+
+    @NotNull
     private Long postId;
-    private String postTitle;
+    @NotNull
+    private Long trainerId;
+    @NotBlank
     private String content;
-    private int sympathy;
+    @NotNull
     private Long parentId;
 
-
-    public ChildCommentDto(Comment comment) {
+    public CreateChildTrainerCommentRequest(Comment comment) {
         this.postId = comment.getPost().getId();
-        this.postTitle = comment.getPost().getTitle();
+        this.trainerId = comment.getTrainer().getId();
         this.content = comment.getContent();
-        this.sympathy = comment.getLikes();
         this.parentId = comment.getParent().getId();
     }
 }

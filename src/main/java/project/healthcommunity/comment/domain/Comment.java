@@ -25,6 +25,7 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @Lob
     private String content;
 
     private int likes = 0;
@@ -40,11 +41,11 @@ public class Comment extends BaseEntity {
     private CommentStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = true)
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trainer_id")
+    @JoinColumn(name = "trainer_id", nullable = true)
     private Trainer trainer;
 
     // 생성자

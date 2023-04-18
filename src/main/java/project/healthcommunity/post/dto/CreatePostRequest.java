@@ -1,19 +1,19 @@
 package project.healthcommunity.post.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import project.healthcommunity.category.dto.CategoryDto;
 
 
 import java.util.List;
 
 @Data
-public class CreateTrainerPostRequest {
+public class CreatePostRequest {
+    @NotNull
     private Long trainerId;
-
-    private String trainerName;
-
+    @NotBlank
     private String title;
-
+    @NotBlank
     private String content;
 
     private List<String> categoryNameList;

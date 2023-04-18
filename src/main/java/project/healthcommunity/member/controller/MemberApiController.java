@@ -23,31 +23,31 @@ public class MemberApiController {
     private final MemberRepository memberRepository;
 
     @PostMapping("/api/member")
-    public CreateMemberResponse saveMemberV1(@RequestBody CreateMemberRequest request) {
+    public MemberResponse saveMember(@RequestBody CreateMemberRequest request) {
         Member member = new Member(request.getUsername(), request.getAge());
         memberService.join(member);
-        return new CreateMemberResponse(member);
+        return new MemberResponse(member);
     }
 
     @GetMapping("/api/members")
-    public List<MemberDto> members() {
-        return memberService.members().stream().map(MemberDto::new).collect(toList());
+    public List<MemberResponse> members() {
+        return memberService.members().stream().map(MemberResponse::new).collect(toList());
     }
 
     @PutMapping("/api/member/{id}")
-    public MemberDto updateMember(
+    public MemberResponse updateMember(
             @PathVariable("id") Long id,
             @RequestBody UpdateMemberDto request) {
 
         memberService.update(id, request.getUsername());
         Member findMember = memberService.findOne(id);
-        return new MemberDto(findMember);
+        return new MemberResponse(findMember);
     }
 
     @GetMapping("/api/member/{id}")
-    public MemberDto memberByParameter(@PathVariable("id") Long id) {
+    public MemberResponse memberById(@PathVariable("id") Long id) {
         Member findMember = memberService.findOne(id);
-        return new MemberDto(findMember);
+        return new MemberResponse(findMember);
     }
 
     /**
@@ -61,7 +61,7 @@ public class MemberApiController {
      * @return
      */
     @GetMapping("/api/member/search")
-    public Page<MemberResult> searchMember(
+    public Page<MemberResponse> searchMember(
             @RequestBody MemberSearchCond condition,
             @PageableDefault(page = 0, size = 10, sort = "postCount", direction = Sort.Direction.DESC) Pageable pageable) {
         return memberRepository.search(condition, pageable);

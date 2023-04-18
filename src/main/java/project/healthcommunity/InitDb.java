@@ -21,6 +21,8 @@ import project.healthcommunity.trainer.service.TrainerService;
 import java.time.LocalDate;
 import java.util.List;
 
+import static project.healthcommunity.global.domain.StaticField.rootCategory;
+
 @Component
 @RequiredArgsConstructor
 public class InitDb {
@@ -29,6 +31,7 @@ public class InitDb {
 
     @PostConstruct
     public void init(){
+        initService.staticFieldInjection();
         initService.dbInit1();
         initService.dbInit2();
     }
@@ -44,28 +47,29 @@ public class InitDb {
         private final CommentService commentService;
         private final CertificateService certificateService;
 
+        public void staticFieldInjection(){
+            categoryService.register(rootCategory);
+        }
+
 
         public void dbInit1(){
-            Category category1 = Category.noParentBuilder()
-                    .categoryName("운동")
-                    .build();
 
             Category category2 = Category.parentBuilder()
                     .categoryName("윗몸")
-                    .parent(category1)
+                    .parent(rootCategory)
                     .build();
 
             Category category3 = Category.parentBuilder()
                     .categoryName("팔굽")
-                    .parent(category1)
+                    .parent(rootCategory)
                     .build();
 
             Category category4 = Category.parentBuilder()
                     .categoryName("달리기")
-                    .parent(category1)
+                    .parent(rootCategory)
                     .build();
 
-            categoryService.register(category1);
+
             categoryService.register(category2);
             categoryService.register(category3);
             categoryService.register(category4);

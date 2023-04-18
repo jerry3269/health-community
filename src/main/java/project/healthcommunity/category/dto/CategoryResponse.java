@@ -1,25 +1,27 @@
 package project.healthcommunity.category.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import project.healthcommunity.category.domain.Category;
 import project.healthcommunity.categorypost.domain.CategoryPost;
 
 @Data
 @AllArgsConstructor
-public class CategoryDto {
-
+public class CategoryResponse {
+    @NotNull
     private Long id;
+    @NotBlank
     private String categoryName;
 
 
-    public CategoryDto(Category category) {
+    public CategoryResponse(Category category) {
         this.id = category.getId();
         this.categoryName = category.getCategoryName();
     }
 
-    public CategoryDto(CategoryPost categoryPost) {
+    public CategoryResponse(CategoryPost categoryPost) {
         this.id = categoryPost.getCategory().getId();
         this.categoryName = categoryPost.getCategory().getCategoryName();
     }

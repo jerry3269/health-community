@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.healthcommunity.category.domain.Category;
 import project.healthcommunity.category.service.CategoryService;
-import project.healthcommunity.member.domain.Member;
-import project.healthcommunity.member.service.MemberService;
 import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.post.dto.*;
 import project.healthcommunity.post.service.PostService;
@@ -49,7 +47,7 @@ public class PostController {
      */
     @PostMapping("/post/trainer")
     public String saveTrainerPost(
-            @RequestBody CreateTrainerPostRequest request,
+            @RequestBody CreatePostRequest request,
             RedirectAttributes redirectAttributes) {
 
         Trainer trainer = trainerService.findOne(request.getTrainerId());

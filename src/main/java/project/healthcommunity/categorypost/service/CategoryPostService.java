@@ -16,18 +16,12 @@ public class CategoryPostService {
 
     private final CategoryPostRepository categoryPostRepository;
 
-    /**
-     * 등록
-     */
     @Transactional
     public void join(CategoryPost categoryPost){
         categoryPostRepository.save(categoryPost);
     }
 
 
-    /**
-     * 조회
-     */
     public CategoryPost findOne(Long id) {
         Optional<CategoryPost> optionalCategoryPost = categoryPostRepository.findById(id);
         if(!optionalCategoryPost.isPresent()){
@@ -36,14 +30,11 @@ public class CategoryPostService {
         return optionalCategoryPost.get();
     }
 
-    /**
-     * 모두조회
-     */
     public List<CategoryPost> categoryPostList(){
         return categoryPostRepository.findAll();
     }
 
-    /**
-     *
-     */
+    public void delete(Long categoryId, Long postId) {
+        categoryPostRepository.deleteByCategory_idAndPost_id(categoryId, postId);
+    }
 }

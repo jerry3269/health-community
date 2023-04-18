@@ -25,7 +25,7 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<Comment> commentList = new ArrayList<>();
 
-    private int commentCount;
+    private int commentCount = 0;
 
 
     // == 생성자 == //
