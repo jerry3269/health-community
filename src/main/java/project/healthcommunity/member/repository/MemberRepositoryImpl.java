@@ -7,9 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
+import project.healthcommunity.member.domain.Member;
 import project.healthcommunity.member.dto.MemberResponse;
 import project.healthcommunity.member.dto.MemberSearchCond;
 import project.healthcommunity.member.dto.QMemberResponse;
+import project.healthcommunity.member.exception.MemberNotFoundException;
 
 
 import java.util.List;
@@ -22,7 +24,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-
+    private final MemberJpaRepository memberJpaRepository;
 
     @Override
     public Page<MemberResponse> search(MemberSearchCond condition, Pageable pageable) {
@@ -60,6 +62,42 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
     private BooleanExpression commentCountGoe(Integer commentCountGoe) {
         return commentCountGoe != null ? member.commentList.size().goe(commentCountGoe) : null;
+    }
+
+    @Override
+    public void save(Member member) {
+        memberJpaRepository.save(member);
+    }
+
+    @Override
+    public List<Member> findByLoginId(String loginId) {
+        return memberJpaRepository.findByLoginId(loginId);
+    }
+
+
+    @Override
+    public Member findById(Long id) {
+        return memberJpaRepository.findById(id).orElseThrow(MemberNotFoundException::new);
+    }
+
+    @Override
+    public List<Member> findAll() {
+        return memberJpaRepository.findAll();
+    }
+
+    @Override
+    public List<Member> findByUsername(String username) {
+        return memberJpaRepository.findByUsername(username);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        memberJpaRepository.deleteById(id);
+    }
+
+    @Override
+    public Member getByLoginId(String loginId) {
+        return memberJpaRepository.findOneByLoginId(loginId).orElseThrow(MemberNotFoundException::new);
     }
 
 
