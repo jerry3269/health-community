@@ -21,6 +21,9 @@ public class Member extends BaseEntity {
     private String username;
     private int age;
 
+    private String loginId;
+    private String password;
+
 
     @OneToMany(mappedBy = "member")
     private List<Comment> commentList = new ArrayList<>();
@@ -30,9 +33,11 @@ public class Member extends BaseEntity {
 
     // == 생성자 == //
     @Builder
-    public Member(String username, int age) {
+    public Member(String username, int age, String loginId, String password) {
         this.username = username;
         this.age = age;
+        this.loginId = loginId;
+        this.password = password;
         resetCountParameters();
     }
 

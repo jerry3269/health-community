@@ -8,4 +8,12 @@ public class StaticField {
             .categoryName("운동")
             .build();
 
+    public static final String LOG_ID = "logId";
+    public static final String LOGIN_MEMBER = "loginMember";
+    public static final String LOGIN_TRAINER = "loginTrainer";
+
+
+
+
+
 }
