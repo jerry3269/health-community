@@ -1,40 +1,66 @@
 package project.healthcommunity.member.service;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.healthcommunity.comment.domain.Comment;
+import project.healthcommunity.global.dto.LoginForm;
 import project.healthcommunity.member.domain.Member;
-import project.healthcommunity.member.repository.MemberRepository;
+import project.healthcommunity.member.dto.MemberResponse;
+import project.healthcommunity.member.exception.MemberDuplicationLoginIdException;
+import project.healthcommunity.member.exception.MemberNotFoundException;
+import project.healthcommunity.member.repository.MemberRepositoryCustom;
 import project.healthcommunity.trainer.domain.Trainer;
-import project.healthcommunity.trainer.repository.TrainerRepository;
-import project.healthcommunity.trainer.service.TrainerService;
+import project.healthcommunity.trainer.repository.TrainerJpaRepository;
+import project.healthcommunity.trainer.repository.TrainerRepositoryCustom;
 
 import java.util.List;
-import java.util.Optional;
+
+import static project.healthcommunity.global.basic.BasicStaticField.LOGIN_MEMBER;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberService {
 
-    private final MemberRepository memberRepository;
-    private final TrainerService trainerService;
-
-
+    private final MemberRepositoryCustom memberRepositoryCustom;
+    private final TrainerRepositoryCustom trainerRepositoryCustom;
 
     @Transactional
     public void join(Member member){
-        validDupMember(member);
-        memberRepository.save(member);
+        validDupLoginId(member.getLoginId());
+        memberRepositoryCustom.save(member);
+    }
+    private void validDupLoginId(String loginId){
+        List<Member> findMember = memberRepositoryCustom.findByLoginId(loginId);
+        if (!findMember.isEmpty()) {
+            throw new MemberDuplicationLoginIdException();
+        }
+
+        List<Trainer> findTrainer = trainerRepositoryCustom.findByLoginId(loginId);
+        if(!findTrainer.isEmpty()) {
+            throw new MemberDuplicationLoginIdException();
+        }
     }
 
-
-    public void validDupMember(Member member){
-        List<Member> findMember = memberRepository.findByUsername(member.getUsername());
-        if(!findMember.isEmpty()){
-            throw new IllegalStateException("이미 존재하는 회원입니다.");
+    public MemberResponse login(LoginForm loginForm, HttpServletRequest request) {
+        Member member = memberRepositoryCustom.getByLoginId(loginForm.getLoginId());
+        if (member.getPassword().equals(loginForm.getPassword())) {
+            HttpSession session = request.getSession();
+            session.setAttribute(LOGIN_MEMBER, member);
+            return new MemberResponse(member);
         }
+        throw new MemberNotFoundException();
+    }
+
+    public HttpSession logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        return session;
     }
 
     @Transactional
@@ -45,33 +71,35 @@ public class MemberService {
 
     @Transactional
     public void upTrainerLikes(Long memberId, Long trainerId) {
-        Trainer trainer = trainerService.findOne(trainerId);
+        Trainer trainer = trainerRepositoryCustom.findOne(trainerId);
         Member member = findOne(memberId);
         trainer.upLikes();
     }
 
     public Member findOne(Long id){
-        Optional<Member> findMember = memberRepository.findById(id);
-        if(!findMember.isPresent()){
-            throw new IllegalStateException("존재하지 않는 회원입니다.");
-        }
-        return findMember.get();
+        return memberRepositoryCustom.findById(id);
     }
 
     /**
      * 전체 조회
      */
     public List<Member> members(){
-        return memberRepository.findAll();
+        return memberRepositoryCustom.findAll();
     }
 
     public List<Member> findByUsername(String username) {
-        return memberRepository.findByUsername(username);
+        return memberRepositoryCustom.findByUsername(username);
     }
 
     public List<Comment> findCommentByMember(Long id) {
         Member member = findOne(id);
         return member.getCommentList();
+    }
+
+    @Transactional
+    public void delete(Member member) {
+        Long id = member.getId();
+        memberRepositoryCustom.deleteById(id);
     }
 
 
