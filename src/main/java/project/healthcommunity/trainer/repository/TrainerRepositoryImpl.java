@@ -15,6 +15,7 @@ import project.healthcommunity.trainer.dto.TrainerSearchCond;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.*;
 import static org.springframework.util.StringUtils.hasText;
@@ -25,6 +26,7 @@ import static project.healthcommunity.trainer.domain.QTrainer.*;
 public class TrainerRepositoryImpl implements TrainerRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
+    private final
 
     @Override
     public Page<TrainerResponse> search(TrainerSearchCond condition, Pageable pageable) {
@@ -70,20 +72,6 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom{
     }
 
 
-
-    private Map<Long, List<CertificateForm>> findCertificateDtoMap(List<Long> trainerIds) {
-        List<CertificateForm> certificateFormList = queryFactory
-                .select(new QCertificateForm(certificate))
-                .from(certificate)
-                .leftJoin(certificate.trainer, trainer).fetchJoin()
-                .where(trainer.id.in(trainerIds))
-                .fetch();
-
-        Map<Long, List<CertificateForm>> certificateDtoMap =
-                certificateFormList.stream().collect(groupingBy(CertificateForm::getTrainerId));
-        return certificateDtoMap;
-    }
-
     private BooleanExpression trainerNameEq(String trainerName) {
         return hasText(trainerName) ? trainer.trainerName.eq(trainerName) : null;
     }
@@ -111,4 +99,64 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom{
     private BooleanExpression commentCountGoe(Integer commentCountGoe) {
         return commentCountGoe != null ? trainer.commentCount.goe(commentCountGoe) : null;
     }
+
+    @Override
+    public void save(Trainer trainer) {
+
+    }
+
+    @Override
+    public List<Trainer> findByLoginId(String loginId) {
+        return null;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+
+    }
+
+    @Override
+    public void deleteAll() {
+
+    }
+
+    @Override
+    public Optional<Trainer> findById(Long id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Trainer> findAll() {
+        return null;
+    }
+
+    @Override
+    public List<Trainer> findByTrainerName(String trainerName) {
+        return null;
+    }
+
+    @Override
+    public Trainer findOne(Long trainerId) {
+        return null;
+    }
+
+    @Override
+    public Trainer getLoginId(String loginId) {
+        return null;
+    }
+
+
+    private Map<Long, List<CertificateForm>> findCertificateDtoMap(List<Long> trainerIds) {
+        List<CertificateForm> certificateFormList = queryFactory
+                .select(new QCertificateForm(certificate))
+                .from(certificate)
+                .leftJoin(certificate.trainer, trainer).fetchJoin()
+                .where(trainer.id.in(trainerIds))
+                .fetch();
+
+        Map<Long, List<CertificateForm>> certificateDtoMap =
+                certificateFormList.stream().collect(groupingBy(CertificateForm::getTrainerId));
+        return certificateDtoMap;
+    }
+
 }
