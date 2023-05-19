@@ -4,8 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import project.healthcommunity.certificate.domain.Certificate;
 import project.healthcommunity.comment.domain.Comment;
-import project.healthcommunity.global.domain.BaseEntity;
+import project.healthcommunity.global.basic.BaseEntity;
 import project.healthcommunity.post.domain.Post;
+import project.healthcommunity.trainer.dto.UpdateTrainerRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,9 @@ public class Trainer extends BaseEntity {
     private int age;
     private int career;
 
+    private String loginId;
+    private String password;
+
 
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
     private List<Certificate> certificates = new ArrayList<>();
@@ -45,18 +49,22 @@ public class Trainer extends BaseEntity {
     // == 생성자 == //
 
     @Builder(builderMethodName = "noCertificateBuilder", builderClassName = "noCertificateBuilder")
-    public Trainer(String trainerName, int age, int career) {
+    public Trainer(String trainerName, int age, int career, String loginId, String password) {
         this.trainerName = trainerName;
         this.age = age;
         this.career = career;
+        this.loginId = loginId;
+        this.password = password;
         resetCountParameters();
     }
 
     @Builder(builderMethodName = "certificateBuilder", builderClassName = "certificateBuilder")
-    public Trainer(String trainerName, int age, int career, Certificate... certificates) {
+    public Trainer(String trainerName, int age, int career,String loginId, String password, Certificate... certificates) {
         this.trainerName = trainerName;
         this.age = age;
         this.career = career;
+        this.loginId = loginId;
+        this.password = password;
         this.certificates = stream(certificates).toList();
         resetCountParameters();
     }
@@ -64,9 +72,9 @@ public class Trainer extends BaseEntity {
 
 
     // == 비지니스 로직 == //
-    public void update(String trainerName, List<Certificate> certificates) {
-        this.trainerName = trainerName;
-        certificates.forEach(this::addCertificate);
+    public void update(UpdateTrainerRequest updateTrainerRequest) {
+        this.trainerName = updateTrainerRequest.getTrainerName();
+        this.password = updateTrainerRequest.getPassword();
     }
 
     public void addCertificate(Certificate certificate) {
