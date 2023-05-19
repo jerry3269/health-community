@@ -6,8 +6,7 @@ import project.healthcommunity.category.domain.Category;
 import project.healthcommunity.categorypost.domain.CategoryPost;
 import project.healthcommunity.comment.domain.Comment;
 import project.healthcommunity.trainer.domain.Trainer;
-import project.healthcommunity.global.domain.BaseEntity;
-import project.healthcommunity.member.domain.Member;
+import project.healthcommunity.global.basic.BaseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
