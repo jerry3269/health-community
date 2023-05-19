@@ -1,10 +1,10 @@
 package project.healthcommunity.categorypost.dto;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class CreateCategoryPostRequest {
     @NotNull

@@ -2,11 +2,11 @@ package project.healthcommunity.categorypost.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import project.healthcommunity.categorypost.domain.CategoryPost;
 
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class CategoryPostRequest {
     @NotNull
