@@ -7,19 +7,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.stereotype.Repository;
 import project.healthcommunity.member.domain.Member;
 import project.healthcommunity.member.dto.MemberResponse;
 import project.healthcommunity.member.dto.MemberSearchCond;
-import project.healthcommunity.member.dto.QMemberResponse;
 import project.healthcommunity.member.exception.MemberNotFoundException;
 
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.*;
 import static project.healthcommunity.member.domain.QMember.member;
 
 @RequiredArgsConstructor
+@Repository
 public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
@@ -29,8 +32,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     @Override
     public Page<MemberResponse> search(MemberSearchCond condition, Pageable pageable) {
 
-        List<MemberResponse> content = queryFactory
-                .select(new QMemberResponse(member))
+        List<Member> fetch = queryFactory
+                .select(member)
                 .from(member)
                 .where(
                         usernameEq(condition.getUsername()),
@@ -39,6 +42,9 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+
+        List<MemberResponse> content = fetch.stream().map(m -> MemberResponse.createByMember(m)).collect(Collectors.toList());
+
 
         JPAQuery<Long> countQuery = queryFactory
                 .select(member.count())
@@ -65,18 +71,15 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public void save(Member member) {
-        memberJpaRepository.save(member);
-    }
-
-    @Override
-    public List<Member> findByLoginId(String loginId) {
-        return memberJpaRepository.findByLoginId(loginId);
+    public Member save(Member member) {
+       return  memberJpaRepository.save(member);
     }
 
 
+
+
     @Override
-    public Member findById(Long id) {
+    public Member getById(Long id) {
         return memberJpaRepository.findById(id).orElseThrow(MemberNotFoundException::new);
     }
 
@@ -96,9 +99,21 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public Member getByLoginId(String loginId) {
-        return memberJpaRepository.findOneByLoginId(loginId).orElseThrow(MemberNotFoundException::new);
+    public Optional<Member> findByLoginId(String loginId) {
+        return memberJpaRepository.findByLoginId(loginId);
     }
+
+    @Override
+    public Optional<Member> findById(Long id) {
+        return memberJpaRepository.findById(id);
+    }
+
+    @Override
+    public Member getByLoginId(String loginId) {
+        return memberJpaRepository.findByLoginId(loginId).orElseThrow(MemberNotFoundException::new);
+    }
+
+
 
 
 }

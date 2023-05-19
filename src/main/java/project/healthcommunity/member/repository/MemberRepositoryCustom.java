@@ -13,13 +13,17 @@ import java.util.Optional;
 public interface MemberRepositoryCustom {
 
     Page<MemberResponse> search(MemberSearchCond condition, Pageable pageable);
-    void save(Member member);
-    List<Member> findByLoginId(String loginId);
-    Member findById(Long id);
+    Member save(Member member);
+    Member getByLoginId(String loginId);
+    Member getById(Long id);
     List<Member> findAll();
     List<Member> findByUsername(String username);
     void deleteById(Long id);
-    Member getByLoginId(String loginId);
+
+    Optional<Member> findByLoginId(String loginId);
+
+    Optional<Member> findById(Long id);
+
 
 
 
