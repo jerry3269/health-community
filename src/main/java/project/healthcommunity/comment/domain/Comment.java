@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.trainer.domain.Trainer;
-import project.healthcommunity.global.domain.BaseEntity;
+import project.healthcommunity.global.basic.BaseEntity;
 import project.healthcommunity.member.domain.Member;
 
 import java.util.ArrayList;
