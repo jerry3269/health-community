@@ -1,13 +1,13 @@
-package project.healthcommunity.member.exception;
+package project.healthcommunity.trainer.exception;
 
 import project.healthcommunity.global.exception.NotFoundException;
 
-import static project.healthcommunity.global.error.ErrorStaticField.Member_Not_Found;
+import static project.healthcommunity.global.error.ErrorStaticField.TRAINER_NOT_FOUND;
 
-public class MemberNotFoundException extends NotFoundException {
-    private static final String message = Member_Not_Found;
+public class TrainerNotFoundException extends NotFoundException {
+    private static final String MESSAGE = TRAINER_NOT_FOUND;
 
-    public MemberNotFoundException() {
-        super(message);
+    public TrainerNotFoundException() {
+        super(MESSAGE);
     }
 }
