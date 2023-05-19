@@ -8,9 +8,9 @@ import project.healthcommunity.certificate.domain.Certificate;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CertificateForm {
 
     @NotNull
