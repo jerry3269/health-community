@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import project.healthcommunity.category.domain.Category;
 import project.healthcommunity.post.domain.Post;
-import project.healthcommunity.global.domain.BaseEntity;
+import project.healthcommunity.global.basic.BaseEntity;
 
 @Entity
 @Getter
