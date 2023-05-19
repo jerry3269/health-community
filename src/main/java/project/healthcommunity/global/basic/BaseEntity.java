@@ -1,4 +1,4 @@
-package project.healthcommunity.global.domain;
+package project.healthcommunity.global.basic;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
