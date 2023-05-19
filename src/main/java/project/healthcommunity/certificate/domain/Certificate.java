@@ -3,7 +3,7 @@ package project.healthcommunity.certificate.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import project.healthcommunity.trainer.domain.Trainer;
-import project.healthcommunity.global.domain.BaseEntity;
+import project.healthcommunity.global.basic.BaseEntity;
 
 import java.time.LocalDate;
 import java.util.List;
