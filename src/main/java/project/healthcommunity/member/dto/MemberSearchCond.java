@@ -1,9 +1,13 @@
 package project.healthcommunity.member.dto;
 
 import jakarta.validation.constraints.Min;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberSearchCond {
     private String username;
     @Min(0)
