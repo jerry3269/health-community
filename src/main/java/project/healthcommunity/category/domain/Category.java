@@ -3,7 +3,7 @@ package project.healthcommunity.category.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import project.healthcommunity.categorypost.domain.CategoryPost;
-import project.healthcommunity.global.domain.BaseEntity;
+import project.healthcommunity.global.basic.BaseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
