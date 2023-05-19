@@ -1,18 +1,23 @@
 package project.healthcommunity.member.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import project.healthcommunity.global.controller.LoginForMember;
 import project.healthcommunity.global.dto.LoginForm;
+import project.healthcommunity.global.exception.BindingException;
 import project.healthcommunity.member.domain.Member;
+import project.healthcommunity.member.domain.MemberSession;
 import project.healthcommunity.member.dto.*;
 import project.healthcommunity.member.repository.MemberJpaRepository;
 import project.healthcommunity.member.repository.MemberRepositoryCustom;
@@ -35,77 +40,60 @@ public class MemberApiController {
     private final MemberRepositoryCustom memberRepositoryCustom;
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@Valid @RequestBody LoginForm loginForm, HttpServletRequest request) {
+    public ResponseEntity<MemberResponse> login(@Valid @RequestBody LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request) {
+        BindingException.validate(bindingResult);
         MemberResponse memberResponse = memberService.login(loginForm, request);
         return ResponseEntity.ok(memberResponse);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity logout(HttpServletRequest request) {
-        HttpSession session = memberService.logout(request);
+    public ResponseEntity logout(@LoginForMember MemberSession memberSession, HttpServletRequest request) {
+        HttpSession session = memberService.logout(memberSession, request);
         return ResponseEntity.ok(session);
     }
 
     @PostMapping("/add")
-    public Object saveMember(@RequestBody @Valid CreateMemberRequest request,
-                                     BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            log.info("검증 오류 발생 errors={}", bindingResult);
-            return bindingResult.getAllErrors();
-        }
-
-        Member member = new Member(request.getUsername(), request.getAge(), request.getLoginId(), request.getPassword());
-        memberService.join(member);
-        return new MemberResponse(member);
+    public ResponseEntity<MemberResponse> saveMember(@RequestBody @Valid CreateMemberRequest createMemberRequest, BindingResult bindingResult) {
+        BindingException.validate(bindingResult);
+        MemberResponse memberResponse = memberService.join(createMemberRequest);
+        return ResponseEntity.ok(memberResponse);
     }
 
-    @GetMapping("/members")
-    public List<MemberResponse> members() {
-        return memberService.members().stream().map(MemberResponse::new).collect(toList());
-    }
-
-    @PutMapping("/{id}")
-    public Object updateMember(
-            @PathVariable("id") Long id,
-            @RequestBody @Valid UpdateMemberDto request,
+    @PatchMapping("/")
+    public ResponseEntity<MemberResponse> updateMember(
+            @LoginForMember MemberSession memberSession,
+            @RequestBody @Valid UpdateMemberDto updateMemberDto,
             BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
-            log.info("검증 오류 발생 errors={}", bindingResult);
-            return bindingResult.getAllErrors();
-        }
-
-        memberService.update(id, request.getUsername());
-        Member findMember = memberService.findOne(id);
-        return new MemberResponse(findMember);
+        BindingException.validate(bindingResult);
+        MemberResponse memberResponse = memberService.update(memberSession, updateMemberDto);
+        return ResponseEntity.ok(memberResponse);
     }
 
-    @GetMapping("/{id}")
-    public MemberResponse memberById(@PathVariable("id") Long id) {
-        Member findMember = memberService.findOne(id);
-        return new MemberResponse(findMember);
+    @GetMapping("/")
+    public ResponseEntity<MemberResponse> memberById(@LoginForMember MemberSession memberSession) {
+        Member findMember = memberService.findOne(memberSession.getId());
+        return ResponseEntity.ok(MemberResponse.createByMember(findMember));
     }
 
-    /**
-     * @param condition
-     * {
-     *     "username": "",
-     *     "ageGoe": ,
-     *     "postCountGoe": ,
-     *     "commentCountGoe":
-     * }
-     * @return
-     */
+    @DeleteMapping("/")
+    public ResponseEntity delete(@LoginForMember MemberSession memberSession) {
+        memberService.delete(memberSession);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/search")
-    public Object searchMember(
-            @RequestBody @Valid MemberSearchCond condition,
+    public ResponseEntity<Page<MemberResponse>> searchMember(
+            @ModelAttribute @Valid MemberSearchCond condition,
             BindingResult bindingResult,
             @PageableDefault(page = 0, size = 10, sort = "postCount", direction = Sort.Direction.DESC) Pageable pageable) {
-
-        if (bindingResult.hasErrors()) {
-            log.info("검증 오류 발생 errors={}", bindingResult);
-            return bindingResult.getAllErrors();
-        }
-        return memberRepositoryCustom.search(condition, pageable);
+        BindingException.validate(bindingResult);
+        Page<MemberResponse> memberResponsePage = memberRepositoryCustom.search(condition, pageable);
+        return ResponseEntity.ok(memberResponsePage);
+    }
+    @GetMapping("/members")
+    public ResponseEntity<List<MemberResponse>> members() {
+        List<MemberResponse> memberResponseList = memberService.members();
+        return ResponseEntity.ok(memberResponseList);
     }
 }
