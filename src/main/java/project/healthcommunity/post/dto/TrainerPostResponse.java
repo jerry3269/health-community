@@ -3,8 +3,7 @@ package project.healthcommunity.post.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import project.healthcommunity.category.dto.CategoryResponse;
 import project.healthcommunity.comment.dto.CommentDto;
 import project.healthcommunity.post.domain.Post;
@@ -13,8 +12,9 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-@Data
+@Getter
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TrainerPostResponse {
     @NotNull
     private Long trainerId;

@@ -2,12 +2,16 @@ package project.healthcommunity.post.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 import java.util.List;
 
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CreatePostRequest {
     @NotNull
     private Long trainerId;

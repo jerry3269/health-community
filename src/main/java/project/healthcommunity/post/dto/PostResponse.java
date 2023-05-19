@@ -8,7 +8,7 @@ import lombok.*;
 
 import project.healthcommunity.post.domain.Post;
 
-@Data
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostResponse {
     @NotNull
@@ -28,5 +28,9 @@ public class PostResponse {
         this.title = post.getTitle();
         this.likes = post.getLikes();
         commentCount = post.getComments().size();
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
     }
 }
