@@ -2,8 +2,9 @@ package project.healthcommunity.member.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import project.healthcommunity.global.domain.BaseEntity;
+import project.healthcommunity.global.basic.BaseEntity;
 import project.healthcommunity.comment.domain.Comment;
+import project.healthcommunity.member.dto.UpdateMemberDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +43,9 @@ public class Member extends BaseEntity {
     }
 
     // == 비지니스 로직 == //
-    public void update(String username){
-        this.username = username;
+    public void update(UpdateMemberDto updateMemberDto){
+        this.username = updateMemberDto.getUsername();
+        this.password = updateMemberDto.getPassword();
     }
 
     public void resetCountParameters(){
