@@ -8,15 +8,19 @@ import org.springframework.transaction.annotation.Transactional;
 import project.healthcommunity.comment.domain.Comment;
 import project.healthcommunity.global.dto.LoginForm;
 import project.healthcommunity.member.domain.Member;
+import project.healthcommunity.member.dto.CreateMemberRequest;
 import project.healthcommunity.member.dto.MemberResponse;
+import project.healthcommunity.member.domain.MemberSession;
+import project.healthcommunity.member.dto.UpdateMemberDto;
 import project.healthcommunity.member.exception.MemberDuplicationLoginIdException;
-import project.healthcommunity.member.exception.MemberNotFoundException;
+import project.healthcommunity.member.exception.MemberNotMatchException;
 import project.healthcommunity.member.repository.MemberRepositoryCustom;
 import project.healthcommunity.trainer.domain.Trainer;
-import project.healthcommunity.trainer.repository.TrainerJpaRepository;
 import project.healthcommunity.trainer.repository.TrainerRepositoryCustom;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static project.healthcommunity.global.basic.BasicStaticField.LOGIN_MEMBER;
 
@@ -29,62 +33,63 @@ public class MemberService {
     private final TrainerRepositoryCustom trainerRepositoryCustom;
 
     @Transactional
-    public void join(Member member){
-        validDupLoginId(member.getLoginId());
+    public MemberResponse join(CreateMemberRequest createMemberRequest){
+        validDupLoginId(createMemberRequest.getLoginId());
+        Member member = CreateMemberRequest.toMember(createMemberRequest);
         memberRepositoryCustom.save(member);
+        return MemberResponse.createByMember(member);
     }
     private void validDupLoginId(String loginId){
-        List<Member> findMember = memberRepositoryCustom.findByLoginId(loginId);
-        if (!findMember.isEmpty()) {
+        Optional<Member> findMember = memberRepositoryCustom.findByLoginId(loginId);
+        if (findMember.isPresent()) {
             throw new MemberDuplicationLoginIdException();
         }
 
-        List<Trainer> findTrainer = trainerRepositoryCustom.findByLoginId(loginId);
-        if(!findTrainer.isEmpty()) {
+        Optional<Trainer> findTrainer = trainerRepositoryCustom.findByLoginId(loginId);
+        if(findTrainer.isPresent()) {
             throw new MemberDuplicationLoginIdException();
         }
     }
 
+    @Transactional
     public MemberResponse login(LoginForm loginForm, HttpServletRequest request) {
         Member member = memberRepositoryCustom.getByLoginId(loginForm.getLoginId());
         if (member.getPassword().equals(loginForm.getPassword())) {
+            MemberSession memberSession = MemberSession.createMemberSession(member);
             HttpSession session = request.getSession();
-            session.setAttribute(LOGIN_MEMBER, member);
-            return new MemberResponse(member);
+            session.setAttribute(LOGIN_MEMBER, memberSession);
+            return MemberResponse.createByMemberSession(memberSession);
         }
-        throw new MemberNotFoundException();
+        throw new MemberNotMatchException();
     }
-
-    public HttpSession logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-        return session;
+    @Transactional
+    public HttpSession logout(MemberSession memberSession, HttpServletRequest request) {
+        memberSession.invalidate(request);
+        return request.getSession(false);
     }
 
     @Transactional
-    public void update(Long id, String username){
-        Member findMember = findOne(id);
-        findMember.update(username);
+    public MemberResponse update(MemberSession memberSession, UpdateMemberDto updateMemberDto){
+        Member findMember = findOne(memberSession.getId());
+        findMember.update(updateMemberDto);
+        return MemberResponse.createByMember(findMember);
     }
 
     @Transactional
-    public void upTrainerLikes(Long memberId, Long trainerId) {
-        Trainer trainer = trainerRepositoryCustom.findOne(trainerId);
-        Member member = findOne(memberId);
+    public void upTrainerLikes(MemberSession memberSession, Long trainerId) {
+        Trainer trainer = trainerRepositoryCustom.getById(trainerId);
+        Member member = findOne(memberSession.getId());
         trainer.upLikes();
     }
 
-    public Member findOne(Long id){
-        return memberRepositoryCustom.findById(id);
-    }
+
 
     /**
      * 전체 조회
      */
-    public List<Member> members(){
-        return memberRepositoryCustom.findAll();
+    public List<MemberResponse> members(){
+        return memberRepositoryCustom.findAll().stream().map(m -> MemberResponse.createByMember(m)).collect(Collectors.toList());
+
     }
 
     public List<Member> findByUsername(String username) {
@@ -97,10 +102,15 @@ public class MemberService {
     }
 
     @Transactional
-    public void delete(Member member) {
-        Long id = member.getId();
-        memberRepositoryCustom.deleteById(id);
+    public void delete(MemberSession memberSession) {
+        memberRepositoryCustom.deleteById(memberSession.getId());
     }
+
+    public Member findOne(Long id){
+        return memberRepositoryCustom.getById(id);
+    }
+
+
 
 
 
