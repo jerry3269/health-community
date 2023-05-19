@@ -1,6 +1,9 @@
 package project.healthcommunity.comment.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +20,7 @@ import project.healthcommunity.post.service.PostService;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.trainer.service.TrainerService;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class CommentApiController {
@@ -27,7 +31,13 @@ public class CommentApiController {
     private final TrainerService trainerService;
 
     @PostMapping("/api/comment/member")
-    public MemberCommentResponse saveMemberComment(@RequestBody CreateMemberCommentRequest request) {
+    public Object saveMemberComment(@RequestBody @Valid CreateMemberCommentRequest request,
+                                                   BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            log.info("검증 오류 발생 errors={}", bindingResult);
+            return bindingResult.getAllErrors();
+        }
+
         Post post = postService.findOne(request.getPostId());
         Member member = memberService.findOne(request.getMemberId());
         Comment comment = new Comment(post, request.getContent(), member);
@@ -36,7 +46,13 @@ public class CommentApiController {
     }
 
     @PostMapping("/api/comment/trainer")
-    public TrainerCommentResponse saveTrainerComment(@RequestBody CreateTrainerCommentRequest request) {
+    public Object saveTrainerComment(@RequestBody @Valid CreateTrainerCommentRequest request,
+                                                     BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            log.info("검증 오류 발생 errors={}", bindingResult);
+            return bindingResult.getAllErrors();
+        }
+
         Post post = postService.findOne(request.getPostId());
         Trainer trainer = trainerService.findOne(request.getTrainerId());
         Comment comment = new Comment(post, request.getContent(), trainer);
