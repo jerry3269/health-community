@@ -3,15 +3,15 @@ package project.healthcommunity.comment.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import project.healthcommunity.comment.domain.Comment;
 
 import java.util.List;
 
 import static java.util.stream.Collectors.*;
 
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class MemberCommentResponse {
     @NotNull
