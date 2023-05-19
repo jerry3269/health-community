@@ -1,104 +1,102 @@
 package project.healthcommunity.trainer.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import project.healthcommunity.certificate.domain.Certificate;
+import project.healthcommunity.global.controller.LoginForTrainer;
+import project.healthcommunity.global.dto.LoginForm;
+import project.healthcommunity.global.exception.BindingException;
+import project.healthcommunity.member.dto.MemberResponse;
 import project.healthcommunity.trainer.domain.Trainer;
+import project.healthcommunity.trainer.domain.TrainerSession;
 import project.healthcommunity.trainer.dto.*;
 
-import project.healthcommunity.trainer.repository.TrainerRepository;
+import project.healthcommunity.trainer.repository.TrainerJpaRepository;
+import project.healthcommunity.trainer.repository.TrainerRepositoryCustom;
 import project.healthcommunity.trainer.service.TrainerService;
 
 import java.util.List;
 
 import static java.util.stream.Collectors.*;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/trainer")
 public class TrainerApiController {
     private final TrainerService trainerService;
-    private final TrainerRepository trainerRepository;
+    private final TrainerRepositoryCustom TrainerRepositoryCustom;
 
-    /**
-     * @param request {
-     *                "trainerName": "t11",
-     *                "age": 11,
-     *                "career": 11
-     *                }
-     * @return
-     */
-    @PostMapping("/api/trainer")
-    public TrainerResponse saveTrainer(@RequestBody CreateTrainerRequest request) {
-        Trainer trainer = new Trainer(request.getTrainerName(), request.getAge(), request.getCareer());
-        trainerService.join(trainer);
-        return new TrainerResponse(trainer);
+    @PostMapping("/login")
+    public ResponseEntity<TrainerResponse> login(@Valid @RequestBody LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request) {
+        BindingException.validate(bindingResult);
+        TrainerResponse trainerResponse = trainerService.login(loginForm, request);
+        return ResponseEntity.ok(trainerResponse);
     }
 
-    @GetMapping("/api/trainers")
-    public List<TrainerResponse> trainers() {
-        return trainerService.trainers().stream().map(TrainerResponse::new).collect(toList());
+    @PostMapping("/logout")
+    public ResponseEntity logout(@LoginForTrainer TrainerSession trainerSession, HttpServletRequest request) {
+        HttpSession session = trainerService.logout(trainerSession, request);
+        return ResponseEntity.ok(session);
     }
 
-    @GetMapping("/api/trainer/{id}")
-    public TrainerResponse trainerByParameter(@PathVariable Long id) {
-        Trainer trainer = trainerService.findOne(id);
-        return new TrainerResponse(trainer);
+    @PostMapping("/add")
+    public ResponseEntity<TrainerResponse> saveTrainer(@RequestBody @Valid CreateTrainerRequest createTrainerRequest,
+                                                       BindingResult bindingResult) {
+
+        BindingException.validate(bindingResult);
+        TrainerResponse trainerResponse = trainerService.join(createTrainerRequest);
+        return ResponseEntity.ok(trainerResponse);
     }
 
-    /**
-     * @param id
-     * @param request {
-     *                "trainerName": "t0",
-     *                "certificateDtoList": [
-     *                {
-     *                "certificateName": "팔굽1급",
-     *                "acquisitionDate": "2019-12-12"
-     *                }
-     *                ]
-     *                }
-     * @return
-     */
-    @PutMapping("/api/trainer/{id}")
-    public TrainerResponse updateTrainer(
-            @PathVariable("id") Long id,
-            @RequestBody UpdateTrainerRequest request) {
-
-        Trainer findTrainer = trainerService.findOne(id);
-
-        List<Certificate> certificates = request.getCertificateFormList()
-                .stream()
-                .map(c -> new Certificate(findTrainer, c.getCertificateName(), c.getAcquisitionDate()))
-                .collect(toList());
-
-        trainerService.update(id, request.getTrainerName(), certificates);
-
-        return new TrainerResponse(findTrainer);
+    @GetMapping("/")
+    public ResponseEntity trainerByParameter(@LoginForTrainer TrainerSession trainerSession) {
+        Trainer trainer = trainerService.findOne(trainerSession.getId());
+        TrainerResponse trainerResponse = TrainerResponse.createByTrainer(trainer);
+        return ResponseEntity.ok(trainerResponse);
     }
 
+    @PatchMapping("/")
+    public ResponseEntity updateTrainer(
+            @LoginForTrainer TrainerSession trainerSession,
+            @RequestBody @Valid UpdateTrainerRequest updateTrainerRequest,
+            BindingResult bindingResult) {
 
-    /**
-     * @param condition {
-     *                  "trinaerName": "",
-     *                  "ageGoe": ,
-     *                  "careerGoe": ,
-     *                  "certificateCountGoe": ,
-     *                  "likesGoe": ,
-     *                  "postCountGoe": ,
-     *                  "commentCountGoe":
-     *                  }
-     * @param pageable
-     * @return
-     */
-    @GetMapping("/api/trainer/search")
-    public Page<TrainerResponse> searchTrainer(
-            @RequestBody TrainerSearchCond condition,
+        BindingException.validate(bindingResult);
+        TrainerResponse trainerResponse = trainerService.update(trainerSession, updateTrainerRequest);
+        return ResponseEntity.ok(trainerResponse);
+    }
+
+    @DeleteMapping("/")
+    public ResponseEntity delete(@LoginForTrainer TrainerSession trainerSession) {
+        trainerService.delete(trainerSession);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity searchTrainer(
+            @RequestBody @Valid TrainerSearchCond condition,
+            BindingResult bindingResult,
             @PageableDefault(page = 0, size = 10, sort = "likes", direction = Sort.Direction.DESC) Pageable pageable) {
-        return trainerRepository.search(condition, pageable);
+
+        BindingException.validate(bindingResult);
+        Page<TrainerResponse> trainerResponsePage = TrainerRepositoryCustom.search(condition, pageable);
+        return ResponseEntity.ok(trainerResponsePage);
     }
 
+    @GetMapping("/trainers")
+    public ResponseEntity<List<TrainerResponse>> trainers() {
+        return ResponseEntity.ok(trainerService.trainers());
+    }
 
 }
