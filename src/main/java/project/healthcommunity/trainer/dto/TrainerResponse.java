@@ -4,20 +4,23 @@ import com.querydsl.core.annotations.QueryProjection;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import project.healthcommunity.certificate.dto.CertificateForm;
 import project.healthcommunity.trainer.domain.Trainer;
+import project.healthcommunity.trainer.domain.TrainerSession;
 
 import java.util.List;
 
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TrainerResponse {
 
     @NotNull
     private Long id;
     @NotBlank
     private String trainerName;
+    @NotBlank
+    private String loginId;
     @Min(value = 0)
     private int age;
     @Min(value = 0)
@@ -34,10 +37,10 @@ public class TrainerResponse {
     private int commentCount;
 
     @Builder
-    @QueryProjection
-    public TrainerResponse(Long id, String trainerName, int age, int career, int likes, int certificateCount, int postCount, int commentCount) {
+    protected TrainerResponse(Long id, String trainerName,String loginId, int age, int career, int likes, int certificateCount, int postCount, int commentCount) {
         this.id = id;
         this.trainerName = trainerName;
+        this.loginId = loginId;
         this.age = age;
         this.career = career;
         this.likes = likes;
@@ -46,16 +49,29 @@ public class TrainerResponse {
         this.commentCount = commentCount;
     }
 
-    public TrainerResponse(Trainer trainer) {
-        this.id = trainer.getId();
-        this.trainerName = trainer.getTrainerName();
-        this.age = trainer.getAge();
-        this.career = trainer.getCareer();
-        this.likes = trainer.getLikes();
-        this.certificateCount = trainer.getCertificateCount();
-        this.postCount = trainer.getPostCount();
-        this.commentCount = trainer.getCommentCount();
+    public static TrainerResponse createByTrainer(Trainer trainer) {
+        return TrainerResponse.builder()
+                .id(trainer.getId())
+                .trainerName(trainer.getTrainerName())
+                .loginId(trainer.getLoginId())
+                .age(trainer.getAge())
+                .career(trainer.getCareer())
+                .likes(trainer.getLikes())
+                .certificateCount(trainer.getCertificateCount())
+                .postCount(trainer.getPostCount())
+                .commentCount(trainer.getCommentCount())
+                .build();
     }
 
+    public static TrainerResponse createByTrainerSession(TrainerSession trainerSession) {
+        return TrainerResponse.builder()
+                .id(trainerSession.getId())
+                .trainerName(trainerSession.getTrainerName())
+                .loginId(trainerSession.getLoginId())
+                .build();
+    }
 
+    public void setCertificateFormList(List<CertificateForm> certificateFormList) {
+        this.certificateFormList = certificateFormList;
+    }
 }

@@ -1,16 +1,29 @@
 package project.healthcommunity.trainer.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.*;
+import project.healthcommunity.certificate.domain.Certificate;
 import project.healthcommunity.certificate.dto.CertificateForm;
+import project.healthcommunity.trainer.domain.Trainer;
 
 import java.util.List;
+import java.util.Optional;
 
-@Data
+import static java.util.stream.Collectors.toList;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UpdateTrainerRequest {
 
     @NotBlank
     private String trainerName;
+    @NotBlank
+    private String password;
 
-    private List<CertificateForm> certificateFormList;
+    @Builder
+    public UpdateTrainerRequest(String trainerName, String password) {
+        this.trainerName = trainerName;
+        this.password = password;
+    }
+
 }
