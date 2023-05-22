@@ -8,9 +8,8 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import project.healthcommunity.global.controller.Login;
-import project.healthcommunity.global.basic.BasicStaticField;
-import project.healthcommunity.member.domain.Member;
+import project.healthcommunity.global.controller.LoginForMember;
+import project.healthcommunity.member.domain.MemberSession;
 
 import static project.healthcommunity.global.basic.BasicStaticField.*;
 
@@ -19,8 +18,8 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         log.info("LoginMemberArgumentResolver supportsParameter 실행");
-        boolean hasLoginAnnotation = parameter.hasParameterAnnotation(Login.class);
-        boolean hasMemberType = Member.class.isAssignableFrom(parameter.getParameterType());
+        boolean hasLoginAnnotation = parameter.hasParameterAnnotation(LoginForMember.class);
+        boolean hasMemberType = MemberSession.class.isAssignableFrom(parameter.getParameterType());
         return hasLoginAnnotation && hasMemberType;
     }
 
