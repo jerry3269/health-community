@@ -1,75 +1,110 @@
 package project.healthcommunity.trainer.service;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.healthcommunity.certificate.domain.Certificate;
 import project.healthcommunity.comment.domain.Comment;
+import project.healthcommunity.global.dto.LoginForm;
+import project.healthcommunity.member.domain.Member;
+import project.healthcommunity.member.exception.MemberDuplicationLoginIdException;
+import project.healthcommunity.member.repository.MemberRepositoryCustom;
 import project.healthcommunity.trainer.domain.Trainer;
-import project.healthcommunity.certificate.repository.CertificateRepository;
-import project.healthcommunity.trainer.repository.TrainerRepository;
+import project.healthcommunity.trainer.domain.TrainerSession;
+import project.healthcommunity.trainer.dto.CreateTrainerRequest;
+import project.healthcommunity.trainer.dto.TrainerResponse;
+import project.healthcommunity.trainer.dto.UpdateTrainerRequest;
+import project.healthcommunity.trainer.exception.TrainerDuplicationLoginIdException;
+import project.healthcommunity.trainer.exception.TrainerNotFoundException;
+import project.healthcommunity.trainer.exception.TrainerNotMatchException;
+import project.healthcommunity.trainer.repository.TrainerRepositoryCustom;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
+import static project.healthcommunity.global.basic.BasicStaticField.LOGIN_TRAINER;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class TrainerService {
 
-    private final TrainerRepository trainerRepository;
-    private final CertificateRepository certificateRepository;
+    private final TrainerRepositoryCustom trainerRepositoryCustom;
+    private final MemberRepositoryCustom memberRepositoryCustom;
 
-
-    @Transactional(noRollbackForClassName = {"IllegalStateException"})
-    public void join(Trainer trainer){
-        validDupTrainer(trainer);
-        trainerRepository.save(trainer);
+    @Transactional
+    public TrainerResponse join(CreateTrainerRequest createTrainerRequest) {
+        validDupLoginId(createTrainerRequest.getLoginId());
+        Trainer trainer = CreateTrainerRequest.toTrainer(createTrainerRequest);
+        trainerRepositoryCustom.save(trainer);
+        return TrainerResponse.createByTrainer(trainer);
     }
 
+    private void validDupLoginId(String loginId) {
+        Optional<Member> findMember = memberRepositoryCustom.findByLoginId(loginId);
+        if (findMember.isPresent()) {
+            throw new MemberDuplicationLoginIdException();
+        }
 
-    private void validDupTrainer(Trainer trainer) {
-        List<Trainer> findTrainer = trainerRepository.findByTrainerName(trainer.getTrainerName());
-        if(!findTrainer.isEmpty()){
-            throw new IllegalStateException("이미 존재하는 트레이너입니다.");
+        Optional<Trainer> findTrainer = trainerRepositoryCustom.findByLoginId(loginId);
+        if (findTrainer.isPresent()) {
+            throw new MemberDuplicationLoginIdException();
         }
     }
 
-
     @Transactional
-    public void update(Long id, String trainerName, List<Certificate> certificates){
-        Trainer findTrainer = findOne(id);
-        findTrainer.update(trainerName, certificates);
-    }
-
-    @Transactional
-    public void deleteTrainer(Long id) {
-        trainerRepository.deleteById(id);
-    }
-
-    @Transactional
-    public void clear(){
-        trainerRepository.deleteAll();
-    }
-
-
-    public Trainer findOne(Long id){
-        Optional<Trainer> findTrainer = trainerRepository.findById(id);
-        if(!findTrainer.isPresent()){
-            throw new IllegalStateException("존재하지 않는 트레이너입니다.");
+    public TrainerResponse login(LoginForm loginForm, HttpServletRequest request) {
+        Trainer trainer = trainerRepositoryCustom.getByLoginId(loginForm.getLoginId());
+        if (trainer.getPassword().equals(loginForm.getPassword())) {
+            TrainerSession trainerSession = TrainerSession.createByTrainer(trainer);
+            HttpSession session = request.getSession();
+            session.setAttribute(LOGIN_TRAINER, trainerSession);
+            return TrainerResponse.createByTrainerSession(trainerSession);
         }
-        return findTrainer.get();
+        throw new TrainerNotMatchException();
     }
 
-    public List<Trainer> trainers(){
-        return trainerRepository.findAll();
+    public HttpSession logout(TrainerSession trainerSession, HttpServletRequest request) {
+        trainerSession.invalidate(request);
+        return request.getSession(false);
     }
 
 
+    @Transactional
+    public TrainerResponse update(TrainerSession trainerSession, UpdateTrainerRequest updateTrainerRequest) {
+        Trainer findTrainer = findOne(trainerSession.getId());
+        findTrainer.update(updateTrainerRequest);
+        return TrainerResponse.createByTrainer(findTrainer);
+    }
+
+    @Transactional
+    public void delete(TrainerSession trainerSession) {
+        trainerRepositoryCustom.deleteById(trainerSession.getId());
+    }
+
+    @Transactional
+    public void clear() {
+        trainerRepositoryCustom.deleteAll();
+    }
+
+
+    public Trainer findOne(Long trainerId) {
+        Trainer findTrainer = trainerRepositoryCustom.getById(trainerId);
+        return findTrainer;
+    }
+
+    public List<TrainerResponse> trainers() {
+        return trainerRepositoryCustom.findAll().stream().map(t -> TrainerResponse.createByTrainer(t)).collect(Collectors.toList());
+
+    }
 
 
     public List<Trainer> findByTrainerName(String trainerName) {
-        return trainerRepository.findByTrainerName(trainerName);
+        return trainerRepositoryCustom.findByTrainerName(trainerName);
     }
 
     public List<Comment> findCommentByTrainer(Long id) {
