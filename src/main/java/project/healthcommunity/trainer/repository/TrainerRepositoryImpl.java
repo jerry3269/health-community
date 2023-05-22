@@ -7,11 +7,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.stereotype.Repository;
 import project.healthcommunity.certificate.dto.CertificateForm;
 import project.healthcommunity.certificate.dto.QCertificateForm;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.trainer.dto.TrainerResponse;
 import project.healthcommunity.trainer.dto.TrainerSearchCond;
+import project.healthcommunity.trainer.exception.TrainerNotFoundException;
 
 import java.util.List;
 import java.util.Map;
@@ -20,13 +22,15 @@ import java.util.Optional;
 import static java.util.stream.Collectors.*;
 import static org.springframework.util.StringUtils.hasText;
 import static project.healthcommunity.certificate.domain.QCertificate.certificate;
+import static project.healthcommunity.global.error.ErrorStaticField.TRAINER_NOT_FOUND;
 import static project.healthcommunity.trainer.domain.QTrainer.*;
 
 @RequiredArgsConstructor
-public class TrainerRepositoryImpl implements TrainerRepositoryCustom{
+@Repository
+public class TrainerRepositoryImpl implements TrainerRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-    private final
+    private final TrainerJpaRepository trainerJpaRepository;
 
     @Override
     public Page<TrainerResponse> search(TrainerSearchCond condition, Pageable pageable) {
@@ -44,7 +48,7 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom{
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        List<TrainerResponse> trainerResponses = trainers.stream().map(TrainerResponse::new).collect(toList());
+        List<TrainerResponse> trainerResponses = trainers.stream().map(t-> TrainerResponse.createByTrainer(t)).collect(toList());
 
         List<Long> trainerIds = trainerResponses.stream().map(TrainerResponse::getId).collect(toList());
 
@@ -101,48 +105,48 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom{
     }
 
     @Override
-    public void save(Trainer trainer) {
-
+    public Trainer save(Trainer trainer) {
+        return trainerJpaRepository.save(trainer);
     }
 
     @Override
-    public List<Trainer> findByLoginId(String loginId) {
-        return null;
+    public Trainer getByLoginId(String loginId) {
+        return trainerJpaRepository.findByLoginId(loginId).orElseThrow(TrainerNotFoundException::new);
     }
 
     @Override
     public void deleteById(Long id) {
-
+        trainerJpaRepository.deleteById(id);
     }
 
     @Override
     public void deleteAll() {
-
+        trainerJpaRepository.deleteAll();
     }
 
     @Override
-    public Optional<Trainer> findById(Long id) {
-        return Optional.empty();
+    public Trainer getById(Long id) {
+        return trainerJpaRepository.findById(id).orElseThrow(TrainerNotFoundException::new);
     }
 
     @Override
     public List<Trainer> findAll() {
-        return null;
+        return trainerJpaRepository.findAll();
     }
 
     @Override
     public List<Trainer> findByTrainerName(String trainerName) {
-        return null;
+        return trainerJpaRepository.findByTrainerName(trainerName);
     }
 
     @Override
-    public Trainer findOne(Long trainerId) {
-        return null;
+    public Optional<Trainer> findByLoginId(String loginId) {
+        return trainerJpaRepository.findByLoginId(loginId);
     }
 
     @Override
-    public Trainer getLoginId(String loginId) {
-        return null;
+    public Optional<Trainer> findById(Long id) {
+        return trainerJpaRepository.findById(id);
     }
 
 
