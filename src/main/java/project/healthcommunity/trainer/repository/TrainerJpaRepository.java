@@ -5,10 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import project.healthcommunity.trainer.domain.Trainer;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface TrainerRepository extends JpaRepository<Trainer, Long>{
+public interface TrainerJpaRepository extends JpaRepository<Trainer, Long>{
 
     List<Trainer> findByTrainerName(String trainerName);
 
-    List<Trainer> findByLoginId(String loginId);
+    Optional<Trainer> findByLoginId(String loginId);
+    Optional<Trainer> findById(Long id);
 }
