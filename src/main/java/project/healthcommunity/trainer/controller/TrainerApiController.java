@@ -84,7 +84,7 @@ public class TrainerApiController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity searchTrainer(
+    public ResponseEntity search(
             @RequestBody @Valid TrainerSearchCond condition,
             BindingResult bindingResult,
             @PageableDefault(page = 0, size = 10, sort = "likes", direction = Sort.Direction.DESC) Pageable pageable) {

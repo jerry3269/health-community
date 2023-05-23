@@ -4,9 +4,9 @@ import static project.healthcommunity.global.error.ErrorStaticField.FORBIDDEN;
 
 public abstract class ForbiddenException extends RuntimeException{
     private static final int STATUS_CODE = FORBIDDEN;
-    private String message;
+    private String MESSAGE;
 
     public ForbiddenException(String message) {
-        this.message = message;
+        this.MESSAGE = message;
     }
 }

@@ -4,8 +4,8 @@ import static project.healthcommunity.global.error.ErrorStaticField.BAD_REQUEST;
 
 public abstract class DuplicationLoginIdException extends RuntimeException {
     private static final int STATUS_CODE = BAD_REQUEST;
-    private String message;
+    private String MESSAGE;
     public DuplicationLoginIdException(String message) {
-        this.message = message;
+        this.MESSAGE = message;
     }
 }

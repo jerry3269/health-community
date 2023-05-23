@@ -9,16 +9,16 @@ import project.healthcommunity.categorypost.domain.CategoryPost;
 import project.healthcommunity.categorypost.service.CategoryPostService;
 import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.post.dto.CreatePostRequest;
+import project.healthcommunity.post.dto.DeletePostRequest;
 import project.healthcommunity.post.dto.PostResponse;
 import project.healthcommunity.post.dto.UpdatePostRequest;
-import project.healthcommunity.post.repository.PostJpaRepository;
+import project.healthcommunity.post.exception.PostNotAllowedException;
 import project.healthcommunity.post.repository.PostRepositoryCustom;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.trainer.domain.TrainerSession;
 import project.healthcommunity.trainer.service.TrainerService;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -31,7 +31,6 @@ public class PostService {
     private final TrainerService trainerService;
     private final CategoryPostService categoryPostService;
     private final CategoryService categoryService;
-
 
     @Transactional
     public PostResponse post(TrainerSession trainerSession, CreatePostRequest createPostRequest){
@@ -51,33 +50,39 @@ public class PostService {
         return new PostResponse(post);
     }
 
+    @Transactional
+    public PostResponse update(TrainerSession trainerSession, UpdatePostRequest updatePostRequest){
+        Post post = getById(updatePostRequest.getPostId());
+
+        if (isValidUser(trainerSession, post)) {
+            post.update(updatePostRequest);
+            return new PostResponse(post);
+        }
+        throw new PostNotAllowedException();
+    }
 
     @Transactional
-    public PostResponse update(UpdatePostRequest updatePostRequest){
-        Post post = findOne(updatePostRequest.getPostId());
-        post.update(updatePostRequest);
-        return new PostResponse(post);
-    }
+    public void delete(TrainerSession trainerSession, DeletePostRequest deletePostRequest) {
+        Post post = getById(deletePostRequest.getPostId());
 
-
-    public Post findOne(Long id) {
-        Optional<Post> optionalPost = postRepositoryCustom.findById(id);
-        if(!optionalPost.isPresent()){
-            throw new IllegalStateException("존재하지 않는 포스트입니다.");
+        if(isValidUser(trainerSession, post)){
+            categoryPostService.deleteByPostId(deletePostRequest.getPostId());
+            postRepositoryCustom.deleteById(deletePostRequest.getPostId());
+            return;
         }
-        return optionalPost.get();
+        throw new PostNotAllowedException();
     }
 
+    private boolean isValidUser(TrainerSession trainerSession, Post post) {
+        return (post.getTrainer().getId() == trainerSession.getId()) ? true : false;
+    }
 
+    public Post getById(Long id) {
+        return postRepositoryCustom.getById(id);
+    }
     public List<Post> posts(){
         return postRepositoryCustom.findAll();
     }
-
-    public void delete(Long postId) {
-        categoryPostService.deleteByPostId(postId);
-        postRepositoryCustom.deleteById(postId);
-    }
-
     public List<Post> findByTrainer(Long trainerId) {
         return postRepositoryCustom.findByTrainer_Id(trainerId);
     }

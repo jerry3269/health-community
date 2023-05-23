@@ -38,7 +38,7 @@ public class CommentApiController {
             return bindingResult.getAllErrors();
         }
 
-        Post post = postService.findOne(request.getPostId());
+        Post post = postService.getById(request.getPostId());
         Member member = memberService.findOne(request.getMemberId());
         Comment comment = new Comment(post, request.getContent(), member);
         commentService.write(comment);
@@ -53,7 +53,7 @@ public class CommentApiController {
             return bindingResult.getAllErrors();
         }
 
-        Post post = postService.findOne(request.getPostId());
+        Post post = postService.getById(request.getPostId());
         Trainer trainer = trainerService.findOne(request.getTrainerId());
         Comment comment = new Comment(post, request.getContent(), trainer);
         commentService.write(comment);

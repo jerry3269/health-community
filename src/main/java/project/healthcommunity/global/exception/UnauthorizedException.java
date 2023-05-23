@@ -4,10 +4,10 @@ import static project.healthcommunity.global.error.ErrorStaticField.UNAUTHORIZED
 
 public class UnauthorizedException extends RuntimeException{
     private static final int STATUS_CODE = UNAUTHORIZED;
-    private String message;
+    private String MESSAGE;
 
     public UnauthorizedException(String message) {
-        this.message = message;
+        this.MESSAGE = message;
     }
 
 }

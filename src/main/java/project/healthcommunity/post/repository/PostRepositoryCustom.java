@@ -22,4 +22,6 @@ public interface PostRepositoryCustom {
     void deleteById(Long postId);
 
     List<Post> findByTrainer_Id(Long trainerId);
+
+    Post getById(Long id);
 }

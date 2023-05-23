@@ -4,8 +4,8 @@ import static project.healthcommunity.global.error.ErrorStaticField.NOT_FOUND;
 
 public abstract class NotFoundException extends RuntimeException{
     private static final int STATUS_CODE = NOT_FOUND;
-    private String message;
+    private String MESSAGE;
     public NotFoundException(String message) {
-        this.message = message;
+        this.MESSAGE = message;
     }
 }

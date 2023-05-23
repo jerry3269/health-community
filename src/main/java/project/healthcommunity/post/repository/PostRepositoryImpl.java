@@ -15,6 +15,7 @@ import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.post.dto.PostResponse;
 import project.healthcommunity.post.dto.PostSearchCond;
 import project.healthcommunity.post.dto.QPostResponse;
+import project.healthcommunity.post.exception.PostNotFoundException;
 
 import java.util.List;
 import java.util.Map;
@@ -116,6 +117,11 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     @Override
     public List<Post> findByTrainer_Id(Long trainerId) {
         return postJpaRepository.findByTrainer_Id(trainerId);
+    }
+
+    @Override
+    public Post getById(Long id) {
+        return findById(id).orElseThrow(PostNotFoundException::new);
     }
 
 

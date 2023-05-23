@@ -48,7 +48,7 @@ public class PostApiController {
     }
 
     @GetMapping("/list/search")
-    public ResponseEntity searchPost(
+    public ResponseEntity search(
             @ModelAttribute @Valid PostSearchCond condition,
             BindingResult bindingResult,
             @PageableDefault(page = 0, size = 10, sort = "likes", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -58,25 +58,36 @@ public class PostApiController {
     }
 
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity updateTrainerPost(
+    @PatchMapping("/update")
+    public ResponseEntity update(
             @LoginForTrainer TrainerSession trainerSession,
             @RequestBody @Valid UpdatePostRequest updatePostRequest,
             BindingResult bindingResult) {
 
         BindingException.validate(bindingResult);
-        PostResponse postResponse = postService.update(updatePostRequest);
+        PostResponse postResponse = postService.update(trainerSession, updatePostRequest);
         return ResponseEntity.ok().body(postResponse);
     }
 
     @PostMapping("/upload")
-    public ResponseEntity saveTrainerPost(
+    public ResponseEntity save(
             @LoginForTrainer TrainerSession trainerSession,
             @RequestBody CreatePostRequest createPostRequest,
             BindingResult bindingResult) {
 
-       BindingException.validate(bindingResult);
-       PostResponse postResponse = postService.post(trainerSession, createPostRequest);
-       return ResponseEntity.ok().body(postResponse);
+        BindingException.validate(bindingResult);
+        PostResponse postResponse = postService.post(trainerSession, createPostRequest);
+        return ResponseEntity.ok().body(postResponse);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity delete(
+            @LoginForTrainer TrainerSession trainerSession,
+            @RequestBody DeletePostRequest deletePostRequest,
+            BindingResult bindingResult) {
+
+        BindingException.validate(bindingResult);
+        postService.delete(trainerSession, deletePostRequest);
+        return ResponseEntity.ok().build();
     }
 }

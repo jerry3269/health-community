@@ -5,9 +5,9 @@ import static project.healthcommunity.global.error.ErrorStaticField.NOT_MATCH;
 public abstract class NotMatchException extends RuntimeException {
     private static final int  STATUS_CODE = NOT_MATCH;
 
-    private String message;
+    private String MESSAGE;
 
     public NotMatchException(String message) {
-        this.message = message;
+        this.MESSAGE = message;
     }
 }
