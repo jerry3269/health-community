@@ -13,7 +13,7 @@ import project.healthcommunity.member.dto.MemberResponse;
 import project.healthcommunity.member.domain.MemberSession;
 import project.healthcommunity.member.dto.UpdateMemberDto;
 import project.healthcommunity.member.exception.MemberDuplicationLoginIdException;
-import project.healthcommunity.member.exception.MemberNotMatchException;
+import project.healthcommunity.member.exception.MemberPasswordNotMatchException;
 import project.healthcommunity.member.repository.MemberRepositoryCustom;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.trainer.repository.TrainerRepositoryCustom;
@@ -61,7 +61,7 @@ public class MemberService {
             session.setAttribute(LOGIN_MEMBER, memberSession);
             return MemberResponse.createByMemberSession(memberSession);
         }
-        throw new MemberNotMatchException();
+        throw new MemberPasswordNotMatchException();
     }
 
     @Transactional

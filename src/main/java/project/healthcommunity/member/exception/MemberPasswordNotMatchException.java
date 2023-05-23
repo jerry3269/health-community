@@ -1,13 +1,13 @@
-package project.healthcommunity.trainer.exception;
+package project.healthcommunity.member.exception;
 
 import project.healthcommunity.global.exception.NotMatchException;
 
 import static project.healthcommunity.global.error.ErrorStaticField.INVALID_PASSWORD;
 
-public class TrainerNotMatchException extends NotMatchException {
+public class MemberPasswordNotMatchException extends NotMatchException {
     private static final String MESSAGE = INVALID_PASSWORD;
 
-    public TrainerNotMatchException() {
+    public MemberPasswordNotMatchException() {
         super(MESSAGE);
     }
 }

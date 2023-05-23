@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.healthcommunity.certificate.domain.Certificate;
 import project.healthcommunity.comment.domain.Comment;
 import project.healthcommunity.global.dto.LoginForm;
 import project.healthcommunity.member.domain.Member;
@@ -16,16 +15,13 @@ import project.healthcommunity.trainer.domain.TrainerSession;
 import project.healthcommunity.trainer.dto.CreateTrainerRequest;
 import project.healthcommunity.trainer.dto.TrainerResponse;
 import project.healthcommunity.trainer.dto.UpdateTrainerRequest;
-import project.healthcommunity.trainer.exception.TrainerDuplicationLoginIdException;
-import project.healthcommunity.trainer.exception.TrainerNotFoundException;
-import project.healthcommunity.trainer.exception.TrainerNotMatchException;
+import project.healthcommunity.trainer.exception.TrainerPasswordNotMatchException;
 import project.healthcommunity.trainer.repository.TrainerRepositoryCustom;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
 import static project.healthcommunity.global.basic.BasicStaticField.LOGIN_TRAINER;
 
 @Service
@@ -65,7 +61,7 @@ public class TrainerService {
             session.setAttribute(LOGIN_TRAINER, trainerSession);
             return TrainerResponse.createByTrainerSession(trainerSession);
         }
-        throw new TrainerNotMatchException();
+        throw new TrainerPasswordNotMatchException();
     }
 
     public HttpSession logout(TrainerSession trainerSession, HttpServletRequest request) {
