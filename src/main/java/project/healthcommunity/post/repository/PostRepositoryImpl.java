@@ -11,12 +11,14 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import project.healthcommunity.comment.dto.CommentDto;
 import project.healthcommunity.comment.dto.QCommentDto;
+import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.post.dto.PostResponse;
 import project.healthcommunity.post.dto.PostSearchCond;
 import project.healthcommunity.post.dto.QPostResponse;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.*;
 import static org.springframework.util.StringUtils.*;
@@ -27,6 +29,7 @@ import static project.healthcommunity.post.domain.QPost.*;
 public class PostRepositoryImpl implements PostRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
+    private final PostJpaRepository postJpaRepository;
     @Override
     public Page<PostResponse> search(PostSearchCond condition, Pageable pageable) {
 
@@ -61,6 +64,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         return PageableExecutionUtils.getPage(postResponses, pageable, countQuery::fetchOne);
     }
 
+
     private List<Long> findPostIds(List<PostResponse> postResponses) {
         return postResponses.stream().map(p -> p.getId()).collect(toList());
     }
@@ -88,5 +92,31 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     private BooleanExpression likesGoe(Integer likesGoe) {
         return likesGoe != null ? post.likes.goe(likesGoe) : null;
     }
+
+    @Override
+    public void save(Post post) {
+        postJpaRepository.save(post);
+    }
+
+    @Override
+    public Optional<Post> findById(Long id) {
+        return postJpaRepository.findById(id);
+    }
+
+    @Override
+    public List<Post> findAll() {
+        return postJpaRepository.findAll();
+    }
+
+    @Override
+    public void deleteById(Long postId) {
+        postJpaRepository.deleteById(postId);
+    }
+
+    @Override
+    public List<Post> findByTrainer_Id(Long trainerId) {
+        return postJpaRepository.findByTrainer_Id(trainerId);
+    }
+
 
 }

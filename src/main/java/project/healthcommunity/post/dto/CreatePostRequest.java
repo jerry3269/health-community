@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 
 import java.util.List;
@@ -16,8 +17,10 @@ public class CreatePostRequest {
     @NotNull
     private Long trainerId;
     @NotBlank
+    @Length(min = 2)
     private String title;
     @NotBlank
+    @Length(min = 20)
     private String content;
 
     private List<String> categoryNameList;

@@ -7,17 +7,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import project.healthcommunity.category.domain.Category;
-import project.healthcommunity.category.service.CategoryService;
-import project.healthcommunity.post.domain.Post;
+import project.healthcommunity.global.controller.LoginForTrainer;
+import project.healthcommunity.global.exception.BindingException;
 import project.healthcommunity.post.dto.*;
-import project.healthcommunity.post.repository.PostRepository;
+import project.healthcommunity.post.repository.PostJpaRepository;
+import project.healthcommunity.post.repository.PostRepositoryCustom;
 import project.healthcommunity.post.service.PostService;
-import project.healthcommunity.trainer.domain.Trainer;
-import project.healthcommunity.trainer.service.TrainerService;
+import project.healthcommunity.trainer.domain.TrainerSession;
 
 import java.util.List;
 
@@ -26,104 +25,58 @@ import static java.util.stream.Collectors.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/post")
 public class PostApiController {
 
     private final PostService postService;
-    private final PostRepository postRepository;
-    private final TrainerService trainerService;
-    private final CategoryService categoryService;
+    private final PostRepositoryCustom postRepositoryCustom;
 
-
-    @GetMapping("/api/posts")
-    public List<PostResponse> posts() {
-        return postService.posts().stream().map(PostResponse::new).collect(toList());
+    @GetMapping("/list")
+    public ResponseEntity<List<PostResponse>> posts() {
+        List<PostResponse> postResponseList = postService.posts().stream().map(PostResponse::new).collect(toList());
+        return ResponseEntity.ok().body(postResponseList);
     }
 
-    @GetMapping("/api/post/trainer/{id}")
-    public TrainerPostResponse findTrainerPostByPostId(
-            @PathVariable("id") Long id) {
-
-        Post findPost = postService.findOne(id);
-        return new TrainerPostResponse(findPost);
+    @GetMapping("/list/{trainerId}")
+    public ResponseEntity<List<PostResponse>> postsByTrainer(@PathVariable("trainerId") Long trainerId) {
+        List<PostResponse> postResponseList = postService
+                .findByTrainer(trainerId)
+                .stream()
+                .map(PostResponse::new)
+                .collect(toList());
+        return ResponseEntity.ok().body(postResponseList);
     }
 
-    @GetMapping("/api/posts/trainer/{trainerId}")
-    public List<PostResponse> postsByTrainer(@PathVariable("trainerId") Long trainerId) {
-        List<Post> postList = postService.findByTrainer(trainerId);
-        return postList.stream().map(PostResponse::new).collect(toList());
-    }
-
-    @GetMapping("/api/post/search")
-    public Object searchPost(
-            @RequestBody @Valid PostSearchCond condition,
+    @GetMapping("/list/search")
+    public ResponseEntity searchPost(
+            @ModelAttribute @Valid PostSearchCond condition,
             BindingResult bindingResult,
             @PageableDefault(page = 0, size = 10, sort = "likes", direction = Sort.Direction.DESC) Pageable pageable) {
-
-        if (bindingResult.hasErrors()) {
-            log.info("검증 오류 발생 errors={}", bindingResult);
-            return bindingResult.getAllErrors();
-        }
-
-        return postRepository.search(condition, pageable);
+        BindingException.validate(bindingResult);
+        Page<PostResponse> postResponsePage = postRepositoryCustom.search(condition, pageable);
+        return ResponseEntity.ok().body(postResponsePage);
     }
 
-    /**
-     * @param id
-     * @param request {
-     *                "title": "수정",
-     *                "content": "수정된 글입니다."
-     *                }
-     * @return
-     */
-    @PutMapping("/post/trainer/{id}")
-    public Object updateTrainerPost(
-            @PathVariable("id") Long id,
-            @RequestBody @Valid UpdatePostRequest request,
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity updateTrainerPost(
+            @LoginForTrainer TrainerSession trainerSession,
+            @RequestBody @Valid UpdatePostRequest updatePostRequest,
             BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
-            log.info("검증 오류 발생 errors={}", bindingResult);
-            return bindingResult.getAllErrors();
-        }
-
-        postService.update(id, request.getTitle(), request.getContent());
-        Post post = postService.findOne(id);
-        return new TrainerPostResponse(post);
+        BindingException.validate(bindingResult);
+        PostResponse postResponse = postService.update(updatePostRequest);
+        return ResponseEntity.ok().body(postResponse);
     }
 
-    /**
-     * @param request            {
-     *                           "trainerId": 1,
-     *                           "trainerName": "t1",
-     *                           "title": "안녕하세요",
-     *                           "content": "양지웅입니다",
-     *                           "categoryNameList": [
-     *                           "팔굽","윗몸"
-     *                           ]
-     *                           }
-     * @param redirectAttributes
-     * @return
-     */
-    @PostMapping("/post/trainer")
-    public Object saveTrainerPost(
-            @RequestBody CreatePostRequest request,
+    @PostMapping("/upload")
+    public ResponseEntity saveTrainerPost(
+            @LoginForTrainer TrainerSession trainerSession,
+            @RequestBody CreatePostRequest createPostRequest,
             BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
-            log.info("검증 오류 발생 errors={}", bindingResult);
-            return bindingResult.getAllErrors();
-        }
-
-        Trainer trainer = trainerService.findOne(request.getTrainerId());
-
-        List<Category> categoryList = request.getCategoryNameList().stream()
-                .map(name -> categoryService.categoryListByName(name).get(0))
-                .collect(toList());
-
-        Post post = new Post(request.getTitle(), request.getContent(), categoryList, trainer);
-        Long postId = postService.post(post);
-
-        Post findPost = postService.findOne(postId);
-        return new TrainerPostResponse(findPost);
+       BindingException.validate(bindingResult);
+       PostResponse postResponse = postService.post(trainerSession, createPostRequest);
+       return ResponseEntity.ok().body(postResponse);
     }
 }

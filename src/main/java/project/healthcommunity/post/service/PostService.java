@@ -4,67 +4,81 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.healthcommunity.category.domain.Category;
+import project.healthcommunity.category.service.CategoryService;
 import project.healthcommunity.categorypost.domain.CategoryPost;
+import project.healthcommunity.categorypost.service.CategoryPostService;
 import project.healthcommunity.post.domain.Post;
-import project.healthcommunity.categorypost.repository.CategoryPostRepository;
-import project.healthcommunity.post.repository.PostRepository;
+import project.healthcommunity.post.dto.CreatePostRequest;
+import project.healthcommunity.post.dto.PostResponse;
+import project.healthcommunity.post.dto.UpdatePostRequest;
+import project.healthcommunity.post.repository.PostJpaRepository;
+import project.healthcommunity.post.repository.PostRepositoryCustom;
+import project.healthcommunity.trainer.domain.Trainer;
+import project.healthcommunity.trainer.domain.TrainerSession;
+import project.healthcommunity.trainer.service.TrainerService;
 
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PostService {
 
-    private final PostRepository postRepository;
-
-    private final CategoryPostRepository categoryPostRepository;
+    private final PostRepositoryCustom postRepositoryCustom;
+    private final TrainerService trainerService;
+    private final CategoryPostService categoryPostService;
+    private final CategoryService categoryService;
 
 
     @Transactional
-    public Long post(Post post){
+    public PostResponse post(TrainerSession trainerSession, CreatePostRequest createPostRequest){
+        Trainer trainer = trainerService.findOne(createPostRequest.getTrainerId());
+
+        List<Category> categoryList = createPostRequest.getCategoryNameList().stream()
+                .map(name -> categoryService.categoryListByName(name).get(0))
+                .collect(toList());
+
+        Post post = new Post(createPostRequest.getTitle(), createPostRequest.getContent(), categoryList, trainer);
+
         List<CategoryPost> categoryPostList = post.getCategoryList();
         for (CategoryPost categoryPost : categoryPostList) {
-            categoryPostRepository.save(categoryPost);
+            categoryPostService.save(categoryPost);
         }
-        postRepository.save(post);
-        return post.getId();
+        postRepositoryCustom.save(post);
+        return new PostResponse(post);
     }
 
 
     @Transactional
-    public void update(Long id, String title, String content){
-        Post post = findOne(id);
-        post.update(title, content);
+    public PostResponse update(UpdatePostRequest updatePostRequest){
+        Post post = findOne(updatePostRequest.getPostId());
+        post.update(updatePostRequest);
+        return new PostResponse(post);
     }
 
 
     public Post findOne(Long id) {
-        Optional<Post> optionalPost = postRepository.findById(id);
+        Optional<Post> optionalPost = postRepositoryCustom.findById(id);
         if(!optionalPost.isPresent()){
             throw new IllegalStateException("존재하지 않는 포스트입니다.");
         }
         return optionalPost.get();
     }
 
-    /**
-     * 전체 조회
-     */
+
     public List<Post> posts(){
-        return postRepository.findAll();
+        return postRepositoryCustom.findAll();
     }
 
-    public void deleteCategoryPostById(Long id) {
-        categoryPostRepository.deleteByPost_id(id);
+    public void delete(Long postId) {
+        categoryPostService.deleteByPostId(postId);
+        postRepositoryCustom.deleteById(postId);
     }
-
-    public List<Post> findByTitle(String title){
-        return postRepository.findByTitle(title);
-    }
-
 
     public List<Post> findByTrainer(Long trainerId) {
-        return postRepository.findByTrainer_Id(trainerId);
+        return postRepositoryCustom.findByTrainer_Id(trainerId);
     }
 }

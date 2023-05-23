@@ -5,7 +5,6 @@ import project.healthcommunity.post.domain.Post;
 
 import java.util.List;
 
-public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom {
-    List<Post> findByTitle(String title);
+public interface PostJpaRepository extends JpaRepository<Post, Long>{
     List<Post> findByTrainer_Id(Long trainerId);
 }

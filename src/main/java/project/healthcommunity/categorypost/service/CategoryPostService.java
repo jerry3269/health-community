@@ -34,7 +34,15 @@ public class CategoryPostService {
         return categoryPostRepository.findAll();
     }
 
-    public void delete(Long categoryId, Long postId) {
+    public void deleteByCategoryIdAndPostId(Long categoryId, Long postId) {
         categoryPostRepository.deleteByCategory_idAndPost_id(categoryId, postId);
+    }
+
+    public void save(CategoryPost categoryPost) {
+        categoryPostRepository.save(categoryPost);
+    }
+
+    public void deleteByPostId(Long postId) {
+        categoryPostRepository.deleteByPost_id(postId);
     }
 }

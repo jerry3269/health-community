@@ -1,5 +1,6 @@
 package project.healthcommunity.global.advice;
 
+import org.hibernate.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,14 +13,15 @@ import static project.healthcommunity.global.error.ErrorStaticField.*;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    @ExceptionHandler(ArgumentNotValidException.class)
-    public ResponseEntity<ErrorCode> argumentNotValidExceptionHandler(ArgumentNotValidException ex) {
+    @ExceptionHandler(TypeMismatchException.class)
+    public ResponseEntity<ErrorCode> bindingExceptionHandler(TypeMismatchException ex) {
         ErrorCode errorCode = ErrorCode.builder()
                 .errorCode(BAD_REQUEST)
                 .message(ex.getMessage())
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorCode);
     }
+
 
     @ExceptionHandler(BindingException.class)
     public ResponseEntity<ErrorCode> bindingExceptionHandler(BindingException ex) {

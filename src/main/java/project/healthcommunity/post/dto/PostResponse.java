@@ -21,13 +21,21 @@ public class PostResponse {
     @NotNull
     @Min(0)
     private int commentCount;
+    @Builder
+    protected PostResponse(Long id, String title, int likes, int commentCount) {
+        this.id = id;
+        this.title = title;
+        this.likes = likes;
+        this.commentCount = commentCount;
+    }
+
 
     @QueryProjection
     public PostResponse(Post post) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.likes = post.getLikes();
-        commentCount = post.getComments().size();
+        this.commentCount = post.getComments().size();
     }
 
     public void setCommentCount(int commentCount) {

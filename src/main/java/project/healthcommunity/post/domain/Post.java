@@ -5,6 +5,7 @@ import lombok.*;
 import project.healthcommunity.category.domain.Category;
 import project.healthcommunity.categorypost.domain.CategoryPost;
 import project.healthcommunity.comment.domain.Comment;
+import project.healthcommunity.post.dto.UpdatePostRequest;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.global.basic.BaseEntity;
 
@@ -62,9 +63,9 @@ public class Post extends BaseEntity {
 
 
     //비지니스 로직 //
-    public void update(String title, String content) {
-        this.title = title;
-        this.content = content;
+    public void update(UpdatePostRequest updatePostRequest) {
+        this.title = updatePostRequest.getTitle();
+        this.content = updatePostRequest.getContent();
     }
 
 
