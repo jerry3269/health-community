@@ -2,6 +2,7 @@ package project.healthcommunity.comment.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import project.healthcommunity.comment.dto.UpdateCommentRequest;
 import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.global.basic.BaseEntity;
@@ -34,7 +35,7 @@ public class Comment extends BaseEntity {
     private List<Comment> child = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
+    @JoinColumn(name = "parent_id", nullable = true)
     private Comment parent;
 
     @Enumerated(EnumType.STRING)
@@ -55,7 +56,7 @@ public class Comment extends BaseEntity {
         addPost(post);
         this.content = content;
         addMember(member);
-        this.status = CommentStatus.COMMENT;
+        this.status = CommentStatus.CREATE;
     }
 
     @Builder(builderMethodName = "trainerNoParentBuilder", builderClassName = "trainerNoParentBuilder")
@@ -63,7 +64,7 @@ public class Comment extends BaseEntity {
         addPost(post);
         this.content = content;
         addTrainer(trainer);
-        this.status = CommentStatus.COMMENT;
+        this.status = CommentStatus.CREATE;
     }
     @Builder(builderMethodName = "memberParentBuilder", builderClassName = "memberParentBuilder")
     public Comment(Post post, String content, Member member, Comment parent) {
@@ -71,7 +72,7 @@ public class Comment extends BaseEntity {
         this.content = content;
         addMember(member);
         addParentComment(parent);
-        this.status = CommentStatus.COMMENT;
+        this.status = CommentStatus.CREATE;
     }
 
     @Builder(builderMethodName = "trainerParentBuilder",builderClassName = "trainerParentBuilder")
@@ -80,7 +81,7 @@ public class Comment extends BaseEntity {
         this.content = content;
         addTrainer(trainer);
         addParentComment(parent);
-        this.status = CommentStatus.COMMENT;
+        this.status = CommentStatus.CREATE;
     }
 
 
@@ -109,8 +110,12 @@ public class Comment extends BaseEntity {
 
     // 비지니스 로직 //
 
-    public void update(String content) {
-        this.content = content;
+    public void update(UpdateCommentRequest updateCommentRequest) {
+        this.content = updateCommentRequest.getContent();
         this.status = CommentStatus.MODIFY;
+    }
+
+    public void delete() {
+        this.status = CommentStatus.DELETE;
     }
 }

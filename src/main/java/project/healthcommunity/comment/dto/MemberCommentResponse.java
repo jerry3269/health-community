@@ -27,7 +27,6 @@ public class MemberCommentResponse {
     private int likes;
     private List<CommentDto> commentDtoList;
 
-
     public MemberCommentResponse(Comment comment) {
         this.commentId = comment.getId();
         this.postId = comment.getPost().getId();

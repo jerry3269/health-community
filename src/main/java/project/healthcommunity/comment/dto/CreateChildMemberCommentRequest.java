@@ -7,7 +7,6 @@ import project.healthcommunity.comment.domain.Comment;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class CreateChildMemberCommentRequest {
     @NotNull
     private Long postId;
@@ -17,12 +16,12 @@ public class CreateChildMemberCommentRequest {
     private String content;
     @NotNull
     private Long parentId;
-
-
-    public CreateChildMemberCommentRequest(Comment comment) {
-        this.postId = comment.getPost().getId();
-        this.memberId = comment.getMember().getId();
-        this.content = comment.getContent();
-        this.parentId = comment.getParent().getId();
+    @Builder
+    public CreateChildMemberCommentRequest(Long postId, Long memberId, String content, Long parentId) {
+        this.postId = postId;
+        this.memberId = memberId;
+        this.content = content;
+        this.parentId = parentId;
     }
+
 }

@@ -4,47 +4,126 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.healthcommunity.comment.domain.Comment;
-import project.healthcommunity.comment.repository.CommentRepository;
+import project.healthcommunity.comment.dto.*;
+import project.healthcommunity.comment.exception.CommentNotAllowedException;
+import project.healthcommunity.comment.repository.CommentRepositoryCustom;
+import project.healthcommunity.member.domain.Member;
+import project.healthcommunity.member.domain.MemberSession;
+import project.healthcommunity.member.repository.MemberRepositoryCustom;
+import project.healthcommunity.post.domain.Post;
+import project.healthcommunity.post.repository.PostRepositoryCustom;
+import project.healthcommunity.trainer.domain.Trainer;
+import project.healthcommunity.trainer.domain.TrainerSession;
+import project.healthcommunity.trainer.repository.TrainerRepositoryCustom;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CommentService {
 
-    private final CommentRepository commentRepository;
+    private final CommentRepositoryCustom commentRepositoryCustom;
+    private final PostRepositoryCustom postRepositoryCustom;
+    private final MemberRepositoryCustom memberRepositoryCustom;
+    private final TrainerRepositoryCustom trainerRepositoryCustom;
 
 
     @Transactional
-    public void write(Comment comment) {
-        commentRepository.save(comment);
+    public MemberCommentResponse write(CreateMemberCommentRequest createMemberCommentRequest) {
+        Post post = postRepositoryCustom.getById(createMemberCommentRequest.getPostId());
+        Member member = memberRepositoryCustom.getById(createMemberCommentRequest.getMemberId());
+        Comment comment = new Comment(post, createMemberCommentRequest.getContent(), member);
+        Comment saveComment = commentRepositoryCustom.save(comment);
+        return new MemberCommentResponse(saveComment);
     }
-
 
     @Transactional
-    public void update(Long id, String content) {
-        Comment comment = findOne(id);
-        comment.update(content);
+    public MemberCommentResponse write(CreateChildMemberCommentRequest createChildMemberCommentRequest) {
+        Post post = postRepositoryCustom.getById(createChildMemberCommentRequest.getPostId());
+        Member member = memberRepositoryCustom.getById(createChildMemberCommentRequest.getMemberId());
+        Comment parent = findOne(createChildMemberCommentRequest.getParentId());
+        Comment comment = new Comment(post, createChildMemberCommentRequest.getContent(), member, parent);
+        Comment saveComment = commentRepositoryCustom.save(comment);
+        return new MemberCommentResponse(saveComment);
     }
 
+    @Transactional
+    public TrainerCommentResponse write(CreateTrainerCommentRequest createTrainerCommentRequest) {
+        Post post = postRepositoryCustom.getById(createTrainerCommentRequest.getPostId());
+        Trainer trainer = trainerRepositoryCustom.getById(createTrainerCommentRequest.getTrainerId());
+        Comment comment = new Comment(post, createTrainerCommentRequest.getContent(), trainer);
+        Comment saveComment = commentRepositoryCustom.save(comment);
+        return new TrainerCommentResponse(saveComment);
+    }
 
+    @Transactional
+    public TrainerCommentResponse write(CreateChildTrainerCommentRequest createChildTrainerCommentRequest) {
+        Post post = postRepositoryCustom.getById(createChildTrainerCommentRequest.getPostId());
+        Trainer trainer = trainerRepositoryCustom.getById(createChildTrainerCommentRequest.getTrainerId());
+        Comment parent = findOne(createChildTrainerCommentRequest.getParentId());
+        Comment comment = new Comment(post, createChildTrainerCommentRequest.getContent(), trainer, parent);
+        Comment saveComment = commentRepositoryCustom.save(comment);
+        return new TrainerCommentResponse(saveComment);
+    }
 
-    public Comment findOne(Long id) {
-        Optional<Comment> optionalComment = commentRepository.findById(id);
-        if (!optionalComment.isPresent()) {
-            throw new IllegalStateException("존재하지 않는 댓글입니다.");
+    @Transactional
+    public MemberCommentResponse updateMemberComment(MemberSession memberSession, UpdateCommentRequest updateCommentRequest) {
+        Comment comment = findOne(updateCommentRequest.getCommentId());
+        if (isValidMember(memberSession, comment)) {
+            comment.update(updateCommentRequest);
+            return new MemberCommentResponse(comment);
         }
-        return optionalComment.get();
+        throw new CommentNotAllowedException();
+    }
+
+    private boolean isValidMember(MemberSession memberSession, Comment comment) {
+        return (memberSession.getId() == comment.getMember().getId()) ? true : false;
+    }
+
+    @Transactional
+    public TrainerCommentResponse updateTrainerComment(TrainerSession trainerSession, UpdateCommentRequest updateCommentRequest) {
+        Comment comment = findOne(updateCommentRequest.getCommentId());
+        if (isValidTrainer(trainerSession, comment)) {
+            comment.update(updateCommentRequest);
+            return new TrainerCommentResponse(comment);
+        }
+        throw new CommentNotAllowedException();
+    }
+
+    private boolean isValidTrainer(TrainerSession trainerSession, Comment comment) {
+        return (trainerSession.getId() == comment.getTrainer().getId()) ? true : false;
+    }
+
+    @Transactional
+    public MemberCommentResponse deleteMemberComment(MemberSession memberSession, DeleteCommentRequest deleteCommentRequest) {
+        Comment comment = findOne(deleteCommentRequest.getId());
+        if (isValidMember(memberSession, comment)) {
+            comment.delete();
+            return new MemberCommentResponse(comment);
+        }
+        throw new CommentNotAllowedException();
+    }
+
+    @Transactional
+    public TrainerCommentResponse deleteTrainerComment(TrainerSession trainerSession, DeleteCommentRequest deleteCommentRequest) {
+        Comment comment = findOne(deleteCommentRequest.getId());
+        if (isValidTrainer(trainerSession, comment)) {
+            comment.delete();
+            return new TrainerCommentResponse(comment);
+        }
+        throw new CommentNotAllowedException();
     }
 
 
-    public List<Comment> comments(){
-        return commentRepository.findAll();
+    private Comment findOne(Long id) {
+        return commentRepositoryCustom.getById(id);
     }
 
-    public void delete(Long id){
-        commentRepository.deleteById(id);
+
+    public List<Comment> comments() {
+        return commentRepositoryCustom.findAll();
     }
+
+
 }

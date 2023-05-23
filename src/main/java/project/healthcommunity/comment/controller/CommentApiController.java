@@ -3,26 +3,25 @@ package project.healthcommunity.comment.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import project.healthcommunity.comment.domain.Comment;
-import project.healthcommunity.comment.dto.CreateMemberCommentRequest;
-import project.healthcommunity.comment.dto.CreateTrainerCommentRequest;
-import project.healthcommunity.comment.dto.MemberCommentResponse;
-import project.healthcommunity.comment.dto.TrainerCommentResponse;
+import org.springframework.web.bind.annotation.*;
+import project.healthcommunity.comment.dto.*;
+import project.healthcommunity.comment.exception.RequestBodyNotFoundException;
 import project.healthcommunity.comment.service.CommentService;
-import project.healthcommunity.member.domain.Member;
+import project.healthcommunity.global.controller.LoginForMember;
+import project.healthcommunity.global.controller.LoginForTrainer;
+import project.healthcommunity.global.exception.BindingException;
+import project.healthcommunity.member.domain.MemberSession;
 import project.healthcommunity.member.service.MemberService;
-import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.post.service.PostService;
-import project.healthcommunity.trainer.domain.Trainer;
+import project.healthcommunity.trainer.domain.TrainerSession;
 import project.healthcommunity.trainer.service.TrainerService;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/comment")
 public class CommentApiController {
 
     private final CommentService commentService;
@@ -30,37 +29,81 @@ public class CommentApiController {
     private final MemberService memberService;
     private final TrainerService trainerService;
 
-    @PostMapping("/api/comment/member")
-    public Object saveMemberComment(@RequestBody @Valid CreateMemberCommentRequest request,
-                                                   BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            log.info("검증 오류 발생 errors={}", bindingResult);
-            return bindingResult.getAllErrors();
-        }
+    @PostMapping("/member")
+    public ResponseEntity saveMemberComment(@RequestBody(required = false) @Valid CreateMemberCommentRequest createMemberCommentRequest,
+                                            BindingResult parentBindingResult,
+                                            @RequestBody(required = false) @Valid CreateChildMemberCommentRequest createChildMemberCommentRequest,
+                                            BindingResult childBindingResult) {
 
-        Post post = postService.getById(request.getPostId());
-        Member member = memberService.findOne(request.getMemberId());
-        Comment comment = new Comment(post, request.getContent(), member);
-        commentService.write(comment);
-        return new MemberCommentResponse(comment);
+        if (createMemberCommentRequest != null) {
+            BindingException.validate(parentBindingResult);
+            MemberCommentResponse memberCommentResponse = commentService.write(createMemberCommentRequest);
+            return ResponseEntity.ok().body(memberCommentResponse);
+
+        } else if (createChildMemberCommentRequest != null) {
+            BindingException.validate(childBindingResult);
+            MemberCommentResponse memberCommentResponse = commentService.write(createChildMemberCommentRequest);
+            return ResponseEntity.ok().body(memberCommentResponse);
+        }
+        throw new RequestBodyNotFoundException();
     }
 
-    @PostMapping("/api/comment/trainer")
-    public Object saveTrainerComment(@RequestBody @Valid CreateTrainerCommentRequest request,
-                                                     BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            log.info("검증 오류 발생 errors={}", bindingResult);
-            return bindingResult.getAllErrors();
-        }
+    @PostMapping("/trainer")
+    public ResponseEntity saveTrainerComment(@RequestBody(required = false) @Valid CreateTrainerCommentRequest createTrainerCommentRequest,
+                                             BindingResult parentBindingResult,
+                                             @RequestBody(required = false) @Valid CreateChildTrainerCommentRequest createChildTrainerCommentRequest,
+                                             BindingResult childBindingResult) {
 
-        Post post = postService.getById(request.getPostId());
-        Trainer trainer = trainerService.findOne(request.getTrainerId());
-        Comment comment = new Comment(post, request.getContent(), trainer);
-        commentService.write(comment);
-        return new TrainerCommentResponse(comment);
+        if (createTrainerCommentRequest != null) {
+            BindingException.validate(parentBindingResult);
+            TrainerCommentResponse trainerCommentResponse = commentService.write(createTrainerCommentRequest);
+            return ResponseEntity.ok().body(trainerCommentResponse);
+
+        } else if (createChildTrainerCommentRequest != null) {
+            BindingException.validate(childBindingResult);
+            TrainerCommentResponse trainerCommentResponse = commentService.write(createChildTrainerCommentRequest);
+            return ResponseEntity.ok().body(createChildTrainerCommentRequest);
+        }
+        throw new RequestBodyNotFoundException();
     }
 
+    @PatchMapping("/member")
+    public ResponseEntity updateMemberComment(@LoginForMember MemberSession memberSession,
+                                              @RequestBody @Valid UpdateCommentRequest updateCommentRequest,
+                                              BindingResult bindingResult) {
 
+        BindingException.validate(bindingResult);
+        MemberCommentResponse memberCommentResponse = commentService.updateMemberComment(memberSession, updateCommentRequest);
+        return ResponseEntity.ok().body(memberCommentResponse);
+    }
 
+    @PatchMapping("/trainer")
+    public ResponseEntity updateTrainerComment(@LoginForTrainer TrainerSession trainerSession,
+                                               @RequestBody @Valid UpdateCommentRequest updateCommentRequest,
+                                               BindingResult bindingResult) {
+
+        BindingException.validate(bindingResult);
+        TrainerCommentResponse trainerCommentResponse = commentService.updateTrainerComment(trainerSession, updateCommentRequest);
+        return ResponseEntity.ok().body(trainerCommentResponse);
+    }
+
+    @DeleteMapping("/member")
+    public ResponseEntity deleteMemberComment(@LoginForMember MemberSession memberSession,
+                                              @RequestBody @Valid DeleteCommentRequest deleteCommentRequest,
+                                              BindingResult bindingResult) {
+        BindingException.validate(bindingResult);
+        MemberCommentResponse memberCommentResponse = commentService.deleteMemberComment(memberSession, deleteCommentRequest);
+        return ResponseEntity.ok().body(memberCommentResponse);
+    }
+
+    @DeleteMapping("/trainer")
+    public ResponseEntity deleteTrainerComment(@LoginForTrainer TrainerSession trainerSession,
+                                               @RequestBody @Valid DeleteCommentRequest deleteCommentRequest,
+                                               BindingResult bindingResult) {
+
+        BindingException.validate(bindingResult);
+        TrainerCommentResponse trainerCommentResponse = commentService.deleteTrainerComment(trainerSession, deleteCommentRequest);
+        return ResponseEntity.ok().body(trainerCommentResponse);
+    }
 
 }
