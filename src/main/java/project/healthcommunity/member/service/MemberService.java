@@ -33,20 +33,21 @@ public class MemberService {
     private final TrainerRepositoryCustom trainerRepositoryCustom;
 
     @Transactional
-    public MemberResponse join(CreateMemberRequest createMemberRequest){
+    public MemberResponse join(CreateMemberRequest createMemberRequest) {
         validDupLoginId(createMemberRequest.getLoginId());
         Member member = CreateMemberRequest.toMember(createMemberRequest);
         memberRepositoryCustom.save(member);
         return MemberResponse.createByMember(member);
     }
-    private void validDupLoginId(String loginId){
+
+    private void validDupLoginId(String loginId) {
         Optional<Member> findMember = memberRepositoryCustom.findByLoginId(loginId);
         if (findMember.isPresent()) {
             throw new MemberDuplicationLoginIdException();
         }
 
         Optional<Trainer> findTrainer = trainerRepositoryCustom.findByLoginId(loginId);
-        if(findTrainer.isPresent()) {
+        if (findTrainer.isPresent()) {
             throw new MemberDuplicationLoginIdException();
         }
     }
@@ -62,6 +63,7 @@ public class MemberService {
         }
         throw new MemberNotMatchException();
     }
+
     @Transactional
     public HttpSession logout(MemberSession memberSession, HttpServletRequest request) {
         memberSession.invalidate(request);
@@ -69,10 +71,11 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberResponse update(MemberSession memberSession, UpdateMemberDto updateMemberDto){
-        Member findMember = findOne(memberSession.getId());
-        findMember.update(updateMemberDto);
-        return MemberResponse.createByMember(findMember);
+    public MemberResponse update(MemberSession memberSession, UpdateMemberDto updateMemberDto) {
+        Member member = findOne(memberSession.getId());
+        member.update(updateMemberDto);
+        return MemberResponse.createByMember(member);
+
     }
 
     @Transactional
@@ -82,12 +85,13 @@ public class MemberService {
         trainer.upLikes();
     }
 
+    @Transactional
+    public void delete(MemberSession memberSession) {
+        memberRepositoryCustom.deleteById(memberSession.getId());
+    }
 
 
-    /**
-     * 전체 조회
-     */
-    public List<MemberResponse> members(){
+    public List<MemberResponse> members() {
         return memberRepositoryCustom.findAll().stream().map(m -> MemberResponse.createByMember(m)).collect(Collectors.toList());
 
     }
@@ -101,17 +105,9 @@ public class MemberService {
         return member.getCommentList();
     }
 
-    @Transactional
-    public void delete(MemberSession memberSession) {
-        memberRepositoryCustom.deleteById(memberSession.getId());
-    }
-
-    public Member findOne(Long id){
+    public Member findOne(Long id) {
         return memberRepositoryCustom.getById(id);
     }
-
-
-
 
 
 }

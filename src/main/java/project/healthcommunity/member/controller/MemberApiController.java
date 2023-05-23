@@ -60,7 +60,7 @@ public class MemberApiController {
     }
 
     @PatchMapping("/")
-    public ResponseEntity<MemberResponse> updateMember(
+    public ResponseEntity<MemberResponse> update(
             @LoginForMember MemberSession memberSession,
             @RequestBody @Valid UpdateMemberDto updateMemberDto,
             BindingResult bindingResult) {
