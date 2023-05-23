@@ -12,6 +12,7 @@ import project.healthcommunity.global.controller.LoginForMember;
 import project.healthcommunity.global.controller.LoginForTrainer;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.trainer.domain.TrainerSession;
+import project.healthcommunity.trainer.exception.TrainerUnauthorizedException;
 
 import static project.healthcommunity.global.basic.BasicStaticField.*;
 
@@ -31,7 +32,7 @@ public class LoginTrainerArgumentResolver implements HandlerMethodArgumentResolv
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute(LOGIN_TRAINER) == null) {
-            return null;
+            throw new TrainerUnauthorizedException();
         }
         return session.getAttribute(LOGIN_TRAINER);
     }
