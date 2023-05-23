@@ -1,4 +1,4 @@
-package project.healthcommunity.comment.dto;
+package project.healthcommunity.comment.dto.member;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

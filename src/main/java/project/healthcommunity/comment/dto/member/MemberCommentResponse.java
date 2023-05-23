@@ -1,10 +1,11 @@
-package project.healthcommunity.comment.dto;
+package project.healthcommunity.comment.dto.member;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import project.healthcommunity.comment.domain.Comment;
+import project.healthcommunity.comment.dto.CommentDto;
 
 import java.util.List;
 
