@@ -80,14 +80,14 @@ public class PostApiController {
         return ResponseEntity.ok().body(postResponse);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{postId}")
     public ResponseEntity delete(
             @LoginForTrainer TrainerSession trainerSession,
-            @ModelAttribute @Valid DeletePostRequest deletePostRequest,
+            @PathVariable Long postId,
             BindingResult bindingResult) {
 
         BindingException.validate(bindingResult);
-        postService.delete(trainerSession, deletePostRequest);
+        postService.delete(trainerSession, postId);
         return ResponseEntity.ok().build();
     }
 }

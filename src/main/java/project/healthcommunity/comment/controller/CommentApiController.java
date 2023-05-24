@@ -81,22 +81,22 @@ public class CommentApiController {
         return ResponseEntity.ok().body(trainerCommentResponse);
     }
 
-    @DeleteMapping("/member")
+    @DeleteMapping("/member/{commentId}")
     public ResponseEntity deleteMemberComment(@LoginForMember MemberSession memberSession,
-                                              @ModelAttribute @Valid DeleteCommentRequest deleteCommentRequest,
+                                              @PathVariable Long commentId,
                                               BindingResult bindingResult) {
         BindingException.validate(bindingResult);
-        MemberCommentResponse memberCommentResponse = commentService.deleteMemberComment(memberSession, deleteCommentRequest);
+        MemberCommentResponse memberCommentResponse = commentService.deleteMemberComment(memberSession, commentId);
         return ResponseEntity.ok().body(memberCommentResponse);
     }
 
-    @DeleteMapping("/trainer")
+    @DeleteMapping("/trainer/{commentId}")
     public ResponseEntity deleteTrainerComment(@LoginForTrainer TrainerSession trainerSession,
-                                               @ModelAttribute @Valid DeleteCommentRequest deleteCommentRequest,
+                                               @PathVariable Long commentId,
                                                BindingResult bindingResult) {
 
         BindingException.validate(bindingResult);
-        TrainerCommentResponse trainerCommentResponse = commentService.deleteTrainerComment(trainerSession, deleteCommentRequest);
+        TrainerCommentResponse trainerCommentResponse = commentService.deleteTrainerComment(trainerSession, commentId);
         return ResponseEntity.ok().body(trainerCommentResponse);
     }
 

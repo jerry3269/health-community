@@ -48,11 +48,11 @@ public class CertificateController {
         return ResponseEntity.ok().body(certificateResponse);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{certificateId}")
     public ResponseEntity delete(@LoginForTrainer TrainerSession trainerSession,
-                                 @PathVariable Long id,
+                                 @PathVariable Long certificateId,
                                  BindingResult bindingResult) {
-        certificateService.delete(trainerSession, id);
+        certificateService.delete(trainerSession, certificateId);
         return ResponseEntity.ok().build();
     }
 }

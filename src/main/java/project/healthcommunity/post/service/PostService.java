@@ -9,7 +9,6 @@ import project.healthcommunity.categorypost.domain.CategoryPost;
 import project.healthcommunity.categorypost.service.CategoryPostService;
 import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.post.dto.CreatePostRequest;
-import project.healthcommunity.post.dto.DeletePostRequest;
 import project.healthcommunity.post.dto.PostResponse;
 import project.healthcommunity.post.dto.UpdatePostRequest;
 import project.healthcommunity.post.exception.PostNotAllowedException;
@@ -62,12 +61,12 @@ public class PostService {
     }
 
     @Transactional
-    public void delete(TrainerSession trainerSession, DeletePostRequest deletePostRequest) {
-        Post post = getById(deletePostRequest.getPostId());
+    public void delete(TrainerSession trainerSession, Long postId) {
+        Post post = getById(postId);
 
         if(isValidUser(trainerSession, post)){
-            categoryPostService.deleteByPostId(deletePostRequest.getPostId());
-            postRepositoryCustom.deleteById(deletePostRequest.getPostId());
+            categoryPostService.deleteByPostId(postId);
+            postRepositoryCustom.deleteById(postId);
             return;
         }
         throw new PostNotAllowedException();

@@ -102,8 +102,8 @@ public class CommentService {
     }
 
     @Transactional
-    public MemberCommentResponse deleteMemberComment(MemberSession memberSession, DeleteCommentRequest deleteCommentRequest) {
-        Comment comment = findOne(deleteCommentRequest.getId());
+    public MemberCommentResponse deleteMemberComment(MemberSession memberSession, Long commentId) {
+        Comment comment = findOne(commentId);
         if (isValidMember(memberSession, comment)) {
             comment.delete();
             return new MemberCommentResponse(comment);
@@ -112,8 +112,8 @@ public class CommentService {
     }
 
     @Transactional
-    public TrainerCommentResponse deleteTrainerComment(TrainerSession trainerSession, DeleteCommentRequest deleteCommentRequest) {
-        Comment comment = findOne(deleteCommentRequest.getId());
+    public TrainerCommentResponse deleteTrainerComment(TrainerSession trainerSession, Long commentId) {
+        Comment comment = findOne(commentId);
         if (isValidTrainer(trainerSession, comment)) {
             comment.delete();
             return new TrainerCommentResponse(comment);
