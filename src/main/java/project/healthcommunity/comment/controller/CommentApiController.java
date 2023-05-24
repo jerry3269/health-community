@@ -37,17 +37,13 @@ public class CommentApiController {
 
     @PostMapping("/member")
     public ResponseEntity saveMemberComment(@RequestBody(required = false) @Valid CreateMemberCommentRequest createMemberCommentRequest,
-                                            BindingResult parentBindingResult,
-                                            @RequestBody(required = false) @Valid CreateChildMemberCommentRequest createChildMemberCommentRequest,
-                                            BindingResult childBindingResult) {
+                                            @RequestBody(required = false) @Valid CreateChildMemberCommentRequest createChildMemberCommentRequest) {
 
         if (createMemberCommentRequest != null) {
-            BindingException.validate(parentBindingResult);
             MemberCommentResponse memberCommentResponse = commentService.write(createMemberCommentRequest);
             return ResponseEntity.ok().body(memberCommentResponse);
 
         } else if (createChildMemberCommentRequest != null) {
-            BindingException.validate(childBindingResult);
             MemberCommentResponse memberCommentResponse = commentService.write(createChildMemberCommentRequest);
             return ResponseEntity.ok().body(memberCommentResponse);
         }
@@ -56,17 +52,13 @@ public class CommentApiController {
 
     @PostMapping("/trainer")
     public ResponseEntity saveTrainerComment(@RequestBody(required = false) @Valid CreateTrainerCommentRequest createTrainerCommentRequest,
-                                             BindingResult parentBindingResult,
-                                             @RequestBody(required = false) @Valid CreateChildTrainerCommentRequest createChildTrainerCommentRequest,
-                                             BindingResult childBindingResult) {
+                                             @RequestBody(required = false) @Valid CreateChildTrainerCommentRequest createChildTrainerCommentRequest) {
 
         if (createTrainerCommentRequest != null) {
-            BindingException.validate(parentBindingResult);
             TrainerCommentResponse trainerCommentResponse = commentService.write(createTrainerCommentRequest);
             return ResponseEntity.ok().body(trainerCommentResponse);
 
         } else if (createChildTrainerCommentRequest != null) {
-            BindingException.validate(childBindingResult);
             TrainerCommentResponse trainerCommentResponse = commentService.write(createChildTrainerCommentRequest);
             return ResponseEntity.ok().body(createChildTrainerCommentRequest);
         }
@@ -75,27 +67,23 @@ public class CommentApiController {
 
     @PatchMapping("/member")
     public ResponseEntity updateMemberComment(@LoginForMember MemberSession memberSession,
-                                              @RequestBody @Valid UpdateCommentRequest updateCommentRequest,
-                                              BindingResult bindingResult) {
+                                              @RequestBody @Valid UpdateCommentRequest updateCommentRequest) {
 
-        BindingException.validate(bindingResult);
         MemberCommentResponse memberCommentResponse = commentService.updateMemberComment(memberSession, updateCommentRequest);
         return ResponseEntity.ok().body(memberCommentResponse);
     }
 
     @PatchMapping("/trainer")
     public ResponseEntity updateTrainerComment(@LoginForTrainer TrainerSession trainerSession,
-                                               @RequestBody @Valid UpdateCommentRequest updateCommentRequest,
-                                               BindingResult bindingResult) {
+                                               @RequestBody @Valid UpdateCommentRequest updateCommentRequest) {
 
-        BindingException.validate(bindingResult);
         TrainerCommentResponse trainerCommentResponse = commentService.updateTrainerComment(trainerSession, updateCommentRequest);
         return ResponseEntity.ok().body(trainerCommentResponse);
     }
 
     @DeleteMapping("/member")
     public ResponseEntity deleteMemberComment(@LoginForMember MemberSession memberSession,
-                                              @RequestBody @Valid DeleteCommentRequest deleteCommentRequest,
+                                              @ModelAttribute @Valid DeleteCommentRequest deleteCommentRequest,
                                               BindingResult bindingResult) {
         BindingException.validate(bindingResult);
         MemberCommentResponse memberCommentResponse = commentService.deleteMemberComment(memberSession, deleteCommentRequest);
@@ -104,7 +92,7 @@ public class CommentApiController {
 
     @DeleteMapping("/trainer")
     public ResponseEntity deleteTrainerComment(@LoginForTrainer TrainerSession trainerSession,
-                                               @RequestBody @Valid DeleteCommentRequest deleteCommentRequest,
+                                               @ModelAttribute @Valid DeleteCommentRequest deleteCommentRequest,
                                                BindingResult bindingResult) {
 
         BindingException.validate(bindingResult);

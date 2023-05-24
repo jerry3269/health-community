@@ -40,8 +40,7 @@ public class MemberApiController {
     private final MemberRepositoryCustom memberRepositoryCustom;
 
     @PostMapping("/login")
-    public ResponseEntity<MemberResponse> login(@Valid @RequestBody LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request) {
-        BindingException.validate(bindingResult);
+    public ResponseEntity<MemberResponse> login(@RequestBody @Valid LoginForm loginForm, HttpServletRequest request) {
         MemberResponse memberResponse = memberService.login(loginForm, request);
         return ResponseEntity.ok(memberResponse);
     }
@@ -53,8 +52,7 @@ public class MemberApiController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<MemberResponse> saveMember(@RequestBody @Valid CreateMemberRequest createMemberRequest, BindingResult bindingResult) {
-        BindingException.validate(bindingResult);
+    public ResponseEntity<MemberResponse> saveMember(@RequestBody @Valid CreateMemberRequest createMemberRequest) {
         MemberResponse memberResponse = memberService.join(createMemberRequest);
         return ResponseEntity.ok(memberResponse);
     }
@@ -62,10 +60,9 @@ public class MemberApiController {
     @PatchMapping("/")
     public ResponseEntity<MemberResponse> update(
             @LoginForMember MemberSession memberSession,
-            @RequestBody @Valid UpdateMemberDto updateMemberDto,
-            BindingResult bindingResult) {
+            @RequestBody @Valid UpdateMemberDto updateMemberDto
+    ) {
 
-        BindingException.validate(bindingResult);
         MemberResponse memberResponse = memberService.update(memberSession, updateMemberDto);
         return ResponseEntity.ok(memberResponse);
     }
@@ -87,6 +84,7 @@ public class MemberApiController {
             @ModelAttribute @Valid MemberSearchCond condition,
             BindingResult bindingResult,
             @PageableDefault(page = 0, size = 10, sort = "postCount", direction = Sort.Direction.DESC) Pageable pageable) {
+
         BindingException.validate(bindingResult);
         Page<MemberResponse> memberResponsePage = memberRepositoryCustom.search(condition, pageable);
         return ResponseEntity.ok(memberResponsePage);

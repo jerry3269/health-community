@@ -38,8 +38,7 @@ public class TrainerApiController {
     private final TrainerRepositoryCustom TrainerRepositoryCustom;
 
     @PostMapping("/login")
-    public ResponseEntity<TrainerResponse> login(@Valid @RequestBody LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request) {
-        BindingException.validate(bindingResult);
+    public ResponseEntity<TrainerResponse> login(@RequestBody @Valid LoginForm loginForm, HttpServletRequest request) {
         TrainerResponse trainerResponse = trainerService.login(loginForm, request);
         return ResponseEntity.ok(trainerResponse);
     }
@@ -51,10 +50,7 @@ public class TrainerApiController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<TrainerResponse> saveTrainer(@RequestBody @Valid CreateTrainerRequest createTrainerRequest,
-                                                       BindingResult bindingResult) {
-
-        BindingException.validate(bindingResult);
+    public ResponseEntity<TrainerResponse> saveTrainer(@RequestBody @Valid CreateTrainerRequest createTrainerRequest) {
         TrainerResponse trainerResponse = trainerService.join(createTrainerRequest);
         return ResponseEntity.ok(trainerResponse);
     }
@@ -69,10 +65,8 @@ public class TrainerApiController {
     @PatchMapping("/")
     public ResponseEntity updateTrainer(
             @LoginForTrainer TrainerSession trainerSession,
-            @RequestBody @Valid UpdateTrainerRequest updateTrainerRequest,
-            BindingResult bindingResult) {
+            @RequestBody @Valid UpdateTrainerRequest updateTrainerRequest) {
 
-        BindingException.validate(bindingResult);
         TrainerResponse trainerResponse = trainerService.update(trainerSession, updateTrainerRequest);
         return ResponseEntity.ok(trainerResponse);
     }
@@ -85,7 +79,7 @@ public class TrainerApiController {
 
     @GetMapping("/search")
     public ResponseEntity search(
-            @RequestBody @Valid TrainerSearchCond condition,
+            @ModelAttribute @Valid TrainerSearchCond condition,
             BindingResult bindingResult,
             @PageableDefault(page = 0, size = 10, sort = "likes", direction = Sort.Direction.DESC) Pageable pageable) {
 

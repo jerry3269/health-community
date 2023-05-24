@@ -38,7 +38,11 @@ public class PostApiController {
     }
 
     @GetMapping("/list/{trainerId}")
-    public ResponseEntity<List<PostResponse>> postsByTrainer(@PathVariable("trainerId") Long trainerId) {
+    public ResponseEntity<List<PostResponse>> postsByTrainer(
+            @PathVariable("trainerId") Long trainerId,
+            BindingResult bindingResult) {
+
+        BindingException.validate(bindingResult);
         List<PostResponse> postResponseList = postService
                 .findByTrainer(trainerId)
                 .stream()
@@ -61,10 +65,8 @@ public class PostApiController {
     @PatchMapping("/update")
     public ResponseEntity update(
             @LoginForTrainer TrainerSession trainerSession,
-            @RequestBody @Valid UpdatePostRequest updatePostRequest,
-            BindingResult bindingResult) {
+            @RequestBody @Valid UpdatePostRequest updatePostRequest) {
 
-        BindingException.validate(bindingResult);
         PostResponse postResponse = postService.update(trainerSession, updatePostRequest);
         return ResponseEntity.ok().body(postResponse);
     }
@@ -72,10 +74,8 @@ public class PostApiController {
     @PostMapping("/upload")
     public ResponseEntity save(
             @LoginForTrainer TrainerSession trainerSession,
-            @RequestBody CreatePostRequest createPostRequest,
-            BindingResult bindingResult) {
+            @RequestBody @Valid CreatePostRequest createPostRequest) {
 
-        BindingException.validate(bindingResult);
         PostResponse postResponse = postService.post(trainerSession, createPostRequest);
         return ResponseEntity.ok().body(postResponse);
     }
@@ -83,7 +83,7 @@ public class PostApiController {
     @DeleteMapping("/delete")
     public ResponseEntity delete(
             @LoginForTrainer TrainerSession trainerSession,
-            @RequestBody DeletePostRequest deletePostRequest,
+            @ModelAttribute @Valid DeletePostRequest deletePostRequest,
             BindingResult bindingResult) {
 
         BindingException.validate(bindingResult);
