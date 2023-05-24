@@ -3,6 +3,7 @@ package project.healthcommunity.global.advice;
 import org.hibernate.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import project.healthcommunity.global.error.ErrorCode;
@@ -75,5 +76,14 @@ public class ControllerAdvice {
                 .message(ex.getMessage())
                 .build();
         return ResponseEntity.status(NOT_MATCH).body(errorCode);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorCode> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex) {
+        ErrorCode errorCode = ErrorCode.builder()
+                .errorCode(BAD_REQUEST)
+                .message(ex.getMessage())
+                .build();
+        return ResponseEntity.status(BAD_REQUEST).body(errorCode);
     }
 }
