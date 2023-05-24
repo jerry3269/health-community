@@ -32,8 +32,8 @@ public class ControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorCode);
     }
 
-    @ExceptionHandler(DuplicationLoginIdException.class)
-    public ResponseEntity<ErrorCode> duplicationLoginIdExceptionHandler(DuplicationLoginIdException ex) {
+    @ExceptionHandler(DuplicationException.class)
+    public ResponseEntity<ErrorCode> duplicationLoginIdExceptionHandler(DuplicationException ex) {
         ErrorCode errorCode = ErrorCode.builder()
                 .errorCode(BAD_REQUEST)
                 .message(ex.getMessage())

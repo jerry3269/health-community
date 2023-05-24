@@ -1,11 +1,10 @@
 package project.healthcommunity.trainer.dto;
 
-import com.querydsl.core.annotations.QueryProjection;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import project.healthcommunity.certificate.dto.CertificateForm;
+import project.healthcommunity.certificate.dto.CertificateResponse;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.trainer.domain.TrainerSession;
 
@@ -26,7 +25,7 @@ public class TrainerResponse {
     @Min(value = 0)
     private int career;
 
-    private List<CertificateForm> certificateFormList;
+    private List<CertificateResponse> certificateResponseList;
     @Min(value = 0)
     private int likes;
     @Min(value = 0)
@@ -71,7 +70,7 @@ public class TrainerResponse {
                 .build();
     }
 
-    public void setCertificateFormList(List<CertificateForm> certificateFormList) {
-        this.certificateFormList = certificateFormList;
+    public void setCertificateResponseList(List<CertificateResponse> certificateResponseList) {
+        this.certificateResponseList = certificateResponseList;
     }
 }

@@ -49,7 +49,7 @@ public class Trainer extends BaseEntity {
     // == 생성자 == //
 
     @Builder(builderMethodName = "noCertificateBuilder", builderClassName = "noCertificateBuilder")
-    public Trainer(String trainerName, int age, int career, String loginId, String password) {
+    private Trainer(String trainerName, int age, int career, String loginId, String password) {
         this.trainerName = trainerName;
         this.age = age;
         this.career = career;
@@ -59,7 +59,7 @@ public class Trainer extends BaseEntity {
     }
 
     @Builder(builderMethodName = "certificateBuilder", builderClassName = "certificateBuilder")
-    public Trainer(String trainerName, int age, int career,String loginId, String password, Certificate... certificates) {
+    private Trainer(String trainerName, int age, int career,String loginId, String password, Certificate... certificates) {
         this.trainerName = trainerName;
         this.age = age;
         this.career = career;

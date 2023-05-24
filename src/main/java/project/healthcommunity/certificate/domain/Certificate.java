@@ -2,6 +2,7 @@ package project.healthcommunity.certificate.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import project.healthcommunity.certificate.dto.UpdateCertificateRequest;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.global.basic.BaseEntity;
 
@@ -25,25 +26,15 @@ public class Certificate extends BaseEntity {
 
     private String certificateName;
 
-    private LocalDate acquisitionDate;
+    private LocalDate acquiredDate;
 
-    // 생성자 //
     @Builder
-    public Certificate(Trainer trainer, String certificateName, LocalDate acquisitionDate) {
-        validDupCertificate(trainer.getCertificates(), certificateName);
+    public Certificate(Trainer trainer, String certificateName, LocalDate acquiredDate) {
         this.trainer = trainer;
         this.certificateName = certificateName;
-        this.acquisitionDate = acquisitionDate;
+        this.acquiredDate = acquiredDate;
     }
 
-    // 중복 자격증 생성 제약 //
-    private void validDupCertificate(List<Certificate> certificates, String certificateName) {
-        certificates.stream().forEach(c -> {
-            if(c.getCertificateName() == certificateName){
-                throw new IllegalStateException("이미 존재하는 자격증을 추가하셨습니다.");
-            }
-        });
-    }
 
     // 연관관계 메서드 시작 //
     public void addTrainer(Trainer trainer) {
@@ -53,9 +44,8 @@ public class Certificate extends BaseEntity {
     }
 
     // == 비지니스 로직 == //
-    public void update(String certificateName, LocalDate acquisitionDate) {
-        this.certificateName = certificateName;
-        this.acquisitionDate = acquisitionDate;
+    public void update(UpdateCertificateRequest updateCertificateRequest) {
+        this.acquiredDate = updateCertificateRequest.getAcquiredDate();
     }
 
 }

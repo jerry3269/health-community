@@ -12,7 +12,7 @@ import project.healthcommunity.member.dto.CreateMemberRequest;
 import project.healthcommunity.member.dto.MemberResponse;
 import project.healthcommunity.member.domain.MemberSession;
 import project.healthcommunity.member.dto.UpdateMemberDto;
-import project.healthcommunity.member.exception.MemberDuplicationLoginIdException;
+import project.healthcommunity.member.exception.MemberDuplicationException;
 import project.healthcommunity.member.exception.MemberPasswordNotMatchException;
 import project.healthcommunity.member.repository.MemberRepositoryCustom;
 import project.healthcommunity.trainer.domain.Trainer;
@@ -43,12 +43,12 @@ public class MemberService {
     private void validDupLoginId(String loginId) {
         Optional<Member> findMember = memberRepositoryCustom.findByLoginId(loginId);
         if (findMember.isPresent()) {
-            throw new MemberDuplicationLoginIdException();
+            throw new MemberDuplicationException();
         }
 
         Optional<Trainer> findTrainer = trainerRepositoryCustom.findByLoginId(loginId);
         if (findTrainer.isPresent()) {
-            throw new MemberDuplicationLoginIdException();
+            throw new MemberDuplicationException();
         }
     }
 

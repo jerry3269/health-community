@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CertificateForm {
+public class CertificateResponse {
 
     @NotNull
     private Long trainerId;
@@ -19,12 +19,12 @@ public class CertificateForm {
     private String certificateName;
     @NotNull
     // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-    private LocalDate acquisitionDate;
+    private LocalDate acquiredDate;
 
     @QueryProjection
-    public CertificateForm(Certificate certificate) {
+    public CertificateResponse(Certificate certificate) {
         this.trainerId = certificate.getTrainer().getId();
         this.certificateName = certificate.getCertificateName();
-        this.acquisitionDate = certificate.getAcquisitionDate();
+        this.acquiredDate = certificate.getAcquiredDate();
     }
 }

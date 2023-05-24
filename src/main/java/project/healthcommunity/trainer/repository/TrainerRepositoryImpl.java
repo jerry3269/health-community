@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-import project.healthcommunity.certificate.dto.CertificateForm;
+import project.healthcommunity.certificate.dto.CertificateResponse;
 import project.healthcommunity.certificate.dto.QCertificateForm;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.trainer.dto.TrainerResponse;
@@ -22,7 +22,6 @@ import java.util.Optional;
 import static java.util.stream.Collectors.*;
 import static org.springframework.util.StringUtils.hasText;
 import static project.healthcommunity.certificate.domain.QCertificate.certificate;
-import static project.healthcommunity.global.error.ErrorStaticField.TRAINER_NOT_FOUND;
 import static project.healthcommunity.trainer.domain.QTrainer.*;
 
 @RequiredArgsConstructor
@@ -52,10 +51,10 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom {
 
         List<Long> trainerIds = trainerResponses.stream().map(TrainerResponse::getId).collect(toList());
 
-        Map<Long, List<CertificateForm>> certificateDtoMap = findCertificateDtoMap(trainerIds);
+        Map<Long, List<CertificateResponse>> certificateDtoMap = findCertificateDtoMap(trainerIds);
 
         trainerResponses.forEach(t-> {
-            t.setCertificateFormList(certificateDtoMap.get(t.getId()));
+            t.setCertificateResponseList(certificateDtoMap.get(t.getId()));
         });
 
         JPAQuery<Long> countQuery = queryFactory
@@ -150,16 +149,16 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom {
     }
 
 
-    private Map<Long, List<CertificateForm>> findCertificateDtoMap(List<Long> trainerIds) {
-        List<CertificateForm> certificateFormList = queryFactory
+    private Map<Long, List<CertificateResponse>> findCertificateDtoMap(List<Long> trainerIds) {
+        List<CertificateResponse> certificateResponseList = queryFactory
                 .select(new QCertificateForm(certificate))
                 .from(certificate)
                 .leftJoin(certificate.trainer, trainer).fetchJoin()
                 .where(trainer.id.in(trainerIds))
                 .fetch();
 
-        Map<Long, List<CertificateForm>> certificateDtoMap =
-                certificateFormList.stream().collect(groupingBy(CertificateForm::getTrainerId));
+        Map<Long, List<CertificateResponse>> certificateDtoMap =
+                certificateResponseList.stream().collect(groupingBy(CertificateResponse::getTrainerId));
         return certificateDtoMap;
     }
 

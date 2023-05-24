@@ -1,13 +1,13 @@
 package project.healthcommunity.trainer.exception;
 
-import project.healthcommunity.global.exception.DuplicationLoginIdException;
+import project.healthcommunity.global.exception.DuplicationException;
 
 import static project.healthcommunity.global.error.ErrorStaticField.DUP_LOGIN_ID;
 
-public class TrainerDuplicationLoginIdException extends DuplicationLoginIdException {
+public class TrainerDuplicationException extends DuplicationException {
     private static final String MESSAGE = DUP_LOGIN_ID;
 
-    public TrainerDuplicationLoginIdException() {
+    public TrainerDuplicationException() {
         super(MESSAGE);
     }
 }
