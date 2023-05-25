@@ -1,48 +1,56 @@
 package project.healthcommunity.categorypost.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.healthcommunity.category.domain.Category;
+import project.healthcommunity.category.repository.CategoryRepositoryCustom;
 import project.healthcommunity.categorypost.domain.CategoryPost;
-import project.healthcommunity.categorypost.repository.CategoryPostRepository;
+import project.healthcommunity.categorypost.dto.CategoryPostResponse;
+import project.healthcommunity.categorypost.dto.CreateCategoryPostRequest;
+import project.healthcommunity.categorypost.repository.CategoryPostJpaRepository;
+import project.healthcommunity.categorypost.repository.CategoryPostRepositoryCustom;
+import project.healthcommunity.post.domain.Post;
+import project.healthcommunity.post.repository.PostRepositoryCustom;
+import project.healthcommunity.trainer.repository.TrainerRepositoryCustom;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CategoryPostService {
 
-    private final CategoryPostRepository categoryPostRepository;
+    private final CategoryPostRepositoryCustom categoryPostRepositoryCustom;
+    private final PostRepositoryCustom postRepositoryCustom;
+    private final CategoryRepositoryCustom categoryRepositoryCustom;
+
 
     @Transactional
-    public void join(CategoryPost categoryPost){
-        categoryPostRepository.save(categoryPost);
+    public CategoryPostResponse save(CreateCategoryPostRequest createCategoryPostRequest){
+        Post post = postRepositoryCustom.getById(createCategoryPostRequest.getPostId());
+        Category category = categoryRepositoryCustom.getById(createCategoryPostRequest.getCategoryId());
+        CategoryPost categoryPost = CreateCategoryPostRequest.toCategoryPost(category, post);
+        CategoryPost savedCategoryPost = categoryPostRepositoryCustom.save(categoryPost);
+        return CategoryPostResponse.createByCategoryPost(savedCategoryPost);
     }
 
 
-    public CategoryPost findOne(Long id) {
-        Optional<CategoryPost> optionalCategoryPost = categoryPostRepository.findById(id);
-        if(!optionalCategoryPost.isPresent()){
-            throw new IllegalStateException("해당 카테고리에 등록된 글이 아닙니다");
-        }
-        return optionalCategoryPost.get();
+    public List<CategoryPostResponse> findByCategoryId(Long categoryId, Pageable pageable) {
+        List<CategoryPost> categoryPosts = categoryPostRepositoryCustom.findByCategory_id(categoryId, pageable);
+        List<CategoryPostResponse> categoryPostResponses = categoryPosts.stream()
+                .map(categoryPost -> CategoryPostResponse.createByCategoryPost(categoryPost))
+                .collect(Collectors.toList());
+        return categoryPostResponses;
     }
 
-    public List<CategoryPost> categoryPostList(){
-        return categoryPostRepository.findAll();
+    public Page<CategoryPost> findAll(Pageable pageable){
+        return categoryPostRepositoryCustom.findAll(pageable);
     }
 
-    public void deleteByCategoryIdAndPostId(Long categoryId, Long postId) {
-        categoryPostRepository.deleteByCategory_idAndPost_id(categoryId, postId);
-    }
 
-    public void save(CategoryPost categoryPost) {
-        categoryPostRepository.save(categoryPost);
-    }
-
-    public void deleteByPostId(Long postId) {
-        categoryPostRepository.deleteByPost_id(postId);
-    }
 }

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.healthcommunity.category.domain.Category;
-import project.healthcommunity.category.repository.CategoryRepository;
+import project.healthcommunity.category.repository.CategoryJpaRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,16 +14,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CategoryService {
 
-    private final CategoryRepository categoryRepository;
+    private final CategoryJpaRepository categoryJpaRepository;
 
     @Transactional
     public void register(Category category) {
         validDupCategory(category);
-        categoryRepository.save(category);
+        categoryJpaRepository.save(category);
     }
 
     private void validDupCategory(Category category) {
-        List<Category> result = categoryRepository.findByCategoryName(category.getCategoryName());
+        List<Category> result = categoryJpaRepository.findByCategoryName(category.getCategoryName());
         if(!result.isEmpty()){
             throw new IllegalStateException("이미 존재하는 카테고리입니다.");
         }
@@ -37,7 +37,7 @@ public class CategoryService {
 
 
     public Category findOne(Long id) {
-        Optional<Category> optionalCategory = categoryRepository.findById(id);
+        Optional<Category> optionalCategory = categoryJpaRepository.findById(id);
         if(!optionalCategory.isPresent()){
             throw new IllegalStateException("존재하지 않는 카테고리입니다.");
         }
@@ -46,11 +46,11 @@ public class CategoryService {
 
 
     public List<Category> categories(){
-        return categoryRepository.findAll();
+        return categoryJpaRepository.findAll();
     }
 
 
     public List<Category> categoryListByName(String categoryName){
-        return categoryRepository.findByCategoryName(categoryName);
+        return categoryJpaRepository.findByCategoryName(categoryName);
     }
 }

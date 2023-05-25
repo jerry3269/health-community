@@ -1,51 +1,46 @@
 package project.healthcommunity.categorypost.controller;
 
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import project.healthcommunity.categorypost.domain.CategoryPost;
-import project.healthcommunity.categorypost.dto.CategoryPostRequest;
-import project.healthcommunity.categorypost.repository.CategoryPostRepository;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import project.healthcommunity.categorypost.dto.CategoryPostResponse;
+import project.healthcommunity.categorypost.dto.CreateCategoryPostRequest;
+import project.healthcommunity.categorypost.repository.CategoryPostJpaRepository;
+import project.healthcommunity.categorypost.repository.CategoryPostRepositoryCustom;
+import project.healthcommunity.categorypost.service.CategoryPostService;
+import project.healthcommunity.global.controller.LoginForTrainer;
+import project.healthcommunity.trainer.domain.TrainerSession;
 
 import java.util.List;
-
-import static java.util.stream.Collectors.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/categorypost")
 public class CategoryPostController {
 
-    private final CategoryPostRepository categoryPostRepository;
+    private final CategoryPostService categoryPostService;
 
     @GetMapping("/search/category/{id}")
-    public Page<CategoryPostRequest> search_categoryId(
+    public ResponseEntity search_categoryId(
             @PathVariable("id") Long id,
-            @PageableDefault(page = 0, size = 10, sort = "categoryId", direction = Sort.Direction.ASC) Pageable pageable){
-
-        List<CategoryPost> list = categoryPostRepository.findByCategory_id(id, pageable);
-        List<CategoryPostRequest> categoryPostRequests = list.stream().map(CategoryPostRequest::new).collect(toList());
-        Long count = categoryPostRepository.countQueryByCategoryId(id);
-        return new PageImpl<>(categoryPostRequests, pageable, count);
+            BindingResult bindingResult,
+            @PageableDefault(page = 0, size = 10, sort = "categoryId", direction = Sort.Direction.ASC) Pageable pageable) {
+        List<CategoryPostResponse> categoryPostResponses = categoryPostService.findByCategoryId(id, pageable);
+        return ResponseEntity.ok().body(categoryPostResponses);
     }
 
-    @GetMapping("/search/post/{id}")
-    public Page<CategoryPostRequest> search_postId(
-            @PathVariable("id") Long id,
-            @PageableDefault(page = 0, size = 10, sort = "postId", direction = Sort.Direction.ASC) Pageable pageable){
-
-        List<CategoryPost> list = categoryPostRepository.findByCategory_id(id, pageable);
-        List<CategoryPostRequest> categoryPostRequests = list.stream().map(CategoryPostRequest::new).collect(toList());
-        Long count = categoryPostRepository.countQueryByPostId(id);
-
-        return new PageImpl<>(categoryPostRequests, pageable, count);
+    @PostMapping("/add")
+    public ResponseEntity save(
+            @LoginForTrainer TrainerSession trainerSession,
+            @RequestBody @Valid CreateCategoryPostRequest createCategoryPostRequest) {
+        CategoryPostResponse categoryPostResponse = categoryPostService.save(createCategoryPostRequest);
+        return ResponseEntity.ok().body(categoryPostResponse);
     }
+
 }

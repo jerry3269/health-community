@@ -5,6 +5,6 @@ import project.healthcommunity.category.domain.Category;
 
 import java.util.List;
 
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface CategoryJpaRepository extends JpaRepository<Category, Long> {
     List<Category> findByCategoryName(String categoryName);
 }
