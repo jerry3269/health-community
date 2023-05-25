@@ -11,7 +11,7 @@ import project.healthcommunity.comment.dto.member.MemberCommentResponse;
 import project.healthcommunity.comment.dto.trainer.CreateChildTrainerCommentRequest;
 import project.healthcommunity.comment.dto.trainer.CreateTrainerCommentRequest;
 import project.healthcommunity.comment.dto.trainer.TrainerCommentResponse;
-import project.healthcommunity.comment.exception.CommentNotAllowedException;
+import project.healthcommunity.comment.exception.CommentUnauthorizedException;
 import project.healthcommunity.comment.repository.CommentRepositoryCustom;
 import project.healthcommunity.member.domain.Member;
 import project.healthcommunity.member.domain.MemberSession;
@@ -80,7 +80,7 @@ public class CommentService {
             comment.update(updateCommentRequest);
             return new MemberCommentResponse(comment);
         }
-        throw new CommentNotAllowedException();
+        throw new CommentUnauthorizedException();
     }
 
     private boolean isValidMember(MemberSession memberSession, Comment comment) {
@@ -94,7 +94,7 @@ public class CommentService {
             comment.update(updateCommentRequest);
             return new TrainerCommentResponse(comment);
         }
-        throw new CommentNotAllowedException();
+        throw new CommentUnauthorizedException();
     }
 
     private boolean isValidTrainer(TrainerSession trainerSession, Comment comment) {
@@ -108,7 +108,7 @@ public class CommentService {
             comment.delete();
             return new MemberCommentResponse(comment);
         }
-        throw new CommentNotAllowedException();
+        throw new CommentUnauthorizedException();
     }
 
     @Transactional
@@ -118,7 +118,7 @@ public class CommentService {
             comment.delete();
             return new TrainerCommentResponse(comment);
         }
-        throw new CommentNotAllowedException();
+        throw new CommentUnauthorizedException();
     }
 
 

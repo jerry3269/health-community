@@ -11,7 +11,7 @@ import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.post.dto.CreatePostRequest;
 import project.healthcommunity.post.dto.PostResponse;
 import project.healthcommunity.post.dto.UpdatePostRequest;
-import project.healthcommunity.post.exception.PostNotAllowedException;
+import project.healthcommunity.post.exception.PostUnauthorizedException;
 import project.healthcommunity.post.repository.PostRepositoryCustom;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.trainer.domain.TrainerSession;
@@ -57,7 +57,7 @@ public class PostService {
             post.update(updatePostRequest);
             return new PostResponse(post);
         }
-        throw new PostNotAllowedException();
+        throw new PostUnauthorizedException();
     }
 
     @Transactional
@@ -69,7 +69,7 @@ public class PostService {
             postRepositoryCustom.deleteById(postId);
             return;
         }
-        throw new PostNotAllowedException();
+        throw new PostUnauthorizedException();
     }
 
     private boolean isValidUser(TrainerSession trainerSession, Post post) {

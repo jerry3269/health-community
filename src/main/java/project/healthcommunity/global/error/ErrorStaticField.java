@@ -23,9 +23,9 @@ public class ErrorStaticField {
     public static final String INVALID_ID = "존재하지 않는 아이디 입니다.";
     public static final String INVALID_PASSWORD = "비밀번호가 올바르지 않습니다.";
     public static final String BINDING_ERROR = "잘못된 CreateForm 형식입니다.";
-    public static final String NOT_ALLOW_POST = "해당 post에 접근 권한이 없는 사용자입니다.";
-    public static final String NOT_ALLOW_COMMENT = "해당 comment에 접근 권한이 없는 사용자입니다.";
-    public static final String NOT_ALLOW_CERTIFICATE = "해당 certificate에 접근 권한이 없는 사용자입니다.";
+    public static final String POST_UNAUTHORIZED = "해당 post에 접근 권한이 없는 사용자입니다.";
+    public static final String COMMENT_UNAUTHORIZED = "해당 comment에 접근 권한이 없는 사용자입니다.";
+    public static final String CERTIFICATE_UNAUTHORIZED = "해당 certificate에 접근 권한이 없는 사용자입니다.";
     public static final String REQUEST_BODY_NOT_FOUND = "ReqeustBody에 입력된 내용이 없습니다.";
     public static final String CERTIFICATE_NOT_YET = "아직 취득한 자격증이 없습니다.";
     public static final String DUP_CERTIFICATE = "이미 해당 자격증이 있습니다.";

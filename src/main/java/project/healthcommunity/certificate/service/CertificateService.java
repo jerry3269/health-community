@@ -7,7 +7,7 @@ import project.healthcommunity.certificate.domain.Certificate;
 import project.healthcommunity.certificate.dto.CertificateResponse;
 import project.healthcommunity.certificate.dto.CreateCertificateRequest;
 import project.healthcommunity.certificate.dto.UpdateCertificateRequest;
-import project.healthcommunity.certificate.exception.CertificateNotAllowedException;
+import project.healthcommunity.certificate.exception.CertificateUnauthorizedException;
 import project.healthcommunity.certificate.exception.DupCertificateException;
 import project.healthcommunity.certificate.repository.CertificateRepositoryCustom;
 import project.healthcommunity.trainer.domain.TrainerSession;
@@ -54,7 +54,7 @@ public class CertificateService {
     private Certificate isValidUser(TrainerSession trainerSession, Long certificateId) {
         Certificate certificate = getById(certificateId);
         if (!trainerSession.getId().equals(certificate.getTrainer().getId())) {
-            throw new CertificateNotAllowedException();
+            throw new CertificateUnauthorizedException();
         }
         return certificate;
     }
