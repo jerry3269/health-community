@@ -34,7 +34,7 @@ public class PostService {
 
     @Transactional
     public PostResponse post(TrainerSession trainerSession, CreatePostRequest createPostRequest){
-        Trainer trainer = trainerService.findOne(createPostRequest.getTrainerId());
+        Trainer trainer = trainerService.getById(createPostRequest.getTrainerId());
 
         List<Category> categoryList = createPostRequest.getCategoryNameList().stream()
                 .map(categoryName -> categoryService.getByCategoryName(categoryName))

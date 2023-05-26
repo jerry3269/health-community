@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import project.healthcommunity.certificate.dto.CertificateResponse;
-import project.healthcommunity.certificate.dto.QCertificateForm;
+import project.healthcommunity.certificate.dto.QCertificateResponse;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.trainer.dto.TrainerResponse;
 import project.healthcommunity.trainer.dto.TrainerSearchCond;
@@ -156,7 +156,7 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom {
 
     private Map<Long, List<CertificateResponse>> findCertificateDtoMap(List<Long> trainerIds) {
         List<CertificateResponse> certificateResponseList = queryFactory
-                .select(new QCertificateForm(certificate))
+                .select(new QCertificateResponse(certificate))
                 .from(certificate)
                 .leftJoin(certificate.trainer, trainer).fetchJoin()
                 .where(trainer.id.in(trainerIds))

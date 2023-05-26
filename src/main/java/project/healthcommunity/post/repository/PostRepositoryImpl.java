@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 
+import org.springframework.stereotype.Repository;
 import project.healthcommunity.comment.dto.CommentDto;
 import project.healthcommunity.comment.dto.QCommentDto;
 import project.healthcommunity.post.domain.Post;
@@ -28,6 +29,7 @@ import static project.healthcommunity.comment.domain.QComment.*;
 import static project.healthcommunity.post.domain.QPost.*;
 
 @RequiredArgsConstructor
+@Repository
 public class PostRepositoryImpl implements PostRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;

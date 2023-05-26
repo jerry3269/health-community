@@ -8,7 +8,6 @@ import project.healthcommunity.categorypost.domain.CategoryPost;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class CategoryResponse {
     @NotNull
     private Long id;
