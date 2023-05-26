@@ -100,13 +100,13 @@ public class MemberService {
         return memberRepositoryCustom.findByUsername(username);
     }
 
-    public List<Comment> findCommentByMember(Long id) {
-        Member member = findOne(id);
+    public List<Comment> findCommentByMember(Long memberId) {
+        Member member = findOne(memberId);
         return member.getCommentList();
     }
 
-    public Member findOne(Long id) {
-        return memberRepositoryCustom.getById(id);
+    public Member findOne(Long memberId) {
+        return memberRepositoryCustom.getById(memberId);
     }
 
 

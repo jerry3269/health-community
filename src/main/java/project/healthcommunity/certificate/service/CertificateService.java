@@ -75,8 +75,8 @@ public class CertificateService {
         return trainer.getCertificates();
     }
 
-    private Certificate getById(Long id) {
-       return certificateRepositoryCustom.getById(id);
+    private Certificate getById(Long certificateId) {
+       return certificateRepositoryCustom.getById(certificateId);
     }
 
 

@@ -20,8 +20,8 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom{
     }
 
     @Override
-    public Comment getById(Long id) {
-        return commentJpaRepository.findById(id).orElseThrow(CommentNotFoundException::new);
+    public Comment getById(Long commentId) {
+        return commentJpaRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom{
     }
 
     @Override
-    public Optional<Comment> findById(Long id) {
-        return commentJpaRepository.findById(id);
+    public Optional<Comment> findById(Long commentId) {
+        return commentJpaRepository.findById(commentId);
     }
 }

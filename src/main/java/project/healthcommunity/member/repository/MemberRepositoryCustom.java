@@ -15,14 +15,14 @@ public interface MemberRepositoryCustom {
     Page<MemberResponse> search(MemberSearchCond condition, Pageable pageable);
     Member save(Member member);
     Member getByLoginId(String loginId);
-    Member getById(Long id);
+    Member getById(Long memberId);
     List<Member> findAll();
     List<Member> findByUsername(String username);
-    void deleteById(Long id);
+    void deleteById(Long memberId);
 
     Optional<Member> findByLoginId(String loginId);
 
-    Optional<Member> findById(Long id);
+    Optional<Member> findById(Long memberId);
 
 
 

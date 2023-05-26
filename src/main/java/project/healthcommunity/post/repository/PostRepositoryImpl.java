@@ -100,8 +100,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     }
 
     @Override
-    public Optional<Post> findById(Long id) {
-        return postJpaRepository.findById(id);
+    public Optional<Post> findById(Long postId) {
+        return postJpaRepository.findById(postId);
     }
 
     @Override
@@ -120,8 +120,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     }
 
     @Override
-    public Post getById(Long id) {
-        return findById(id).orElseThrow(PostNotFoundException::new);
+    public Post getById(Long postId) {
+        return findById(postId).orElseThrow(PostNotFoundException::new);
     }
 
 

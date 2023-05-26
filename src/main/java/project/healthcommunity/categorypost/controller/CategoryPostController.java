@@ -26,12 +26,12 @@ public class CategoryPostController {
 
     private final CategoryPostService categoryPostService;
 
-    @GetMapping("/search/category/{id}")
+    @GetMapping("/search/{categoryId}")
     public ResponseEntity search_categoryId(
-            @PathVariable("id") Long id,
+            @PathVariable Long categoryId,
             BindingResult bindingResult,
             @PageableDefault(page = 0, size = 10, sort = "categoryId", direction = Sort.Direction.ASC) Pageable pageable) {
-        List<CategoryPostResponse> categoryPostResponses = categoryPostService.findByCategoryId(id, pageable);
+        List<CategoryPostResponse> categoryPostResponses = categoryPostService.findByCategoryId(categoryId, pageable);
         return ResponseEntity.ok().body(categoryPostResponses);
     }
 

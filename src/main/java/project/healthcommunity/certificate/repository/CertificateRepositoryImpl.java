@@ -20,8 +20,8 @@ public class CertificateRepositoryImpl implements CertificateRepositoryCustom{
     }
 
     @Override
-    public void deleteById(Long id) {
-        certificateJpaRepository.deleteById(id);
+    public void deleteById(Long certificateId) {
+        certificateJpaRepository.deleteById(certificateId);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class CertificateRepositoryImpl implements CertificateRepositoryCustom{
     }
 
     @Override
-    public Certificate getById(Long id) {
-        return certificateJpaRepository.findById(id).orElseThrow(CertificateNotFoundException::new);
+    public Certificate getById(Long certificateId) {
+        return certificateJpaRepository.findById(certificateId).orElseThrow(CertificateNotFoundException::new);
     }
 }

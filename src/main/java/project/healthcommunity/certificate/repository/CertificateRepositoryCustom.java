@@ -7,9 +7,9 @@ import java.util.List;
 public interface CertificateRepositoryCustom {
     Certificate save(Certificate certificate);
 
-    void deleteById(Long id);
+    void deleteById(Long certificateId);
 
     List<Certificate> getByTrainer_id(Long trainerId);
 
-    Certificate getById(Long id);
+    Certificate getById(Long certificateId);
 }

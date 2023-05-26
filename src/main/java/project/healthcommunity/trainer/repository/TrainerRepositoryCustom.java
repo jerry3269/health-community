@@ -14,12 +14,12 @@ public interface TrainerRepositoryCustom {
     Page<TrainerResponse> search(TrainerSearchCond condition, Pageable pageable);
     Trainer save(Trainer trainer);
     Trainer getByLoginId(String loginId);
-    void deleteById(Long id);
+    void deleteById(Long trainerId);
     void deleteAll();
-    Trainer getById(Long id);
+    Trainer getById(Long trainerId);
     List<Trainer> findAll();
     List<Trainer> findByTrainerName(String trainerName);
     Optional<Trainer> findByLoginId(String loginId);
-    Optional<Trainer> findById(Long id);
+    Optional<Trainer> findById(Long trainerId);
 
 }

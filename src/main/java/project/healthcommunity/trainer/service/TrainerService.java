@@ -103,8 +103,8 @@ public class TrainerService {
         return trainerRepositoryCustom.findByTrainerName(trainerName);
     }
 
-    public List<Comment> findCommentByTrainer(Long id) {
-        Trainer trainer = findOne(id);
+    public List<Comment> findCommentByTrainer(Long trainerId) {
+        Trainer trainer = findOne(trainerId);
         return trainer.getCommentList();
     }
 

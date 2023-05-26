@@ -15,7 +15,7 @@ public interface PostRepositoryCustom {
 
     void save(Post post);
 
-    Optional<Post> findById(Long id);
+    Optional<Post> findById(Long postId);
 
     List<Post> findAll();
 
@@ -23,5 +23,5 @@ public interface PostRepositoryCustom {
 
     List<Post> findByTrainer_Id(Long trainerId);
 
-    Post getById(Long id);
+    Post getById(Long postId);
 }

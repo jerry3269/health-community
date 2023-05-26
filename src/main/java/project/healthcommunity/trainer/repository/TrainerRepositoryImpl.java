@@ -114,8 +114,8 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom {
     }
 
     @Override
-    public void deleteById(Long id) {
-        trainerJpaRepository.deleteById(id);
+    public void deleteById(Long trainerId) {
+        trainerJpaRepository.deleteById(trainerId);
     }
 
     @Override
@@ -124,8 +124,8 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom {
     }
 
     @Override
-    public Trainer getById(Long id) {
-        return trainerJpaRepository.findById(id).orElseThrow(TrainerNotFoundException::new);
+    public Trainer getById(Long trainerId) {
+        return trainerJpaRepository.findById(trainerId).orElseThrow(TrainerNotFoundException::new);
     }
 
     @Override
@@ -144,8 +144,8 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom {
     }
 
     @Override
-    public Optional<Trainer> findById(Long id) {
-        return trainerJpaRepository.findById(id);
+    public Optional<Trainer> findById(Long trainerId) {
+        return trainerJpaRepository.findById(trainerId);
     }
 
 

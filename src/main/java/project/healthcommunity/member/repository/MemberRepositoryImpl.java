@@ -79,8 +79,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
 
     @Override
-    public Member getById(Long id) {
-        return memberJpaRepository.findById(id).orElseThrow(MemberNotFoundException::new);
+    public Member getById(Long memberId) {
+        return memberJpaRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
     }
 
     @Override
@@ -94,8 +94,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public void deleteById(Long id) {
-        memberJpaRepository.deleteById(id);
+    public void deleteById(Long memberId) {
+        memberJpaRepository.deleteById(memberId);
     }
 
     @Override
@@ -104,8 +104,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public Optional<Member> findById(Long id) {
-        return memberJpaRepository.findById(id);
+    public Optional<Member> findById(Long memberId) {
+        return memberJpaRepository.findById(memberId);
     }
 
     @Override
