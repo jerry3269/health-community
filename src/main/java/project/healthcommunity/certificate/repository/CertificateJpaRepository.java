@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CertificateJpaRepository extends JpaRepository<Certificate, Long> {
-    List<Certificate> findByTrainer_id(Long trainerId);
+    Optional<List<Certificate>> findByTrainer_id(Long trainerId);
+
     Optional<Certificate> findById(Long certificateId);
 }

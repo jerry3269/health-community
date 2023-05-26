@@ -72,7 +72,7 @@ public class TrainerService {
 
     @Transactional
     public TrainerResponse update(TrainerSession trainerSession, UpdateTrainerRequest updateTrainerRequest) {
-        Trainer findTrainer = findOne(trainerSession.getId());
+        Trainer findTrainer = getById(trainerSession.getId());
         findTrainer.update(updateTrainerRequest);
         return TrainerResponse.createByTrainer(findTrainer);
     }
@@ -88,23 +88,23 @@ public class TrainerService {
     }
 
 
-    public Trainer findOne(Long trainerId) {
+    public Trainer getById(Long trainerId) {
         Trainer findTrainer = trainerRepositoryCustom.getById(trainerId);
         return findTrainer;
     }
 
-    public List<TrainerResponse> trainers() {
+    public List<TrainerResponse> findAll() {
         return trainerRepositoryCustom.findAll().stream().map(t -> TrainerResponse.createByTrainer(t)).collect(Collectors.toList());
 
     }
 
 
-    public List<Trainer> findByTrainerName(String trainerName) {
-        return trainerRepositoryCustom.findByTrainerName(trainerName);
+    public List<Trainer> getByTrainerName(String trainerName) {
+        return trainerRepositoryCustom.getByTrainerName(trainerName);
     }
 
-    public List<Comment> findCommentByTrainer(Long trainerId) {
-        Trainer trainer = findOne(trainerId);
+    public List<Comment> getCommentByTrainer(Long trainerId) {
+        Trainer trainer = getById(trainerId);
         return trainer.getCommentList();
     }
 

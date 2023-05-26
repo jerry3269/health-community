@@ -69,7 +69,7 @@ public class MemberApiController {
 
     @GetMapping("/")
     public ResponseEntity<MemberResponse> memberById(@LoginForMember MemberSession memberSession) {
-        Member findMember = memberService.findOne(memberSession.getId());
+        Member findMember = memberService.getById(memberSession.getId());
         return ResponseEntity.ok(MemberResponse.createByMember(findMember));
     }
 
@@ -91,7 +91,7 @@ public class MemberApiController {
     }
     @GetMapping("/members")
     public ResponseEntity<List<MemberResponse>> members() {
-        List<MemberResponse> memberResponseList = memberService.members();
+        List<MemberResponse> memberResponseList = memberService.findAll();
         return ResponseEntity.ok(memberResponseList);
     }
 }

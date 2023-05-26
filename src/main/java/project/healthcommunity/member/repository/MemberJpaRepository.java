@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberJpaRepository extends JpaRepository<Member, Long> {
-    List<Member> findByUsername(String username);
+    Optional<List<Member>> findByUsername(String username);
     Optional<Member> findByLoginId(String loginId);
     Optional<Member> findById(Long memberId);
+
 }

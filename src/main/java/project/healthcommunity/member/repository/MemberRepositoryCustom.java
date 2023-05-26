@@ -17,7 +17,8 @@ public interface MemberRepositoryCustom {
     Member getByLoginId(String loginId);
     Member getById(Long memberId);
     List<Member> findAll();
-    List<Member> findByUsername(String username);
+    Optional<List<Member>> findByUsername(String username);
+    List<Member> getByUsername(String username);
     void deleteById(Long memberId);
 
     Optional<Member> findByLoginId(String loginId);

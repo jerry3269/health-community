@@ -31,7 +31,7 @@ public class CategoryPostController {
             @PathVariable Long categoryId,
             BindingResult bindingResult,
             @PageableDefault(page = 0, size = 10, sort = "categoryId", direction = Sort.Direction.ASC) Pageable pageable) {
-        List<CategoryPostResponse> categoryPostResponses = categoryPostService.findByCategoryId(categoryId, pageable);
+        List<CategoryPostResponse> categoryPostResponses = categoryPostService.getByCategoryId(categoryId, pageable);
         return ResponseEntity.ok().body(categoryPostResponses);
     }
 

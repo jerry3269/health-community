@@ -134,7 +134,12 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom {
     }
 
     @Override
-    public List<Trainer> findByTrainerName(String trainerName) {
+    public List<Trainer> getByTrainerName(String trainerName) {
+        return trainerJpaRepository.findByTrainerName(trainerName).orElseThrow(TrainerNotFoundException::new);
+    }
+
+    @Override
+    public Optional<List<Trainer>> findByTrainerName(String trainerName) {
         return trainerJpaRepository.findByTrainerName(trainerName);
     }
 

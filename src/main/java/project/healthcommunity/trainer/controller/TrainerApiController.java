@@ -57,7 +57,7 @@ public class TrainerApiController {
 
     @GetMapping("/")
     public ResponseEntity trainerByParameter(@LoginForTrainer TrainerSession trainerSession) {
-        Trainer trainer = trainerService.findOne(trainerSession.getId());
+        Trainer trainer = trainerService.getById(trainerSession.getId());
         TrainerResponse trainerResponse = TrainerResponse.createByTrainer(trainer);
         return ResponseEntity.ok(trainerResponse);
     }
@@ -90,7 +90,7 @@ public class TrainerApiController {
 
     @GetMapping("/trainers")
     public ResponseEntity<List<TrainerResponse>> trainers() {
-        return ResponseEntity.ok(trainerService.trainers());
+        return ResponseEntity.ok(trainerService.findAll());
     }
 
 }

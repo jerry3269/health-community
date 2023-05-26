@@ -48,7 +48,7 @@ public class CommentService {
     public MemberCommentResponse write(CreateChildMemberCommentRequest createChildMemberCommentRequest) {
         Post post = postRepositoryCustom.getById(createChildMemberCommentRequest.getPostId());
         Member member = memberRepositoryCustom.getById(createChildMemberCommentRequest.getMemberId());
-        Comment parent = findOne(createChildMemberCommentRequest.getParentId());
+        Comment parent = getById(createChildMemberCommentRequest.getParentId());
         Comment comment = new Comment(post, createChildMemberCommentRequest.getContent(), member, parent);
         Comment saveComment = commentRepositoryCustom.save(comment);
         return new MemberCommentResponse(saveComment);
@@ -67,7 +67,7 @@ public class CommentService {
     public TrainerCommentResponse write(CreateChildTrainerCommentRequest createChildTrainerCommentRequest) {
         Post post = postRepositoryCustom.getById(createChildTrainerCommentRequest.getPostId());
         Trainer trainer = trainerRepositoryCustom.getById(createChildTrainerCommentRequest.getTrainerId());
-        Comment parent = findOne(createChildTrainerCommentRequest.getParentId());
+        Comment parent = getById(createChildTrainerCommentRequest.getParentId());
         Comment comment = new Comment(post, createChildTrainerCommentRequest.getContent(), trainer, parent);
         Comment saveComment = commentRepositoryCustom.save(comment);
         return new TrainerCommentResponse(saveComment);
@@ -75,7 +75,7 @@ public class CommentService {
 
     @Transactional
     public MemberCommentResponse updateMemberComment(MemberSession memberSession, UpdateCommentRequest updateCommentRequest) {
-        Comment comment = findOne(updateCommentRequest.getCommentId());
+        Comment comment = getById(updateCommentRequest.getCommentId());
         if (isValidMember(memberSession, comment)) {
             comment.update(updateCommentRequest);
             return new MemberCommentResponse(comment);
@@ -89,7 +89,7 @@ public class CommentService {
 
     @Transactional
     public TrainerCommentResponse updateTrainerComment(TrainerSession trainerSession, UpdateCommentRequest updateCommentRequest) {
-        Comment comment = findOne(updateCommentRequest.getCommentId());
+        Comment comment = getById(updateCommentRequest.getCommentId());
         if (isValidTrainer(trainerSession, comment)) {
             comment.update(updateCommentRequest);
             return new TrainerCommentResponse(comment);
@@ -103,7 +103,7 @@ public class CommentService {
 
     @Transactional
     public MemberCommentResponse deleteMemberComment(MemberSession memberSession, Long commentId) {
-        Comment comment = findOne(commentId);
+        Comment comment = getById(commentId);
         if (isValidMember(memberSession, comment)) {
             comment.delete();
             return new MemberCommentResponse(comment);
@@ -113,7 +113,7 @@ public class CommentService {
 
     @Transactional
     public TrainerCommentResponse deleteTrainerComment(TrainerSession trainerSession, Long commentId) {
-        Comment comment = findOne(commentId);
+        Comment comment = getById(commentId);
         if (isValidTrainer(trainerSession, comment)) {
             comment.delete();
             return new TrainerCommentResponse(comment);
@@ -122,12 +122,12 @@ public class CommentService {
     }
 
 
-    private Comment findOne(Long id) {
-        return commentRepositoryCustom.getById(id);
+    private Comment getById(Long commentId) {
+        return commentRepositoryCustom.getById(commentId);
     }
 
 
-    public List<Comment> comments() {
+    public List<Comment> findAll() {
         return commentRepositoryCustom.findAll();
     }
 

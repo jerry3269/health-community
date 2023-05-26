@@ -36,7 +36,7 @@ public class CertificateService {
     }
 
     private void validDupCertificate(TrainerSession trainerSession, CreateCertificateRequest createCertificateRequest) {
-        List<Certificate> certificates = findCertificatesByTrainer(trainerSession.getId());
+        List<Certificate> certificates = getByTrainerId(trainerSession.getId());
         for (Certificate c : certificates) {
             if (c.getCertificateName().equals(createCertificateRequest.getCertificateName())) {
                 throw new DupCertificateException();
@@ -66,11 +66,11 @@ public class CertificateService {
     }
 
     public List<CertificateResponse> getCertificateResponseByTrainer(TrainerSession trainerSession) {
-        List<Certificate> certificatesByTrainer = findCertificatesByTrainer(trainerSession.getId());
+        List<Certificate> certificatesByTrainer = getByTrainerId(trainerSession.getId());
         return certificatesByTrainer.stream().map(CertificateResponse::new).collect(Collectors.toList());
     }
 
-    private List<Certificate> findCertificatesByTrainer(Long trainerId){
+    private List<Certificate> getByTrainerId(Long trainerId){
         Trainer trainer = trainerRepositoryCustom.getById(trainerId);
         return trainer.getCertificates();
     }

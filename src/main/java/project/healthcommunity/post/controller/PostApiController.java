@@ -44,7 +44,7 @@ public class PostApiController {
 
         BindingException.validate(bindingResult);
         List<PostResponse> postResponseList = postService
-                .findByTrainer(trainerId)
+                .getByTrainer(trainerId)
                 .stream()
                 .map(PostResponse::new)
                 .collect(toList());

@@ -40,8 +40,8 @@ public class CategoryPostService {
     }
 
 
-    public List<CategoryPostResponse> findByCategoryId(Long categoryId, Pageable pageable) {
-        List<CategoryPost> categoryPosts = categoryPostRepositoryCustom.findByCategory_id(categoryId, pageable);
+    public List<CategoryPostResponse> getByCategoryId(Long categoryId, Pageable pageable) {
+        List<CategoryPost> categoryPosts = categoryPostRepositoryCustom.getByCategory_id(categoryId, pageable);
         List<CategoryPostResponse> categoryPostResponses = categoryPosts.stream()
                 .map(categoryPost -> CategoryPostResponse.createByCategoryPost(categoryPost))
                 .collect(Collectors.toList());
@@ -53,4 +53,7 @@ public class CategoryPostService {
     }
 
 
+    public void deleteByPostId(Long postId) {
+        categoryPostRepositoryCustom.deleteByPost_id(postId);
+    }
 }

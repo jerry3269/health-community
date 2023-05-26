@@ -7,13 +7,14 @@ import org.springframework.data.repository.query.Param;
 import project.healthcommunity.categorypost.domain.CategoryPost;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CategoryPostJpaRepository extends JpaRepository<CategoryPost, Long> {
     void deleteByPost_id(Long postId);
 
     void deleteByCategory_idAndPost_id(Long categoryId, Long postId);
 
-    List<CategoryPost> findByCategory_id(Long categoryId, Pageable pageable);
+    Optional<List<CategoryPost>> findByCategory_id(Long categoryId, Pageable pageable);
 
     @Query("select count(cp.id) from CategoryPost cp where cp.category.id = :categoryId")
     Long countQueryByCategoryId(@Param("categoryId") Long categoryId);

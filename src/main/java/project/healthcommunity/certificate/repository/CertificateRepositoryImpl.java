@@ -12,29 +12,25 @@ import java.util.List;
 @Repository
 public class CertificateRepositoryImpl implements CertificateRepositoryCustom{
 
-    private final CertificateJpaRepository certificateJpaRepository;
+    private final CertificateRepositoryCustom certificateRepositoryCustom;
 
     @Override
     public Certificate save(Certificate certificate) {
-        return certificateJpaRepository.save(certificate);
+        return certificateRepositoryCustom.save(certificate);
     }
 
     @Override
     public void deleteById(Long certificateId) {
-        certificateJpaRepository.deleteById(certificateId);
+        certificateRepositoryCustom.deleteById(certificateId);
     }
 
     @Override
     public List<Certificate> getByTrainer_id(Long trainerId) {
-        List<Certificate> certificates = certificateJpaRepository.findByTrainer_id(trainerId);
-        if(!certificates.isEmpty()){
-            return certificates;
-        }
-        throw new CertificateNotYetException();
+        return certificateRepositoryCustom.getByTrainer_id(trainerId);
     }
 
     @Override
     public Certificate getById(Long certificateId) {
-        return certificateJpaRepository.findById(certificateId).orElseThrow(CertificateNotFoundException::new);
+        return certificateRepositoryCustom.getById(certificateId);
     }
 }

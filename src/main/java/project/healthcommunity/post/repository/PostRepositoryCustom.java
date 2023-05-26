@@ -12,16 +12,11 @@ import java.util.Optional;
 public interface PostRepositoryCustom {
 
     Page<PostResponse> search(PostSearchCond condition, Pageable pageable);
-
     void save(Post post);
-
     Optional<Post> findById(Long postId);
-
     List<Post> findAll();
-
     void deleteById(Long postId);
-
-    List<Post> findByTrainer_Id(Long trainerId);
-
+    Optional<List<Post>> findByTrainer_Id(Long trainerId);
+    List<Post> getByTrainer_id(Long trainerId);
     Post getById(Long postId);
 }

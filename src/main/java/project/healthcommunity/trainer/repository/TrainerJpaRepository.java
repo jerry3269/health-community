@@ -9,8 +9,7 @@ import java.util.Optional;
 
 public interface TrainerJpaRepository extends JpaRepository<Trainer, Long>{
 
-    List<Trainer> findByTrainerName(String trainerName);
-
+    Optional<List<Trainer>> findByTrainerName(String trainerName);
     Optional<Trainer> findByLoginId(String loginId);
     Optional<Trainer> findById(Long trainerId);
 }

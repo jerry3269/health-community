@@ -18,7 +18,8 @@ public interface TrainerRepositoryCustom {
     void deleteAll();
     Trainer getById(Long trainerId);
     List<Trainer> findAll();
-    List<Trainer> findByTrainerName(String trainerName);
+    List<Trainer> getByTrainerName(String trainerName);
+    Optional<List<Trainer>> findByTrainerName(String trainerName);
     Optional<Trainer> findByLoginId(String loginId);
     Optional<Trainer> findById(Long trainerId);
 

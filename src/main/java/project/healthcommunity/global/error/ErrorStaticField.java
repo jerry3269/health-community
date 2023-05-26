@@ -18,6 +18,8 @@ public class ErrorStaticField {
     public static final String COMMENT_NOT_FOUND = "존재하지 않는 댓글입니다.";
     public static final String CERTIFICATE_NOT_FOUND = "존재하지 않는 자격증입니다.";
     public static final String CATEGORY_NOT_FOUND = "존재하지 않는 카테고리입니다.";
+    public static final String CATEGORY_POST_NOT_FOUND = "해당 카테고리에 존재하는 post가 없습니다.";
+    public static final String TRAINER_POST_NOT_FOUND = "해당 트레이너는 post가 없습니다.";
     public static final String DUP_LOGIN_ID = "이미 사용중인 아이디 입니다.";
     public static final String DUP_CATEGORY = "이미 해당 카테고리가 존재합니다.";
     public static final String MEMBER_UNAUTHORIZED = "Member 로그인이 필요한 서비스 입니다.";

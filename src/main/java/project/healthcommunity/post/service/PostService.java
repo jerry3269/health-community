@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.healthcommunity.category.domain.Category;
 import project.healthcommunity.category.service.CategoryService;
 import project.healthcommunity.categorypost.domain.CategoryPost;
+import project.healthcommunity.categorypost.repository.CategoryPostRepositoryCustom;
 import project.healthcommunity.categorypost.service.CategoryPostService;
 import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.post.dto.CreatePostRequest;
@@ -28,7 +29,7 @@ public class PostService {
 
     private final PostRepositoryCustom postRepositoryCustom;
     private final TrainerService trainerService;
-    private final CategoryPostService categoryPostService;
+    private final CategoryPostRepositoryCustom categoryPostRepositoryCustom;
     private final CategoryService categoryService;
 
     @Transactional
@@ -36,14 +37,14 @@ public class PostService {
         Trainer trainer = trainerService.findOne(createPostRequest.getTrainerId());
 
         List<Category> categoryList = createPostRequest.getCategoryNameList().stream()
-                .map(name -> categoryService.categoryListByName(name).get(0))
+                .map(categoryName -> categoryService.getByCategoryName(categoryName))
                 .collect(toList());
 
         Post post = new Post(createPostRequest.getTitle(), createPostRequest.getContent(), categoryList, trainer);
 
         List<CategoryPost> categoryPostList = post.getCategoryList();
         for (CategoryPost categoryPost : categoryPostList) {
-            categoryPostService.save(categoryPost);
+            categoryPostRepositoryCustom.save(categoryPost);
         }
         postRepositoryCustom.save(post);
         return new PostResponse(post);
@@ -65,7 +66,7 @@ public class PostService {
         Post post = getById(postId);
 
         if(isValidUser(trainerSession, post)){
-            categoryPostService.deleteByPostId(postId);
+            categoryPostRepositoryCustom.deleteByPost_id(postId);
             postRepositoryCustom.deleteById(postId);
             return;
         }
@@ -82,7 +83,7 @@ public class PostService {
     public List<Post> posts(){
         return postRepositoryCustom.findAll();
     }
-    public List<Post> findByTrainer(Long trainerId) {
-        return postRepositoryCustom.findByTrainer_Id(trainerId);
+    public List<Post> getByTrainer(Long trainerId) {
+        return postRepositoryCustom.getByTrainer_id(trainerId);
     }
 }

@@ -72,7 +72,7 @@ public class MemberService {
 
     @Transactional
     public MemberResponse update(MemberSession memberSession, UpdateMemberDto updateMemberDto) {
-        Member member = findOne(memberSession.getId());
+        Member member = getById(memberSession.getId());
         member.update(updateMemberDto);
         return MemberResponse.createByMember(member);
 
@@ -81,7 +81,7 @@ public class MemberService {
     @Transactional
     public void upTrainerLikes(MemberSession memberSession, Long trainerId) {
         Trainer trainer = trainerRepositoryCustom.getById(trainerId);
-        Member member = findOne(memberSession.getId());
+        Member member = getById(memberSession.getId());
         trainer.upLikes();
     }
 
@@ -91,21 +91,21 @@ public class MemberService {
     }
 
 
-    public List<MemberResponse> members() {
+    public List<MemberResponse> findAll() {
         return memberRepositoryCustom.findAll().stream().map(m -> MemberResponse.createByMember(m)).collect(Collectors.toList());
 
     }
 
-    public List<Member> findByUsername(String username) {
-        return memberRepositoryCustom.findByUsername(username);
+    public List<Member> getByUsername(String username) {
+        return memberRepositoryCustom.getByUsername(username);
     }
 
-    public List<Comment> findCommentByMember(Long memberId) {
-        Member member = findOne(memberId);
+    public List<Comment> getCommentByMember(Long memberId) {
+        Member member = getById(memberId);
         return member.getCommentList();
     }
 
-    public Member findOne(Long memberId) {
+    public Member getById(Long memberId) {
         return memberRepositoryCustom.getById(memberId);
     }
 

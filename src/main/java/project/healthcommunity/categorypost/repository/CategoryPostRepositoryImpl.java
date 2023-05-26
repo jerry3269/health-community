@@ -6,8 +6,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import project.healthcommunity.categorypost.domain.CategoryPost;
+import project.healthcommunity.categorypost.exception.CategoryPostNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -32,8 +34,13 @@ public class CategoryPostRepositoryImpl implements CategoryPostRepositoryCustom 
     }
 
     @Override
-    public List<CategoryPost> findByCategory_id(Long categoryId, Pageable pageable) {
+    public Optional<List<CategoryPost>> findByCategory_id(Long categoryId, Pageable pageable) {
         return categoryPostJpaRepository.findByCategory_id(categoryId, pageable);
+    }
+
+    @Override
+    public List<CategoryPost> getByCategory_id(Long categoryId, Pageable pageable) {
+        return categoryPostJpaRepository.findByCategory_id(categoryId, pageable).orElseThrow(CategoryPostNotFoundException::new);
     }
 
     @Override

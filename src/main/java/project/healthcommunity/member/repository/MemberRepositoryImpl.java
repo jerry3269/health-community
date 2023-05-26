@@ -89,8 +89,13 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public List<Member> findByUsername(String username) {
+    public Optional<List<Member>> findByUsername(String username) {
         return memberJpaRepository.findByUsername(username);
+    }
+
+    @Override
+    public List<Member> getByUsername(String username) {
+        return memberJpaRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
     }
 
     @Override
