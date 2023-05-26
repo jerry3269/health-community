@@ -18,7 +18,7 @@ public class Category extends BaseEntity {
     @GeneratedValue
     @Column(name = "category_id")
     private Long id;
-
+    @Column(unique = true)
     private String categoryName;
 
 
@@ -32,7 +32,6 @@ public class Category extends BaseEntity {
     @JoinColumn(name = "parent_id")
     private Category parent;
 
-    //생성자
     @Builder(builderMethodName = "noParentBuilder", builderClassName = "noParentBuilder")
     public Category(String categoryName) {
         this.categoryName = categoryName;
@@ -43,17 +42,10 @@ public class Category extends BaseEntity {
         addParentCategory(parent);
     }
 
-
-
-    // 연관관계 메서드 시작 //
     public void addParentCategory(Category category) {
         this.parent = category;
         category.getChild().add(this);
     }
 
 
-    // 비지니스 로직
-    public void update(String categoryName) {
-        this.categoryName = categoryName;
-    }
 }

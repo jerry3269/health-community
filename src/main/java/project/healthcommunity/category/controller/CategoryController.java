@@ -1,11 +1,20 @@
 package project.healthcommunity.category.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import project.healthcommunity.category.domain.Category;
 import project.healthcommunity.category.dto.CategoryResponse;
+import project.healthcommunity.category.dto.CreateCategoryRequest;
 import project.healthcommunity.category.repository.CategoryJpaRepository;
+import project.healthcommunity.category.service.CategoryService;
+import project.healthcommunity.global.exception.BindingException;
 
 import java.util.List;
 
@@ -13,14 +22,32 @@ import static java.util.stream.Collectors.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/category")
 public class CategoryController {
 
-    private final CategoryJpaRepository categoryJpaRepository;
+    private final CategoryService categoryService;
 
-    @GetMapping("/categories")
-    public List<CategoryResponse> categories(){
-        List<Category> list = categoryJpaRepository.findAll();
-        List<CategoryResponse> categoryResponses = list.stream().map(CategoryResponse::new).collect(toList());
-        return categoryResponses;
+    @GetMapping("/list")
+    public ResponseEntity list(@PageableDefault(page = 0, size = 10, sort = "categoryId", direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<Category> categoryPage = categoryService.findAll(pageable);
+        Page<CategoryResponse> categoryResponsePage =
+                (Page<CategoryResponse>) categoryPage.stream()
+                        .map(category -> CategoryResponse.createByCategory(category))
+                        .collect(toList());
+        return ResponseEntity.ok().body(categoryResponsePage);
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity save(@RequestBody @Valid CreateCategoryRequest createCategoryRequest) {
+        CategoryResponse categoryResponse = categoryService.register(createCategoryRequest);
+        return ResponseEntity.ok().body(categoryResponse);
+    }
+
+    @DeleteMapping("/delete/{categoryId}")
+    public ResponseEntity delete(@PathVariable Long categoryId,
+                                 BindingResult bindingResult) {
+        BindingException.validate(bindingResult);
+        categoryService.delete(categoryId);
+        return ResponseEntity.ok().build();
     }
 }

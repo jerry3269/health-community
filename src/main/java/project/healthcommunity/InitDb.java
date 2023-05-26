@@ -49,7 +49,6 @@ public class InitDb {
         private final CertificateService certificateService;
 
         public void staticFieldInjection() {
-            categoryService.register(rootCategory);
         }
 
 

@@ -1,10 +1,16 @@
 package project.healthcommunity.category.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.healthcommunity.category.domain.Category;
+import project.healthcommunity.category.dto.CategoryResponse;
+import project.healthcommunity.category.dto.CreateCategoryRequest;
+import project.healthcommunity.category.exception.CategoryDupException;
 import project.healthcommunity.category.repository.CategoryJpaRepository;
+import project.healthcommunity.category.repository.CategoryRepositoryCustom;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,43 +20,40 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CategoryService {
 
-    private final CategoryJpaRepository categoryJpaRepository;
+    private final CategoryRepositoryCustom categoryRepositoryCustom;
 
     @Transactional
-    public void register(Category category) {
-        validDupCategory(category);
-        categoryJpaRepository.save(category);
+    public CategoryResponse register(CreateCategoryRequest createCategoryRequest) {
+
+        validDupCategory(createCategoryRequest.getCategoryName());
+        Category category = CreateCategoryRequest.toCategory(createCategoryRequest);
+        Category savedCategory = categoryRepositoryCustom.save(category);
+        return CategoryResponse.createByCategory(savedCategory);
     }
 
-    private void validDupCategory(Category category) {
-        List<Category> result = categoryJpaRepository.findByCategoryName(category.getCategoryName());
-        if(!result.isEmpty()){
-            throw new IllegalStateException("이미 존재하는 카테고리입니다.");
+    private void validDupCategory(String categoryName) {
+        Optional<Category> optionalCategory = categoryRepositoryCustom.findByCategoryName(categoryName);
+        if(!optionalCategory.isEmpty()){
+            throw new CategoryDupException();
         }
     }
 
     @Transactional
-    public void update(Long id, String categoryName){
-        Category category = findOne(id);
-        category.update(categoryName);
+    public void delete(Long categoryId) {
+        categoryRepositoryCustom.deleteById(categoryId);
+    }
+
+    public Category getById(Long categoryId) {
+        return categoryRepositoryCustom.getById(categoryId);
     }
 
 
-    public Category findOne(Long id) {
-        Optional<Category> optionalCategory = categoryJpaRepository.findById(id);
-        if(!optionalCategory.isPresent()){
-            throw new IllegalStateException("존재하지 않는 카테고리입니다.");
-        }
-        return optionalCategory.get();
+    public Page<Category> findAll(Pageable pageable){
+        return categoryRepositoryCustom.findAll(pageable);
     }
 
 
-    public List<Category> categories(){
-        return categoryJpaRepository.findAll();
-    }
-
-
-    public List<Category> categoryListByName(String categoryName){
-        return categoryJpaRepository.findByCategoryName(categoryName);
+    public Category getByCategoryName(String categoryName){
+        return categoryRepositoryCustom.getByCategoryName(categoryName);
     }
 }

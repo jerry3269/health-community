@@ -15,10 +15,17 @@ public class CategoryResponse {
     @NotBlank
     private String categoryName;
 
+    @Builder
+    protected CategoryResponse(Long id, String categoryName) {
+        this.id = id;
+        this.categoryName = categoryName;
+    }
 
-    public CategoryResponse(Category category) {
-        this.id = category.getId();
-        this.categoryName = category.getCategoryName();
+    public static CategoryResponse createByCategory(Category category) {
+        return CategoryResponse.builder()
+                .id(category.getId())
+                .categoryName(category.getCategoryName())
+                .build();
     }
 
     public CategoryResponse(CategoryPost categoryPost) {
