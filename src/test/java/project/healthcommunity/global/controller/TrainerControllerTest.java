@@ -1,6 +1,7 @@
 package project.healthcommunity.global.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -11,6 +12,9 @@ import project.healthcommunity.trainer.dto.CreateTrainerRequest;
 import project.healthcommunity.trainer.dto.UpdateTrainerRequest;
 import project.healthcommunity.util.ControllerTest;
 
+import java.util.concurrent.ThreadPoolExecutor;
+
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static project.healthcommunity.global.error.ErrorStaticField.NOT_MATCH;
@@ -153,13 +157,34 @@ class TrainerControllerTest extends ControllerTest {
     }
 
     @Test
+    @DisplayName("Trainer 탈퇴후 update시도 시 실패404")
+    void update404() throws Exception {
+        Trainer trainer = CreateAndSaveTrainer();
+        MockHttpSession session = getTrainerSession(trainer);
+        deleteSession((session));
+
+        UpdateTrainerRequest updateTrainerRequest = UpdateTrainerRequest.builder()
+                .trainerName("updateTrainer")
+                .password("update_password")
+                .build();
+
+        String string = objectMapper.writeValueAsString(updateTrainerRequest);
+
+        mockMvc.perform(patch("/trainer/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(string)
+                        .session(session))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     @DisplayName("Trainer delete 성공")
     void delete200() throws Exception {
+
         Trainer trainer = CreateAndSaveTrainer();
         MockHttpSession session = getTrainerSession(trainer);
 
-        mockMvc.perform(delete("/trainer/")
-                        .session(session))
-                .andExpect(status().isOk());
+        int status = deleteSession(session);
+        assertThat(status).isEqualTo(200);
     }
 }
