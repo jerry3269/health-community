@@ -157,7 +157,7 @@ class TrainerControllerTest extends ControllerTest {
     }
 
     @Test
-    @DisplayName("Trainer 탈퇴후 update시도 시 실패404")
+    @DisplayName("Trainer 탈퇴후 update시도 시 실패 404")
     void update404() throws Exception {
         Trainer trainer = CreateAndSaveTrainer();
         MockHttpSession session = getTrainerSession(trainer);
@@ -186,5 +186,15 @@ class TrainerControllerTest extends ControllerTest {
 
         int status = deleteSession(session);
         assertThat(status).isEqualTo(200);
+    }
+
+    @Test
+    @DisplayName("경력 10년이상, 좋아요 1개 이상 Trainer Search성공 200")
+    void search200() throws Exception {
+
+        mockMvc.perform(get("/trainer/search")
+                        .queryParam("careerGoe", "10")
+                        .queryParam("likesGoe", "1"))
+                .andExpect(status().isOk());
     }
 }
