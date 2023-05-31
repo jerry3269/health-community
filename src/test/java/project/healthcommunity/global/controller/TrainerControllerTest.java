@@ -194,7 +194,8 @@ class TrainerControllerTest extends ControllerTest {
 
         mockMvc.perform(get("/trainer/search")
                         .queryParam("careerGoe", "10")
-                        .queryParam("likesGoe", "1"))
+                        .queryParam("likesGoe", "1")
+                        .queryParam("size","20"))
                 .andExpect(status().isOk());
     }
 }
