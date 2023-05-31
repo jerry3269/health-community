@@ -24,6 +24,7 @@ import project.healthcommunity.trainer.repository.TrainerJpaRepository;
 import project.healthcommunity.trainer.repository.TrainerRepositoryCustom;
 import project.healthcommunity.trainer.service.TrainerService;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static project.healthcommunity.global.basic.BasicStaticField.LOGIN_MEMBER;
@@ -124,5 +125,13 @@ public class ControllerTest {
 
         HttpSession session = request.getSession();
         return (MockHttpSession)session;
+    }
+
+    protected int deleteSession(MockHttpSession session) throws Exception {
+        return mockMvc.perform(delete("/trainer/")
+                .session(session))
+                .andReturn()
+                .getResponse()
+                .getStatus();
     }
 }
