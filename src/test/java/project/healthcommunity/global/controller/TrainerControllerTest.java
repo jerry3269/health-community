@@ -6,9 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import project.healthcommunity.global.dto.LoginForm;
-import project.healthcommunity.member.domain.Member;
-import project.healthcommunity.member.dto.CreateMemberRequest;
-import project.healthcommunity.member.dto.UpdateMemberDto;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.trainer.dto.CreateTrainerRequest;
 import project.healthcommunity.trainer.dto.UpdateTrainerRequest;
@@ -16,7 +13,6 @@ import project.healthcommunity.util.ControllerTest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static project.healthcommunity.global.basic.BasicStaticField.LOGIN_TRAINER;
 import static project.healthcommunity.global.error.ErrorStaticField.NOT_MATCH;
 
 @Slf4j
