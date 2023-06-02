@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface PostRepositoryCustom {
 
     Page<PostResponse> search(PostSearchCond condition, Pageable pageable);
-    void save(Post post);
+    Post save(Post post);
     Optional<Post> findById(Long postId);
     List<Post> findAll();
     void deleteById(Long postId);

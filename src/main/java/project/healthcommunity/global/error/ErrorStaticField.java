@@ -11,7 +11,7 @@ public class ErrorStaticField {
     public static final int OK = 200;
     public static final int CREATED = 201;
 
-
+    public static final String CONVERSION_ERROR = "Long으로 변환 불가능한 타입이 URL에 입력되었습니다";
     public static final String MEMBER_NOT_FOUND = "존재하지 않는 회원입니다.";
     public static final String TRAINER_NOT_FOUND = "존재하지 않는 트레이너입니다.";
     public static final String POST_NOT_FOUND = "존재하지 않는 포스트입니다.";

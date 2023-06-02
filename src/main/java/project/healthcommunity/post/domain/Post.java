@@ -2,6 +2,8 @@ package project.healthcommunity.post.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import project.healthcommunity.category.domain.Category;
 import project.healthcommunity.categorypost.domain.CategoryPost;
 import project.healthcommunity.comment.domain.Comment;
@@ -33,6 +35,7 @@ public class Post extends BaseEntity {
     private int likes = 0;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
     private List<CategoryPost> categoryList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

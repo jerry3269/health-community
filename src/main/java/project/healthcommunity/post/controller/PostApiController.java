@@ -39,10 +39,8 @@ public class PostApiController {
 
     @GetMapping("/list/{trainerId}")
     public ResponseEntity<List<PostResponse>> postsByTrainer(
-            @PathVariable("trainerId") Long trainerId,
-            BindingResult bindingResult) {
+            @PathVariable("trainerId") Long trainerId) {
 
-        BindingException.validate(bindingResult);
         List<PostResponse> postResponseList = postService
                 .getByTrainer(trainerId)
                 .stream()

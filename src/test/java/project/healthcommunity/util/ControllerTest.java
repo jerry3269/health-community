@@ -11,18 +11,24 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
+import project.healthcommunity.category.domain.Category;
+import project.healthcommunity.category.repository.CategoryRepositoryCustom;
 import project.healthcommunity.global.dto.LoginForm;
 import project.healthcommunity.member.domain.Member;
 import project.healthcommunity.member.repository.MemberJpaRepository;
 import project.healthcommunity.member.repository.MemberRepositoryCustom;
 import project.healthcommunity.member.service.MemberService;
+import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.post.dto.CreatePostRequest;
+import project.healthcommunity.post.repository.PostRepositoryCustom;
+import project.healthcommunity.post.service.PostService;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.trainer.repository.TrainerJpaRepository;
 import project.healthcommunity.trainer.repository.TrainerRepositoryCustom;
 import project.healthcommunity.trainer.service.TrainerService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -35,16 +41,20 @@ public class ControllerTest {
     protected MockMvc mockMvc;
     @Autowired
     protected ObjectMapper objectMapper;
-
     @Autowired
     protected MemberService memberService;
     @Autowired
     protected TrainerService trainerService;
     @Autowired
+    protected PostService postService;
+    @Autowired
     protected MemberRepositoryCustom memberRepositoryCustom;
     @Autowired
     protected TrainerRepositoryCustom trainerRepositoryCustom;
-
+    @Autowired
+    protected CategoryRepositoryCustom categoryRepositoryCustom;
+    @Autowired
+    protected PostRepositoryCustom postRepositoryCustom;
     @Autowired
     protected MemberJpaRepository memberJpaRepository;
     @Autowired
@@ -98,6 +108,11 @@ public class ControllerTest {
         return trainerRepositoryCustom.save(testTrainer);
     }
 
+    protected Post createAndSaveTestPost(Trainer trainer){
+        Post testPost = new Post(TEST_TITLE, TEST_CONTENT, getCategoryList(List.of("팔굽")), trainer);
+        return postRepositoryCustom.save(testPost);
+    }
+
     protected CreatePostRequest createTestPostRequest(Long trainerId){
         return CreatePostRequest.builder()
                 .trainerId(trainerId)
@@ -106,6 +121,8 @@ public class ControllerTest {
                 .categoryNameList(List.of("팔굽"))
                 .build();
     }
+
+
 
     protected MockHttpSession getMemberSession(Member member) throws Exception {
         LoginForm loginForm = loginMemberRequest(member);
@@ -141,5 +158,11 @@ public class ControllerTest {
                 .andReturn()
                 .getResponse()
                 .getStatus();
+    }
+
+    protected List<Category> getCategoryList(List<String> categoryNameList) {
+        return categoryNameList.stream()
+                .map(categoryRepositoryCustom::getByCategoryName)
+                .collect(Collectors.toList());
     }
 }

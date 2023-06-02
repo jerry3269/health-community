@@ -98,8 +98,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     }
 
     @Override
-    public void save(Post post) {
-        postJpaRepository.save(post);
+    public Post save(Post post) {
+        return postJpaRepository.save(post);
     }
 
     @Override

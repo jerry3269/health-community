@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentConversionNotSupportedException;
 import project.healthcommunity.global.error.ErrorCode;
 import project.healthcommunity.global.exception.*;
 
@@ -80,6 +81,20 @@ public class ControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorCode> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex) {
+        ErrorCode errorCode = ErrorCode.builder()
+                .errorCode(BAD_REQUEST)
+                .message(ex.getMessage())
+                .build();
+        return ResponseEntity.status(BAD_REQUEST).body(errorCode);
+    }
+
+    @ExceptionHandler(MethodArgumentConversionNotSupportedException.class)
+    public void methodArgumentConversionNotSupportedException(MethodArgumentConversionNotSupportedException ex) {
+        throw new MethodArgumentNotConversionException();
+    }
+
+    @ExceptionHandler(MethodArgumentNotConversionException.class)
+    public ResponseEntity<ErrorCode> methodArgumentNotConversionException(MethodArgumentNotConversionException ex) {
         ErrorCode errorCode = ErrorCode.builder()
                 .errorCode(BAD_REQUEST)
                 .message(ex.getMessage())

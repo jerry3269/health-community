@@ -2,6 +2,8 @@ package project.healthcommunity.category.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import project.healthcommunity.categorypost.domain.CategoryPost;
 import project.healthcommunity.global.basic.BaseEntity;
 
@@ -23,6 +25,7 @@ public class Category extends BaseEntity {
 
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
     private List<CategoryPost> postList = new ArrayList<>();
 
     @OneToMany(mappedBy = "parent")
