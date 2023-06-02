@@ -29,7 +29,6 @@ public class CategoryPostController {
     @GetMapping("/search/{categoryId}")
     public ResponseEntity search_categoryId(
             @PathVariable Long categoryId,
-            BindingResult bindingResult,
             @PageableDefault(page = 0, size = 10, sort = "categoryId", direction = Sort.Direction.ASC) Pageable pageable) {
         List<CategoryPostResponse> categoryPostResponses = categoryPostService.getByCategoryId(categoryId, pageable);
         return ResponseEntity.ok().body(categoryPostResponses);

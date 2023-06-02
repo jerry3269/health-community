@@ -81,10 +81,8 @@ public class PostApiController {
     @DeleteMapping("/delete/{postId}")
     public ResponseEntity delete(
             @LoginForTrainer TrainerSession trainerSession,
-            @PathVariable Long postId,
-            BindingResult bindingResult) {
+            @PathVariable Long postId) {
 
-        BindingException.validate(bindingResult);
         postService.delete(trainerSession, postId);
         return ResponseEntity.ok().build();
     }

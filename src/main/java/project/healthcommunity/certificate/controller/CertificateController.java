@@ -50,8 +50,7 @@ public class CertificateController {
 
     @DeleteMapping("/delete/{certificateId}")
     public ResponseEntity delete(@LoginForTrainer TrainerSession trainerSession,
-                                 @PathVariable Long certificateId,
-                                 BindingResult bindingResult) {
+                                 @PathVariable Long certificateId) {
         certificateService.delete(trainerSession, certificateId);
         return ResponseEntity.ok().build();
     }
