@@ -1,7 +1,5 @@
 package project.healthcommunity.global.controller;
 
-import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -12,22 +10,23 @@ import project.healthcommunity.trainer.dto.CreateTrainerRequest;
 import project.healthcommunity.trainer.dto.UpdateTrainerRequest;
 import project.healthcommunity.util.ControllerTest;
 
-import java.util.concurrent.ThreadPoolExecutor;
-
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static project.healthcommunity.global.error.ErrorStaticField.NOT_MATCH;
 
-@Slf4j
+
 class TrainerControllerTest extends ControllerTest {
+
 
     @Test
     @DisplayName("Trainer로그인 성공")
     void login_success() throws Exception {
-        Trainer trainer = CreateAndSaveTrainer();
+        Trainer trainer = createAndSaveTestTrainer();
         LoginForm loginForm = loginTrainerRequest(trainer);
         String content = objectMapper.writeValueAsString(loginForm);
+
+
 
         //when
         mockMvc.perform(post("/trainer/login")
@@ -40,7 +39,7 @@ class TrainerControllerTest extends ControllerTest {
     @Test
     @DisplayName("아이디가 존재하지 않으면 로그인 실패")
     void login_fail() throws Exception {
-        Trainer trainer = CreateAndSaveTrainer();
+        Trainer trainer = createAndSaveTestTrainer();
         LoginForm loginForm = new LoginForm("fail", "fail");
         String content = objectMapper.writeValueAsString(loginForm);
 
@@ -54,7 +53,7 @@ class TrainerControllerTest extends ControllerTest {
     @Test
     @DisplayName("비밀번호가 맞지 않으면 로그인 실패")
     void login405() throws Exception {
-        Trainer trainer = CreateAndSaveTrainer();
+        Trainer trainer = createAndSaveTestTrainer();
         LoginForm loginForm = new LoginForm(TEST_ID, "not match");
 
         String content = objectMapper.writeValueAsString(loginForm);
@@ -69,7 +68,7 @@ class TrainerControllerTest extends ControllerTest {
     @Test
     @DisplayName("LoginForm에 맞지 않으면 로그인 실패")
     void login_fail400() throws Exception {
-        Trainer trainer = CreateAndSaveTrainer();
+        Trainer trainer = createAndSaveTestTrainer();
         LoginForm loginForm = new LoginForm(TEST_ID, "");
 
         String content = objectMapper.writeValueAsString(loginForm);
@@ -85,7 +84,7 @@ class TrainerControllerTest extends ControllerTest {
     @DisplayName("trainer 로그아웃 성공")
     void logout200() throws Exception {
 
-        Trainer trainer = CreateAndSaveTrainer();
+        Trainer trainer = createAndSaveTestTrainer();
         MockHttpSession session = getTrainerSession(trainer);
 
         mockMvc.perform(post("/trainer/logout")
@@ -118,7 +117,7 @@ class TrainerControllerTest extends ControllerTest {
     @DisplayName("trainer 회원가입시 중복된 아이디 실패")
     void signup() throws Exception {
         //when
-        Trainer trainer = CreateAndSaveTrainer();
+        Trainer trainer = createAndSaveTestTrainer();
         CreateTrainerRequest createTrainerRequest = CreateTrainerRequest.builder()
                 .trainerName("testMember")
                 .age(20)
@@ -139,7 +138,7 @@ class TrainerControllerTest extends ControllerTest {
     @Test
     @DisplayName("Trainer 업데이트 성공")
     void update200() throws Exception {
-        Trainer trainer = CreateAndSaveTrainer();
+        Trainer trainer = createAndSaveTestTrainer();
         MockHttpSession session = getTrainerSession(trainer);
 
         UpdateTrainerRequest updateTrainerRequest = UpdateTrainerRequest.builder()
@@ -159,7 +158,7 @@ class TrainerControllerTest extends ControllerTest {
     @Test
     @DisplayName("Trainer 탈퇴후 update시도 시 실패 404")
     void update404() throws Exception {
-        Trainer trainer = CreateAndSaveTrainer();
+        Trainer trainer = createAndSaveTestTrainer();
         MockHttpSession session = getTrainerSession(trainer);
         deleteSession((session));
 
@@ -181,7 +180,7 @@ class TrainerControllerTest extends ControllerTest {
     @DisplayName("Trainer delete 성공")
     void delete200() throws Exception {
 
-        Trainer trainer = CreateAndSaveTrainer();
+        Trainer trainer = createAndSaveTestTrainer();
         MockHttpSession session = getTrainerSession(trainer);
 
         int status = deleteSession(session);

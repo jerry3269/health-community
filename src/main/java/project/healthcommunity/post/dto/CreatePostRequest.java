@@ -2,10 +2,7 @@ package project.healthcommunity.post.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 
@@ -20,8 +17,16 @@ public class CreatePostRequest {
     @Length(min = 2)
     private String title;
     @NotBlank
-    @Length(min = 20)
+    @Length(min = 2)
     private String content;
 
     private List<String> categoryNameList;
+
+    @Builder
+    public CreatePostRequest(Long trainerId, String title, String content, List<String> categoryNameList) {
+        this.trainerId = trainerId;
+        this.title = title;
+        this.content = content;
+        this.categoryNameList = categoryNameList;
+    }
 }

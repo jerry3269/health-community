@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import project.healthcommunity.category.domain.Category;
+import project.healthcommunity.category.repository.CategoryRepositoryCustom;
 import project.healthcommunity.category.service.CategoryService;
 import project.healthcommunity.certificate.domain.Certificate;
 import project.healthcommunity.certificate.service.CertificateService;
@@ -22,7 +23,7 @@ import project.healthcommunity.trainer.service.TrainerService;
 import java.time.LocalDate;
 import java.util.List;
 
-import static project.healthcommunity.global.basic.BasicStaticField.rootCategory;
+import static project.healthcommunity.global.basic.BasicStaticField.*;
 
 @Component
 @RequiredArgsConstructor
@@ -47,8 +48,13 @@ public class InitDb {
         private final PostService postService;
         private final CommentService commentService;
         private final CertificateService certificateService;
+        private final CategoryRepositoryCustom categoryRepositoryCustom;
 
         public void staticFieldInjection() {
+            categoryRepositoryCustom.save(rootCategory);
+            categoryRepositoryCustom.save(testCategory1);
+            categoryRepositoryCustom.save(testCategory2);
+            categoryRepositoryCustom.save(testCategory3);
         }
 
 
