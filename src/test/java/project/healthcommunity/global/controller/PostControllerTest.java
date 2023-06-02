@@ -7,10 +7,12 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.post.dto.CreatePostRequest;
+import project.healthcommunity.post.dto.PostSearchCond;
 import project.healthcommunity.post.dto.UpdatePostRequest;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.util.ControllerTest;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -126,5 +128,24 @@ class PostControllerTest extends ControllerTest {
         mockMvc.perform(delete("/post/delete/{postId}", testPost.getId())
                         .session(trainerSession))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("searchCond으로 post조회 성공 200")
+    void search200() throws Exception {
+        Trainer testTrainer = createAndSaveTestTrainer();
+        Post testPost = createAndSaveTestPost(testTrainer);
+
+        mockMvc.perform(get("/post/list/search")
+                .queryParam("likesGoe", "0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].id", is((testPost.getId().intValue()))))
+                .andExpect(jsonPath("$.content[0].title", is(testPost.getTitle())))
+                .andExpect(jsonPath("$.content[0].likes", is(0)))
+                .andExpect(jsonPath("$.content[0].commentCount", is(0)))
+                .andExpect(jsonPath("$.totalElements", is(1)))
+                .andExpect(jsonPath("$.totalPages", is(1)))
+                .andExpect(jsonPath("$.number", is(0)))
+                .andExpect(jsonPath("$.size", is(10)));
     }
 }
