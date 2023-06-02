@@ -15,6 +15,9 @@ import project.healthcommunity.category.domain.Category;
 import project.healthcommunity.category.repository.CategoryJpaRepository;
 import project.healthcommunity.category.repository.CategoryRepositoryCustom;
 import project.healthcommunity.categorypost.repository.CategoryPostJpaRepository;
+import project.healthcommunity.comment.repository.CommentJpaRepository;
+import project.healthcommunity.comment.repository.CommentRepositoryCustom;
+import project.healthcommunity.comment.service.CommentService;
 import project.healthcommunity.global.dto.LoginForm;
 import project.healthcommunity.member.domain.Member;
 import project.healthcommunity.member.repository.MemberJpaRepository;
@@ -51,6 +54,8 @@ public class ControllerTest {
     @Autowired
     protected PostService postService;
     @Autowired
+    protected CommentService commentService;
+    @Autowired
     protected MemberRepositoryCustom memberRepositoryCustom;
     @Autowired
     protected TrainerRepositoryCustom trainerRepositoryCustom;
@@ -58,6 +63,8 @@ public class ControllerTest {
     protected CategoryRepositoryCustom categoryRepositoryCustom;
     @Autowired
     protected PostRepositoryCustom postRepositoryCustom;
+    @Autowired
+    protected CommentRepositoryCustom commentRepositoryCustom;
     @Autowired
     protected MemberJpaRepository memberJpaRepository;
     @Autowired
@@ -68,6 +75,8 @@ public class ControllerTest {
     protected CategoryPostJpaRepository categoryPostJpaRepository;
     @Autowired
     protected CategoryJpaRepository categoryJpaRepository;
+    @Autowired
+    protected CommentJpaRepository commentJpaRepository;
 
     protected String TEST_ID = "test_id";
     protected String TEST_PASSWORD = "test_password";
@@ -75,6 +84,7 @@ public class ControllerTest {
     protected String TEST_CONTENT = " test_content";
     @BeforeEach
     void initial(){
+        commentJpaRepository.deleteAll();
         postJpaRepository.deleteAll();
         categoryPostJpaRepository.deleteAll();
         memberJpaRepository.deleteAll();
