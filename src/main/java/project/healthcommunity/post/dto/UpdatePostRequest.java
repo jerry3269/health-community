@@ -1,10 +1,7 @@
 package project.healthcommunity.post.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -15,4 +12,10 @@ public class UpdatePostRequest {
     private String title;
     @NotBlank
     private String content;
+    @Builder
+    public UpdatePostRequest(Long postId, String title, String content) {
+        this.postId = postId;
+        this.title = title;
+        this.content = content;
+    }
 }

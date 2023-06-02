@@ -12,7 +12,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import project.healthcommunity.category.domain.Category;
+import project.healthcommunity.category.repository.CategoryJpaRepository;
 import project.healthcommunity.category.repository.CategoryRepositoryCustom;
+import project.healthcommunity.categorypost.repository.CategoryPostJpaRepository;
 import project.healthcommunity.global.dto.LoginForm;
 import project.healthcommunity.member.domain.Member;
 import project.healthcommunity.member.repository.MemberJpaRepository;
@@ -20,6 +22,7 @@ import project.healthcommunity.member.repository.MemberRepositoryCustom;
 import project.healthcommunity.member.service.MemberService;
 import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.post.dto.CreatePostRequest;
+import project.healthcommunity.post.repository.PostJpaRepository;
 import project.healthcommunity.post.repository.PostRepositoryCustom;
 import project.healthcommunity.post.service.PostService;
 import project.healthcommunity.trainer.domain.Trainer;
@@ -59,6 +62,12 @@ public class ControllerTest {
     protected MemberJpaRepository memberJpaRepository;
     @Autowired
     protected TrainerJpaRepository trainerJpaRepository;
+    @Autowired
+    protected PostJpaRepository postJpaRepository;
+    @Autowired
+    protected CategoryPostJpaRepository categoryPostJpaRepository;
+    @Autowired
+    protected CategoryJpaRepository categoryJpaRepository;
 
     protected String TEST_ID = "test_id";
     protected String TEST_PASSWORD = "test_password";
@@ -66,6 +75,8 @@ public class ControllerTest {
     protected String TEST_CONTENT = " test_content";
     @BeforeEach
     void initial(){
+        postJpaRepository.deleteAll();
+        categoryPostJpaRepository.deleteAll();
         memberJpaRepository.deleteAll();
         trainerJpaRepository.deleteAll();
     }
@@ -96,6 +107,17 @@ public class ControllerTest {
         return memberRepositoryCustom.save(testMember);
     }
 
+    protected Member createAndSaveRealMember() {
+        Member realMember = Member.builder()
+                .username("realMember")
+                .age(20)
+                .loginId("real_id")
+                .password("real_password")
+                .build();
+
+        return memberRepositoryCustom.save(realMember);
+    }
+
     protected Trainer createAndSaveTestTrainer() {
         Trainer testTrainer = Trainer.noCertificateBuilder()
                 .trainerName("testTrainer")
@@ -106,6 +128,17 @@ public class ControllerTest {
                 .build();
 
         return trainerRepositoryCustom.save(testTrainer);
+    }
+
+    protected Trainer createAndSaveRealTrainer() {
+        Trainer realTrainer = Trainer.noCertificateBuilder()
+                .trainerName("realTrainer")
+                .age(10)
+                .career(10)
+                .loginId("real_id")
+                .password("real_password")
+                .build();
+        return trainerRepositoryCustom.save(realTrainer);
     }
 
     protected Post createAndSaveTestPost(Trainer trainer){
@@ -121,8 +154,6 @@ public class ControllerTest {
                 .categoryNameList(List.of("팔굽"))
                 .build();
     }
-
-
 
     protected MockHttpSession getMemberSession(Member member) throws Exception {
         LoginForm loginForm = loginMemberRequest(member);
@@ -165,4 +196,6 @@ public class ControllerTest {
                 .map(categoryRepositoryCustom::getByCategoryName)
                 .collect(Collectors.toList());
     }
+
+
 }

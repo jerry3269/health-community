@@ -7,19 +7,22 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.post.dto.CreatePostRequest;
+import project.healthcommunity.post.dto.UpdatePostRequest;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.util.ControllerTest;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static project.healthcommunity.global.error.ErrorStaticField.*;
 
 class PostControllerTest extends ControllerTest {
 
     @Test
-    @DisplayName("Get Post list 200")
+    @DisplayName("Post list 조회 성공 200")
     void list200() throws Exception {
         mockMvc.perform(get("/post/list"))
                 .andExpect(status().isOk());
@@ -45,9 +48,10 @@ class PostControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.commentCount").value(0));
 
     }
+
     @Test
     @DisplayName("TrainerId로 post 조회하기 200")
-    public void testPostsByTrainer200() throws Exception {
+    void testPostsByTrainer200() throws Exception {
         Trainer testTrainer = createAndSaveTestTrainer();
         Post testPost = createAndSaveTestPost(testTrainer);
 
@@ -60,4 +64,67 @@ class PostControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$[0].commentCount").value(0));
     }
 
+    @Test
+    @DisplayName("올바른 사용자가 post update를 시도할때 성공 200")
+    void update200() throws Exception {
+        Trainer testTrainer = createAndSaveTestTrainer();
+        MockHttpSession trainerSession = getTrainerSession(testTrainer);
+        Post testPost = createAndSaveTestPost(testTrainer);
+
+        UpdatePostRequest updatePostRequest = UpdatePostRequest.builder()
+                .postId(testPost.getId())
+                .title("update_title")
+                .content("update_content")
+                .build();
+
+        String string = objectMapper.writeValueAsString(updatePostRequest);
+
+        mockMvc.perform(patch("/post/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .session(trainerSession)
+                        .content(string))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.title").value("update_title"))
+                .andExpect(jsonPath("$.likes").value(0))
+                .andExpect(jsonPath("$.commentCount").value(0));
+    }
+
+    @Test
+    @DisplayName("권한이 없는 사용자가 post update를 시도할때 실패 401")
+    void update401() throws Exception {
+        Trainer unAuthorizedTrainer = createAndSaveTestTrainer();
+        MockHttpSession unAuthorizedTrainerSession = getTrainerSession(unAuthorizedTrainer);
+
+        Trainer realTrainer = createAndSaveRealTrainer();
+        Post testPost = createAndSaveTestPost(realTrainer);
+
+        UpdatePostRequest updatePostRequest = UpdatePostRequest.builder()
+                .postId(testPost.getId())
+                .title("update_title")
+                .content("update_content")
+                .build();
+
+        String string = objectMapper.writeValueAsString(updatePostRequest);
+
+        mockMvc.perform(patch("/post/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .session(unAuthorizedTrainerSession)
+                        .content(string))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.errorCode").value(UNAUTHORIZED))
+                .andExpect(jsonPath("$.message").value(POST_UNAUTHORIZED));
+    }
+
+    @Test
+    @DisplayName("올바른 TrainerSession이 들어왔을때 post delete 성공 200")
+    void delete200() throws Exception {
+        Trainer testTrainer = createAndSaveTestTrainer();
+        MockHttpSession trainerSession = getTrainerSession(testTrainer);
+        Post testPost = createAndSaveTestPost(testTrainer);
+
+        mockMvc.perform(delete("/post/delete/{postId}", testPost.getId())
+                        .session(trainerSession))
+                .andExpect(status().isOk());
+    }
 }
