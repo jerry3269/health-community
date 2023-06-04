@@ -51,7 +51,7 @@ public class Comment extends BaseEntity {
 
     // 생성자
 
-    @Builder(builderMethodName = "memberNoParentBuilder", builderClassName = "memberNoParentBuilder")
+    @Builder(builderMethodName = "memberParentBuilder", builderClassName = "memberParentBuilder")
     public Comment(Post post, String content, Member member) {
         addPost(post);
         this.content = content;
@@ -59,14 +59,14 @@ public class Comment extends BaseEntity {
         this.status = CommentStatus.CREATE;
     }
 
-    @Builder(builderMethodName = "trainerNoParentBuilder", builderClassName = "trainerNoParentBuilder")
+    @Builder(builderMethodName = "trainerParentBuilder", builderClassName = "trainerParentBuilder")
     public Comment(Post post, String content, Trainer trainer) {
         addPost(post);
         this.content = content;
         addTrainer(trainer);
         this.status = CommentStatus.CREATE;
     }
-    @Builder(builderMethodName = "memberParentBuilder", builderClassName = "memberParentBuilder")
+    @Builder(builderMethodName = "memberChildBuilder", builderClassName = "memberChildBuilder")
     public Comment(Post post, String content, Member member, Comment parent) {
         addPost(post);
         this.content = content;
@@ -75,7 +75,7 @@ public class Comment extends BaseEntity {
         this.status = CommentStatus.CREATE;
     }
 
-    @Builder(builderMethodName = "trainerParentBuilder",builderClassName = "trainerParentBuilder")
+    @Builder(builderMethodName = "trainerChildBuilder",builderClassName = "trainerChildBuilder")
     public Comment(Post post, String content, Trainer trainer, Comment parent) {
         addPost(post);
         this.content = content;

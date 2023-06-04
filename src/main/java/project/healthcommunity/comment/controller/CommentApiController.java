@@ -36,7 +36,8 @@ public class CommentApiController {
     private final TrainerService trainerService;
 
     @PostMapping("/member")
-    public ResponseEntity saveMemberComment(@RequestBody(required = false) @Valid CreateMemberCommentRequest createMemberCommentRequest,
+    public ResponseEntity saveMemberComment(@LoginForMember MemberSession memberSession,
+                                            @RequestBody(required = false) @Valid CreateMemberCommentRequest createMemberCommentRequest,
                                             @RequestBody(required = false) @Valid CreateChildMemberCommentRequest createChildMemberCommentRequest) {
 
         if (createMemberCommentRequest != null) {
@@ -51,7 +52,8 @@ public class CommentApiController {
     }
 
     @PostMapping("/trainer")
-    public ResponseEntity saveTrainerComment(@RequestBody(required = false) @Valid CreateTrainerCommentRequest createTrainerCommentRequest,
+    public ResponseEntity saveTrainerComment(@LoginForTrainer TrainerSession trainerSession,
+                                             @RequestBody(required = false) @Valid CreateTrainerCommentRequest createTrainerCommentRequest,
                                              @RequestBody(required = false) @Valid CreateChildTrainerCommentRequest createChildTrainerCommentRequest) {
 
         if (createTrainerCommentRequest != null) {
