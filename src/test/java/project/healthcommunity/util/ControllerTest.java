@@ -15,6 +15,9 @@ import project.healthcommunity.category.domain.Category;
 import project.healthcommunity.category.repository.CategoryJpaRepository;
 import project.healthcommunity.category.repository.CategoryRepositoryCustom;
 import project.healthcommunity.categorypost.repository.CategoryPostJpaRepository;
+import project.healthcommunity.certificate.repository.CertificateJpaRepository;
+import project.healthcommunity.certificate.repository.CertificateRepositoryCustom;
+import project.healthcommunity.certificate.service.CertificateService;
 import project.healthcommunity.comment.repository.CommentJpaRepository;
 import project.healthcommunity.comment.repository.CommentRepositoryCustom;
 import project.healthcommunity.comment.service.CommentService;
@@ -56,6 +59,8 @@ public class ControllerTest {
     @Autowired
     protected CommentService commentService;
     @Autowired
+    protected CertificateService certificateService;
+    @Autowired
     protected MemberRepositoryCustom memberRepositoryCustom;
     @Autowired
     protected TrainerRepositoryCustom trainerRepositoryCustom;
@@ -65,6 +70,8 @@ public class ControllerTest {
     protected PostRepositoryCustom postRepositoryCustom;
     @Autowired
     protected CommentRepositoryCustom commentRepositoryCustom;
+    @Autowired
+    protected CertificateRepositoryCustom certificateRepositoryCustom;
     @Autowired
     protected MemberJpaRepository memberJpaRepository;
     @Autowired
@@ -77,6 +84,8 @@ public class ControllerTest {
     protected CategoryJpaRepository categoryJpaRepository;
     @Autowired
     protected CommentJpaRepository commentJpaRepository;
+    @Autowired
+    protected CertificateJpaRepository certificateJpaRepository;
 
     protected String TEST_ID = "test_id";
     protected String TEST_PASSWORD = "test_password";
@@ -84,6 +93,7 @@ public class ControllerTest {
     protected String TEST_CONTENT = " test_content";
     @BeforeEach
     void initial(){
+        certificateJpaRepository.deleteAll();
         commentJpaRepository.deleteAll();
         postJpaRepository.deleteAll();
         categoryPostJpaRepository.deleteAll();
