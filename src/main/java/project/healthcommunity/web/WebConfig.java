@@ -24,14 +24,14 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new MemberLoginCheckInterceptor())
                 .order(2)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/member/login","/member/add","/", "/post/**", "/comment/trainer",
+                .excludePathPatterns("/member/login","/member/add","/", "/post/**", "/comment/trainer/**",
                         "/trainer/**", "/css/**", "/*.ico", "/error");
 
         registry.addInterceptor(new TrainerLoginCheckInterceptor())
                 .order(3)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/trainer/login","/trainer/add", "/trainer/search", "/post/list/**",
-                        "/comment/member",
+                        "/comment/member/**",
                         "/","/member/**", "/css/**", "/*.ico", "/error");
     }
 
