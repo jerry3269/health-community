@@ -56,6 +56,7 @@ import static project.healthcommunity.global.basic.BasicStaticField.testCategory
 @Slf4j
 @AcceptanceTest
 @AutoConfigureMockMvc
+@ExtendWith(RestDocumentationExtension.class)
 public class ControllerTest {
     @Autowired
     protected MockMvc mockMvc;
@@ -107,7 +108,13 @@ public class ControllerTest {
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation){
         initialCategory();
-
+        this.mockMvc = MockMvcBuilders
+                .webAppContextSetup(webApplicationContext)
+                .apply(documentationConfiguration(restDocumentation)
+                        .operationPreprocessors()
+                        .withRequestDefaults(prettyPrint())
+                        .withResponseDefaults(prettyPrint()))
+                .build();
     }
 
     private void initialCategory() {
