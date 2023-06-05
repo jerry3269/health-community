@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import project.healthcommunity.category.domain.Category;
 import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.post.dto.CreatePostRequest;
 import project.healthcommunity.post.dto.PostSearchCond;
@@ -22,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static project.healthcommunity.global.error.ErrorStaticField.*;
 
 class PostControllerTest extends ControllerTest {
+
 
     @Test
     @DisplayName("Post list 조회 성공 200")

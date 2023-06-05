@@ -4,14 +4,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import project.healthcommunity.InitDb;
 import project.healthcommunity.category.domain.Category;
 import project.healthcommunity.category.repository.CategoryJpaRepository;
 import project.healthcommunity.category.repository.CategoryRepositoryCustom;
@@ -40,11 +46,15 @@ import project.healthcommunity.trainer.service.TrainerService;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static project.healthcommunity.global.basic.BasicStaticField.*;
+import static project.healthcommunity.global.basic.BasicStaticField.testCategory3;
 
 @Slf4j
-@SpringBootTest
+@AcceptanceTest
 @AutoConfigureMockMvc
 public class ControllerTest {
     @Autowired
@@ -95,13 +105,18 @@ public class ControllerTest {
     protected String TEST_TITLE = "test_title";
     protected String TEST_CONTENT = " test_content";
     @BeforeEach
-    void initial(){
-        certificateJpaRepository.deleteAll();
-        commentJpaRepository.deleteAll();
-        postJpaRepository.deleteAll();
-        categoryPostJpaRepository.deleteAll();
-        memberJpaRepository.deleteAll();
-        trainerJpaRepository.deleteAll();
+    public void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation){
+        initialCategory();
+
+    }
+
+    private void initialCategory() {
+        if (categoryJpaRepository.findAll().isEmpty()) {
+            Category parent = categoryJpaRepository.save(createRootCategory());
+            categoryJpaRepository.save(createTestCategory1(parent));
+            categoryJpaRepository.save(createTestCategory2(parent));
+            categoryJpaRepository.save(createTestCategory3(parent));
+        }
     }
 
     protected LoginForm loginMemberRequest(Member member) {
@@ -221,4 +236,29 @@ public class ControllerTest {
     }
 
 
+    protected Category createRootCategory(){
+        return Category.noParentBuilder()
+                .categoryName("운동")
+                .build();
+    }
+
+    protected Category createTestCategory1(Category parent){
+        return Category.parentBuilder()
+                .categoryName("팔굽")
+                .parent(parent)
+                .build();
+    }
+
+    protected Category createTestCategory2(Category parent){
+        return Category.parentBuilder()
+                .categoryName("윗몸")
+                .parent(parent)
+                .build();
+    }
+    protected Category createTestCategory3(Category parent){
+        return Category.parentBuilder()
+                .categoryName("체력")
+                .parent(parent)
+                .build();
+    }
 }
