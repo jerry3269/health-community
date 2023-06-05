@@ -26,7 +26,7 @@ import static java.util.stream.Collectors.*;
 @RequestMapping("/certificate")
 public class CertificateController {
 
-    private CertificateService certificateService;
+    private final CertificateService certificateService;
 
     @GetMapping("/list")
     public ResponseEntity search(@LoginForTrainer TrainerSession trainerSession) {

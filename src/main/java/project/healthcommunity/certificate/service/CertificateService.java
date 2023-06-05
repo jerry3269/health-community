@@ -46,7 +46,7 @@ public class CertificateService {
 
     @Transactional
     public CertificateResponse update(TrainerSession trainerSession, UpdateCertificateRequest updateCertificateRequest){
-        Certificate certificate = isValidUser(trainerSession, updateCertificateRequest.getId());
+        Certificate certificate = isValidUser(trainerSession, updateCertificateRequest.getCertificateId());
         certificate.update(updateCertificateRequest);
         return new CertificateResponse(certificate);
     }
