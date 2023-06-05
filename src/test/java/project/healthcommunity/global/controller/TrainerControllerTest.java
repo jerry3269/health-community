@@ -26,8 +26,6 @@ class TrainerControllerTest extends ControllerTest {
         LoginForm loginForm = loginTrainerRequest(trainer);
         String content = objectMapper.writeValueAsString(loginForm);
 
-
-
         //when
         mockMvc.perform(post("/trainer/login")
                         .contentType(MediaType.APPLICATION_JSON)

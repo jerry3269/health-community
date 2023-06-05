@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import project.healthcommunity.category.domain.Category;
 import project.healthcommunity.category.repository.CategoryJpaRepository;
@@ -50,6 +51,8 @@ public class ControllerTest {
     protected MockMvc mockMvc;
     @Autowired
     protected ObjectMapper objectMapper;
+    @Autowired
+    protected PasswordEncoder passwordEncoder;
     @Autowired
     protected MemberService memberService;
     @Autowired
@@ -105,14 +108,14 @@ public class ControllerTest {
 
         return LoginForm.builder()
                 .loginId(member.getLoginId())
-                .password(member.getPassword())
+                .password(TEST_PASSWORD)
                 .build();
     }
 
     protected LoginForm loginTrainerRequest(Trainer trainer){
         return LoginForm.builder()
                 .loginId(trainer.getLoginId())
-                .password(trainer.getPassword())
+                .password(TEST_PASSWORD)
                 .build();
     }
 
@@ -121,7 +124,7 @@ public class ControllerTest {
                 .username("testMember")
                 .age(20)
                 .loginId(TEST_ID)
-                .password(TEST_PASSWORD)
+                .password(passwordEncoder.encode(TEST_PASSWORD))
                 .build();
 
         return memberRepositoryCustom.save(testMember);
@@ -132,7 +135,7 @@ public class ControllerTest {
                 .username("realMember")
                 .age(20)
                 .loginId("real_id")
-                .password("real_password")
+                .password(passwordEncoder.encode("real_password"))
                 .build();
 
         return memberRepositoryCustom.save(realMember);
@@ -144,7 +147,7 @@ public class ControllerTest {
                 .age(20)
                 .career(10)
                 .loginId(TEST_ID)
-                .password(TEST_PASSWORD)
+                .password(passwordEncoder.encode(TEST_PASSWORD))
                 .build();
 
         return trainerRepositoryCustom.save(testTrainer);
@@ -156,7 +159,7 @@ public class ControllerTest {
                 .age(10)
                 .career(10)
                 .loginId("real_id")
-                .password("real_password")
+                .password(passwordEncoder.encode("real_password"))
                 .build();
         return trainerRepositoryCustom.save(realTrainer);
     }

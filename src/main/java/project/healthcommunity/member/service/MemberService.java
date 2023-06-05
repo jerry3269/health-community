@@ -3,6 +3,7 @@ package project.healthcommunity.member.service;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.healthcommunity.comment.domain.Comment;
@@ -31,11 +32,12 @@ public class MemberService {
 
     private final MemberRepositoryCustom memberRepositoryCustom;
     private final TrainerRepositoryCustom trainerRepositoryCustom;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public MemberResponse join(CreateMemberRequest createMemberRequest) {
         validDupLoginId(createMemberRequest.getLoginId());
-        Member member = CreateMemberRequest.toMember(createMemberRequest);
+        Member member = createMemberRequest.toMember(passwordEncoder);
         memberRepositoryCustom.save(member);
         return MemberResponse.createByMember(member);
     }
@@ -55,7 +57,7 @@ public class MemberService {
     @Transactional
     public MemberResponse login(LoginForm loginForm, HttpServletRequest request) {
         Member member = memberRepositoryCustom.getByLoginId(loginForm.getLoginId());
-        if (member.getPassword().equals(loginForm.getPassword())) {
+        if (passwordEncoder.matches(loginForm.getPassword(), member.getPassword())) {
             MemberSession memberSession = MemberSession.createMemberSession(member);
             HttpSession session = request.getSession();
             session.setAttribute(LOGIN_MEMBER, memberSession);
@@ -73,6 +75,7 @@ public class MemberService {
     @Transactional
     public MemberResponse update(MemberSession memberSession, UpdateMemberDto updateMemberDto) {
         Member member = getById(memberSession.getId());
+        updateMemberDto.encodingPassword(passwordEncoder);
         member.update(updateMemberDto);
         return MemberResponse.createByMember(member);
 

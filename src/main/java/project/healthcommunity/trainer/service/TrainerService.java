@@ -3,6 +3,8 @@ package project.healthcommunity.trainer.service;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.healthcommunity.comment.domain.Comment;
@@ -31,11 +33,12 @@ public class TrainerService {
 
     private final TrainerRepositoryCustom trainerRepositoryCustom;
     private final MemberRepositoryCustom memberRepositoryCustom;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public TrainerResponse join(CreateTrainerRequest createTrainerRequest) {
         validDupLoginId(createTrainerRequest.getLoginId());
-        Trainer trainer = CreateTrainerRequest.toTrainer(createTrainerRequest);
+        Trainer trainer = createTrainerRequest.toTrainer(passwordEncoder);
         trainerRepositoryCustom.save(trainer);
         return TrainerResponse.createByTrainer(trainer);
     }
@@ -55,7 +58,7 @@ public class TrainerService {
     @Transactional
     public TrainerResponse login(LoginForm loginForm, HttpServletRequest request) {
         Trainer trainer = trainerRepositoryCustom.getByLoginId(loginForm.getLoginId());
-        if (trainer.getPassword().equals(loginForm.getPassword())) {
+        if (passwordEncoder.matches(loginForm.getPassword(), trainer.getPassword())) {
             TrainerSession trainerSession = TrainerSession.createByTrainer(trainer);
             HttpSession session = request.getSession();
             session.setAttribute(LOGIN_TRAINER, trainerSession);
@@ -73,6 +76,7 @@ public class TrainerService {
     @Transactional
     public TrainerResponse update(TrainerSession trainerSession, UpdateTrainerRequest updateTrainerRequest) {
         Trainer findTrainer = getById(trainerSession.getId());
+        updateTrainerRequest.encodingPassword(passwordEncoder);
         findTrainer.update(updateTrainerRequest);
         return TrainerResponse.createByTrainer(findTrainer);
     }

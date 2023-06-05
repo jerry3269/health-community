@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import project.healthcommunity.trainer.domain.Trainer;
 
 @Getter
@@ -36,12 +37,13 @@ public class CreateTrainerRequest {
         this.password = password;
     }
 
-    public static Trainer toTrainer(CreateTrainerRequest createTrainerRequest) {
+    public Trainer toTrainer(PasswordEncoder passwordEncoder) {
         return Trainer.noCertificateBuilder()
-                .trainerName(createTrainerRequest.trainerName)
-                .age(createTrainerRequest.age)
-                .career(createTrainerRequest.career)
-                .loginId(createTrainerRequest.loginId)
-                .password(createTrainerRequest.password).build();
+                .trainerName(this.trainerName)
+                .age(this.age)
+                .career(this.career)
+                .loginId(this.loginId)
+                .password(passwordEncoder.encode(this.password))
+                .build();
     }
 }

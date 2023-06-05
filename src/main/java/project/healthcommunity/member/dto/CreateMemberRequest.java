@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import project.healthcommunity.member.domain.Member;
 
 @Getter
@@ -28,12 +29,13 @@ public class CreateMemberRequest {
         this.password = password;
     }
 
-    public static Member toMember(CreateMemberRequest createMemberRequest) {
+    public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
-                .username(createMemberRequest.getUsername())
-                .age(createMemberRequest.getAge())
-                .loginId(createMemberRequest.getLoginId())
-                .password(createMemberRequest.getPassword()).build();
+                .username(this.username)
+                .age(this.age)
+                .loginId(this.loginId)
+                .password(passwordEncoder.encode(this.password))
+                .build();
     }
 
     public static CreateMemberRequest createByMember(Member member) {
