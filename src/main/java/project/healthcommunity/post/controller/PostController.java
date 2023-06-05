@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import project.healthcommunity.global.controller.LoginForTrainer;
 import project.healthcommunity.global.exception.BindingException;
 import project.healthcommunity.post.dto.*;
-import project.healthcommunity.post.repository.PostJpaRepository;
 import project.healthcommunity.post.repository.PostRepositoryCustom;
 import project.healthcommunity.post.service.PostService;
 import project.healthcommunity.trainer.domain.TrainerSession;
@@ -26,7 +25,7 @@ import static java.util.stream.Collectors.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/post")
-public class PostApiController {
+public class PostController {
 
     private final PostService postService;
     private final PostRepositoryCustom postRepositoryCustom;

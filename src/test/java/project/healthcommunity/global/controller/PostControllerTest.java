@@ -3,9 +3,12 @@ package project.healthcommunity.global.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import project.healthcommunity.category.domain.Category;
+import project.healthcommunity.certificate.controller.CertificateController;
+import project.healthcommunity.post.controller.PostController;
 import project.healthcommunity.post.domain.Post;
 import project.healthcommunity.post.dto.CreatePostRequest;
 import project.healthcommunity.post.dto.PostSearchCond;
@@ -21,6 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static project.healthcommunity.global.error.ErrorStaticField.*;
+
 
 class PostControllerTest extends ControllerTest {
 

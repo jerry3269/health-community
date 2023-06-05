@@ -1,7 +1,6 @@
 package project.healthcommunity.member.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,22 +18,16 @@ import project.healthcommunity.global.exception.BindingException;
 import project.healthcommunity.member.domain.Member;
 import project.healthcommunity.member.domain.MemberSession;
 import project.healthcommunity.member.dto.*;
-import project.healthcommunity.member.repository.MemberJpaRepository;
 import project.healthcommunity.member.repository.MemberRepositoryCustom;
 import project.healthcommunity.member.service.MemberService;
-import project.healthcommunity.trainer.domain.Trainer;
 
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
-import static project.healthcommunity.global.basic.BasicStaticField.LOGIN_MEMBER;
-import static project.healthcommunity.global.basic.BasicStaticField.LOGIN_TRAINER;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/member")
-public class MemberApiController {
+public class MemberController {
 
     private final MemberService memberService;
     private final MemberRepositoryCustom memberRepositoryCustom;

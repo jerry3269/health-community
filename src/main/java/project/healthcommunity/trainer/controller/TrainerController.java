@@ -12,28 +12,23 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import project.healthcommunity.certificate.domain.Certificate;
 import project.healthcommunity.global.controller.LoginForTrainer;
 import project.healthcommunity.global.dto.LoginForm;
 import project.healthcommunity.global.exception.BindingException;
-import project.healthcommunity.member.dto.MemberResponse;
 import project.healthcommunity.trainer.domain.Trainer;
 import project.healthcommunity.trainer.domain.TrainerSession;
 import project.healthcommunity.trainer.dto.*;
 
-import project.healthcommunity.trainer.repository.TrainerJpaRepository;
 import project.healthcommunity.trainer.repository.TrainerRepositoryCustom;
 import project.healthcommunity.trainer.service.TrainerService;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.*;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/trainer")
-public class TrainerApiController {
+public class TrainerController {
     private final TrainerService trainerService;
     private final TrainerRepositoryCustom TrainerRepositoryCustom;
 

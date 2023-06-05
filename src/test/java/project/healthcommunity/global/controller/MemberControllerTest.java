@@ -4,9 +4,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.*;
 import org.springframework.mock.web.MockHttpSession;
+import project.healthcommunity.certificate.controller.CertificateController;
 import project.healthcommunity.global.dto.LoginForm;
+import project.healthcommunity.member.controller.MemberController;
 import project.healthcommunity.member.domain.Member;
 import project.healthcommunity.member.dto.CreateMemberRequest;
 import project.healthcommunity.member.dto.UpdateMemberDto;

@@ -2,8 +2,10 @@ package project.healthcommunity.global.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import project.healthcommunity.comment.controller.CommentController;
 import project.healthcommunity.comment.domain.Comment;
 import project.healthcommunity.comment.dto.UpdateCommentRequest;
 import project.healthcommunity.comment.dto.member.CreateMemberCommentRequest;
@@ -18,6 +20,7 @@ import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 public class CommentControllerTest extends ControllerTest {
 

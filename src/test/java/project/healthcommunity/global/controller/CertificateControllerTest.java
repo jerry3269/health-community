@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.web.WebAppConfiguration;
+import project.healthcommunity.certificate.controller.CertificateController;
 import project.healthcommunity.certificate.domain.Certificate;
 import project.healthcommunity.certificate.dto.CreateCertificateRequest;
 import project.healthcommunity.certificate.dto.UpdateCertificateRequest;
@@ -19,6 +20,7 @@ import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 public class CertificateControllerTest extends ControllerTest {
 

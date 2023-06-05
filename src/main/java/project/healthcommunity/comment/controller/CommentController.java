@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import project.healthcommunity.comment.dto.*;
 import project.healthcommunity.comment.dto.member.CreateChildMemberCommentRequest;
@@ -17,7 +16,6 @@ import project.healthcommunity.comment.exception.RequestBodyNotFoundException;
 import project.healthcommunity.comment.service.CommentService;
 import project.healthcommunity.global.controller.LoginForMember;
 import project.healthcommunity.global.controller.LoginForTrainer;
-import project.healthcommunity.global.exception.BindingException;
 import project.healthcommunity.member.domain.MemberSession;
 import project.healthcommunity.member.service.MemberService;
 import project.healthcommunity.post.service.PostService;
@@ -28,7 +26,7 @@ import project.healthcommunity.trainer.service.TrainerService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/comment")
-public class CommentApiController {
+public class CommentController {
 
     private final CommentService commentService;
     private final PostService postService;
