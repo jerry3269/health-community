@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import project.healthcommunity.category.domain.Category;
 import project.healthcommunity.certificate.controller.CertificateController;
 import project.healthcommunity.post.controller.PostController;
@@ -19,6 +20,7 @@ import project.healthcommunity.util.ControllerTest;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -33,7 +35,8 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("Post list 조회 성공 200")
     void list200() throws Exception {
         mockMvc.perform(get("/post/list"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("post-list/200"));
     }
 
     @Test
@@ -53,8 +56,8 @@ class PostControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.title").value(createTestPostRequest.getTitle()))
                 .andExpect(jsonPath("$.likes").value(0))
-                .andExpect(jsonPath("$.commentCount").value(0));
-
+                .andExpect(jsonPath("$.commentCount").value(0))
+                .andDo(document("post-save/200"));
     }
 
     @Test
@@ -69,7 +72,8 @@ class PostControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$[0].id").exists())
                 .andExpect(jsonPath("$[0].title").value(testPost.getTitle()))
                 .andExpect(jsonPath("$[0].likes").value(testPost.getLikes()))
-                .andExpect(jsonPath("$[0].commentCount").value(0));
+                .andExpect(jsonPath("$[0].commentCount").value(0))
+                .andDo(document("post-list/trainerId/200"));
     }
 
     @Test
@@ -95,7 +99,8 @@ class PostControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.title").value("update_title"))
                 .andExpect(jsonPath("$.likes").value(0))
-                .andExpect(jsonPath("$.commentCount").value(0));
+                .andExpect(jsonPath("$.commentCount").value(0))
+                .andDo(document("post-update/200"));
     }
 
     @Test
@@ -121,7 +126,8 @@ class PostControllerTest extends ControllerTest {
                         .content(string))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.errorCode").value(UNAUTHORIZED))
-                .andExpect(jsonPath("$.message").value(POST_UNAUTHORIZED));
+                .andExpect(jsonPath("$.message").value(POST_UNAUTHORIZED))
+                .andDo(document("post-update/401"));
     }
 
     @Test
@@ -133,7 +139,8 @@ class PostControllerTest extends ControllerTest {
 
         mockMvc.perform(delete("/post/delete/{postId}", testPost.getId())
                         .session(trainerSession))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("post-delete/200"));
     }
 
     @Test
@@ -152,6 +159,7 @@ class PostControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.totalElements", is(1)))
                 .andExpect(jsonPath("$.totalPages", is(1)))
                 .andExpect(jsonPath("$.number", is(0)))
-                .andExpect(jsonPath("$.size", is(10)));
+                .andExpect(jsonPath("$.size", is(10)))
+                .andDo(document("post-search/200"));
     }
 }

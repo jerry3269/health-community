@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import project.healthcommunity.comment.controller.CommentController;
 import project.healthcommunity.comment.domain.Comment;
 import project.healthcommunity.comment.dto.UpdateCommentRequest;
@@ -17,6 +18,7 @@ import project.healthcommunity.util.ControllerTest;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -58,16 +60,17 @@ public class CommentControllerTest extends ControllerTest {
         MockHttpSession memberSession = getMemberSession(testMember);
 
         mockMvc.perform(post("/comment/member")
-                .contentType(MediaType.APPLICATION_JSON)
-                .session(memberSession)
-                .content(string))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .session(memberSession)
+                        .content(string))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.commentId").exists())
                 .andExpect(jsonPath("$.postId", is(testPost.getId().intValue())))
                 .andExpect(jsonPath("$.memberId", is(testMember.getId().intValue())))
                 .andExpect(jsonPath("$.content", is(TEST_CONTENT)))
                 .andExpect(jsonPath("$.likes", is(0)))
-                .andExpect(jsonPath("$.commentDtoList", hasSize(0)));
+                .andExpect(jsonPath("$.commentDtoList", hasSize(0)))
+                .andDo(document("comment-save/member/200"));
     }
 
     @Test
@@ -93,7 +96,8 @@ public class CommentControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.trainerId", is(testTrainer.getId().intValue())))
                 .andExpect(jsonPath("$.content", is(TEST_CONTENT)))
                 .andExpect(jsonPath("$.likes", is(0)))
-                .andExpect(jsonPath("$.commentDtoList", hasSize(0)));
+                .andExpect(jsonPath("$.commentDtoList", hasSize(0)))
+                .andDo(document("comment-save/trainer/200"));
     }
 
     @Test
@@ -119,7 +123,8 @@ public class CommentControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.memberId", is(testMember.getId().intValue())))
                 .andExpect(jsonPath("$.content", is("update_content")))
                 .andExpect(jsonPath("$.likes", is(0)))
-                .andExpect(jsonPath("$.commentDtoList", hasSize(0)));
+                .andExpect(jsonPath("$.commentDtoList", hasSize(0)))
+                .andDo(document("comment-update/member/200"));
     }
 
     @Test
@@ -145,7 +150,8 @@ public class CommentControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.trainerId", is(testTrainer.getId().intValue())))
                 .andExpect(jsonPath("$.content", is("update_content")))
                 .andExpect(jsonPath("$.likes", is(0)))
-                .andExpect(jsonPath("$.commentDtoList", hasSize(0)));
+                .andExpect(jsonPath("$.commentDtoList", hasSize(0)))
+                .andDo(document("comment-update/trainer/200"));
     }
 
     @Test
@@ -162,7 +168,8 @@ public class CommentControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.memberId", is(testMember.getId().intValue())))
                 .andExpect(jsonPath("$.content", is(TEST_CONTENT)))
                 .andExpect(jsonPath("$.likes", is(0)))
-                .andExpect(jsonPath("$.commentDtoList", hasSize(0)));
+                .andExpect(jsonPath("$.commentDtoList", hasSize(0)))
+                .andDo(document("comment-delete/member/200"));
     }
 
     @Test
@@ -179,6 +186,7 @@ public class CommentControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.trainerId", is(testTrainer.getId().intValue())))
                 .andExpect(jsonPath("$.content", is(TEST_CONTENT)))
                 .andExpect(jsonPath("$.likes", is(0)))
-                .andExpect(jsonPath("$.commentDtoList", hasSize(0)));
+                .andExpect(jsonPath("$.commentDtoList", hasSize(0)))
+                .andDo(document("comment-delete/trainer/200"));
     }
 }
