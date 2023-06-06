@@ -1,0 +1,159 @@
+= REST Docs 문서 만들기 (글의 제목)
+backtony.github.io(부제)
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs // 문서에 표기되는 코드들의 하이라이팅을 highlightjs를 사용
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[Member-API]]
+== Member API
+
+[[Member-회원가입-성공-200]]
+=== Member 회원가입 성공
+operation::member-signup/200[snippets='http-request,http-response']
+
+[[Member-회원가입-실패-400]]
+=== 이미 해당 아이디가 존재할때 Member 회원가입 실패
+operation::member-signup/400[snippets='http-request,http-response']
+
+[[Member-로그인-성공-200]]
+=== Member 로그인 성공
+operation::member-login/200[snippets='http-request,http-response']
+
+[[Member-로그인-실패-400]]
+=== 잘못된 입력 Form이 들어오면 로그인 실패
+operation::member-login/400[snippets='http-request,http-response']
+
+[[Member-로그인-실패-404]]
+=== 아이디가 존재하지 않으면 로그인 실패
+operation::member-login/404[snippets='http-request,http-response']
+
+[[Member-로그인-실패-405]]
+=== 비밀번호가 일치하지 않으면 로그인 실패
+operation::member-login/405[snippets='http-request,http-response']
+
+[[Member-로그아웃-성공-200]]
+=== Member 로그아웃 성공
+operation::member-logout/200[snippets='http-request,http-response']
+
+[[Member-업데이트-성공-200]]
+=== Member 업데이트 성공
+operation::member-update/200[snippets='http-request,http-response']
+
+[[Member-삭제-성공-200]]
+=== Member 삭제 성공
+operation::member-delete/200[snippets='http-request,http-response']
+
+
+[[Trainer-API]]
+== Trainer API
+
+[[Trainer-회원가입-성공-200]]
+=== Trainer 회원가입 성공
+operation::trainer-signup/200[snippets='http-request,http-response']
+
+[[Trainer-회원가입-실패-400]]
+=== 이미 해당 아이디가 존재할때 Trainer 회원가입 실패
+operation::trainer-signup/400[snippets='http-request,http-response']
+
+[[Trainer-로그인-성공-200]]
+=== Trainer 로그인 성공
+operation::trainer-login/200[snippets='http-request,http-response']
+
+[[Trainer-로그인-실패-400]]
+=== 로그인 Form이 잘못 입력 되었을때 Trainer 로그인 실패
+operation::trainer-login/400[snippets='http-request,http-response']
+
+[[Trainer-로그인-실패-404]]
+=== 해당 아이디가 존재 하지 않을 때 Trainer 로그인 실패
+operation::trainer-login/404[snippets='http-request,http-response']
+
+[[Trainer-로그인-실패-405]]
+=== 비밀번호가 일치하지 않을 때 Trainer 로그인 실패
+operation::trainer-login/405[snippets='http-request,http-response']
+
+[[Trainer-회원가입-실패-400]]
+=== 이미 해당 아이디가 존재할때 Trainer 회원가입 실패
+operation::trainer-signup/400[snippets='http-request,http-response']
+
+[[Trainer-로그아웃-성공-200]]
+=== Trainer 로그아웃 성공
+operation::trainer-logout/200[snippets='http-request,http-response']
+
+[[Trainer-업데이트-성공-200]]
+=== Trainer 업데이트 성공
+operation::trainer-update/200[snippets='http-request,http-response']
+
+[[Trainer-업데이트-실패-404]]
+=== 삭제된 Trainer가 update 요청시 실패
+operation::trainer-update/404[snippets='http-request,http-response']
+
+[[Trainer-서치-성공-200]]
+=== Trainer 서치 성공
+operation::trainer-search/200[snippets='http-request,http-response']
+
+
+[[Post-API]]
+== Post API
+
+[[Post-저장-성공-200]]
+=== Post 저장 성공
+operation::post-save/200[snippets='http-request,http-response']
+
+[[Post-리스트-성공-200]]
+=== Post 리스트 성공
+operation::post-list/200[snippets='http-request,http-response']
+
+[[Post-트레이너Id-리스트-성공-200]]
+=== Post TrainerID로 리스트 가져오기 성공
+operation::post-list/trainerId/200[snippets='http-request,http-response']
+
+[[Post-트레이너Id-리스트-성공-200]]
+=== Post TrainerID로 리스트 가져오기 성공
+operation::post-list/trainerId/200[snippets='http-request,http-response']
+
+[[Post-업데이트-성공-200]]
+=== Post 업데이트 성공
+operation::post-update/200[snippets='http-request,http-response']
+
+[[Post-업데이트-실패-401]]
+=== 권한 없는 사용자가 post 업데이트 시도시 실패
+operation::post-update/401[snippets='http-request,http-response']
+
+[[Post-삭제-성공-200]]
+=== Post 삭제 성공
+operation::post-delete/200[snippets='http-request,http-response']
+
+[[Post-서치-성공-200]]
+=== Post 서치 성공
+operation::post-search/200[snippets='http-request,http-response']
+
+
+[[Comment-API]]
+== Comment API
+
+[[Comment-Member-저장-성공-200]]
+=== MemberComment 저장 성공
+operation::comment-save/member/200[snippets='http-request,http-response']
+
+[[Comment-Trainer-저장-성공-200]]
+=== TrainerComment 저장 성공
+operation::comment-save/trainer/200[snippets='http-request,http-response']
+
+[[Comment-Member-업데이트-성공-200]]
+=== MemberComment 업데이트 성공
+operation::comment-update/member/200[snippets='http-request,http-response']
+
+[[Comment-Trainer-업데이트-성공-200]]
+=== TrainerComment 업데이트 성공
+operation::comment-update/trainer/200[snippets='http-request,http-response']
+
+[[Comment-Member-삭제-성공-200]]
+=== MemberComment 삭제 성공
+operation::comment-delete/member/200[snippets='http-request,http-response']
+
+[[Comment-Trainer-삭제-성공-200]]
+=== TrainerComment 삭제 성공
+operation::comment-delete/trainer/200[snippets='http-request,http-response']

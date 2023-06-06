@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"id", "certificateName", "acquisitionDate"})
+@ToString(of = {"id", "certificateName", "acquiredDate"})
 public class Certificate extends BaseEntity {
 
     @Id
